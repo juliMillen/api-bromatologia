@@ -2,6 +2,7 @@ package com.bromatologia.backend.Controller;
 
 import com.bromatologia.backend.Entity.Mantenimiento;
 import com.bromatologia.backend.Service.MantenimientoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,27 +26,19 @@ public class MantenimientoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Mantenimiento> obtenerMantenimientoPorId(@PathVariable long id){
-        if(id <= 0){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
         Mantenimiento buscado = mantenimientoService.obtenerMantenimiento(id);
         return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 
     @PostMapping("/")
-    public ResponseEntity<Mantenimiento> registrarMantenimiento(@RequestBody Mantenimiento mantenimiento){
-        if(mantenimiento ==null){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+    public ResponseEntity<Mantenimiento> registrarMantenimiento(@RequestBody @Valid Mantenimiento mantenimiento){
+
         Mantenimiento registrado = mantenimientoService.registrarMantenimiento(mantenimiento);
         return new ResponseEntity<>(registrado, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Mantenimiento> eliminarMantenimiento(@PathVariable long id){
-        if(id <= 0){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
         mantenimientoService.eliminarMantenimiento(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

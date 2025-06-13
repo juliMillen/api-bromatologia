@@ -2,6 +2,7 @@ package com.bromatologia.backend.Controller;
 
 import com.bromatologia.backend.Entity.Establecimiento;
 import com.bromatologia.backend.Service.EstablecimientoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,27 +29,19 @@ public class EstablecimientoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Establecimiento> obtenerEstablecimiento(@PathVariable long id){
-        if(id <= 0){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
         Establecimiento buscado = establecimientoService.obtenerEstablecimientoPorId(id);
         return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 
     @PostMapping("/")
-    public ResponseEntity<Establecimiento> crearEstablecimiento(Establecimiento establecimiento){
-    if(establecimiento == null){
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+    public ResponseEntity<Establecimiento> crearEstablecimiento(@RequestBody @Valid Establecimiento establecimiento){
+
     Establecimiento nuevoEstablecimiento = establecimientoService.crearEstablecimiento(establecimiento);
     return new ResponseEntity<>(nuevoEstablecimiento, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Establecimiento> eliminarEstablecimiento(@PathVariable long id){
-        if(id <= 0){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
         establecimientoService.eliminarEstablecimiento(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

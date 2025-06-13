@@ -3,6 +3,7 @@ package com.bromatologia.backend.Controller;
 
 import com.bromatologia.backend.Entity.Titular;
 import com.bromatologia.backend.Service.TitularService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,42 +27,27 @@ public class TitularController {
         return new ResponseEntity<>(listaTitulares, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{cuit}")
     public ResponseEntity<Titular> obtenerTitular(@PathVariable long cuit) {
-        if(cuit <= 0){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
         Titular buscado = titularService.obtenerTitularPorCuit(cuit);
-        if(buscado == null){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }else{
-            return new ResponseEntity<>(buscado, HttpStatus.OK);
-        }
+        return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 
     @PostMapping("/")
-    public ResponseEntity<Titular> crearTitular(@RequestBody Titular titular) {
-        if(titular == null){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+    public ResponseEntity<Titular> crearTitular(@RequestBody @Valid Titular titular) {
         Titular nuevoTitular = titularService.crearTitular(titular);
         return new ResponseEntity<>(nuevoTitular, HttpStatus.CREATED);
     }
 
     @PutMapping("/")
-    public ResponseEntity<Titular> actualizarTitular(@RequestBody Titular titular) {
-        if(titular == null){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+    public ResponseEntity<Titular> actualizarTitular(@RequestBody @Valid Titular titular) {
+
         Titular nuevoTitular = titularService.actualizarTitular(titular);
         return new ResponseEntity<>(nuevoTitular, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{cuit}")
     public ResponseEntity<String> eliminarTitular(@PathVariable long cuit) {
-        if(cuit <= 0){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
         titularService.eliminarTitular(cuit);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

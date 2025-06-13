@@ -2,6 +2,7 @@ package com.bromatologia.backend.Controller;
 
 import com.bromatologia.backend.Entity.Empresa;
 import com.bromatologia.backend.Service.EmpresaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,6 @@ public class EmpresaController {
     @GetMapping("/")
     public ResponseEntity<List<Empresa>> obtenerEmpresas(){
         List<Empresa> empresas = empresaService.obtenerEmpresas();
-        if(empresas.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
         return new ResponseEntity<>(empresas, HttpStatus.OK);
     }
 
@@ -32,13 +30,13 @@ public class EmpresaController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Empresa> crearEmpresa(@RequestBody Empresa empresa) {
+    public ResponseEntity<Empresa> crearEmpresa(@RequestBody @Valid Empresa empresa) {
         Empresa nuevaEmpresa = empresaService.crearEmpresa(empresa);
         return new ResponseEntity<>(nuevaEmpresa, HttpStatus.CREATED);
     }
 
     @PutMapping("/")
-    public ResponseEntity<Empresa> actualizarEmpresa(@RequestBody Empresa empresa) {
+    public ResponseEntity<Empresa> actualizarEmpresa(@RequestBody @Valid Empresa empresa) {
         Empresa nuevaEmpresa = empresaService.actualizarEmpresa(empresa);
         return new ResponseEntity<>(nuevaEmpresa, HttpStatus.OK);
     }
