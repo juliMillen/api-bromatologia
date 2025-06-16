@@ -1,9 +1,7 @@
 package com.bromatologia.backend.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +21,13 @@ public class Empresa {
 
     @OneToMany(mappedBy = "empresa", fetch = FetchType.LAZY)
     private List<Establecimiento> establecimientos = new ArrayList<>();
+
+    @OneToOne(mappedBy = "empresa",fetch = FetchType.LAZY)
+    private Titular titular;
+
+    @NotBlank
     private String email;
+    @NotBlank
     private long telefono;
 
 }

@@ -1,6 +1,9 @@
 package com.bromatologia.backend.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,12 +37,16 @@ public class RegistroProducto {
     )
     private List<RegistroEstablecimiento> registrosEstablecimientos = new ArrayList<>();
 
+    @NotNull(message = "El numero de RNPA es obligatorio")
     private long nroRnpaActual;
 
+    @NotBlank(message = "El tipo no puede estar vacio")
     private String tipo;
 
+    @NotNull(message = "La fecha de emision es obligatoria")
     private Date fecha_Emision;
 
+    @NotNull(message = "El numero anterior de RNPA es obligatorio")
     private long nroAnteriorRnpa;
 
     private String certificado;

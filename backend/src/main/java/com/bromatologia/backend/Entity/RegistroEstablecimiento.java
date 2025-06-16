@@ -1,6 +1,9 @@
 package com.bromatologia.backend.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,15 +36,19 @@ public class RegistroEstablecimiento {
     @ManyToMany(mappedBy = "establecimientos",fetch = FetchType.LAZY)
     private List<RegistroProducto> registroProductos;
 
+    @NotBlank(message = "la categoria anterior no puede estar vacia")
     private String categoriaAnt;
 
+    @NotNull(message = "El arancel no puede estar vacio")
     private double arancel;
 
+    @NotNull(message = "La fecha de emision es obligatoria")
     private Date fechaEmision;
 
+    @NotNull(message = "La fecha de vencimiento es obligatoria")
     private Date fechaVencimiento;
 
+    @NotBlank(message = "El estado no puede estar vacio")
     private String estado;
-
 
 }

@@ -15,6 +15,6 @@ public class Tramite {
     private long id_tramite;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recibos", nullable = false)
+    @JoinColumn(name = "id_recibo", nullable = false)
     private Recibo recibo;
 }
