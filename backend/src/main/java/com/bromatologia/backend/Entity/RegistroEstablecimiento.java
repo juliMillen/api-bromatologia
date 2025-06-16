@@ -20,7 +20,7 @@ public class RegistroEstablecimiento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_registro_establecimiento;
+    private long id_Registro_establecimiento;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_titular", nullable = false)
@@ -33,8 +33,8 @@ public class RegistroEstablecimiento {
     @OneToMany(mappedBy = "registroEstablecimiento", fetch = FetchType.LAZY)
     private List<Mantenimiento> mantenimiento = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "establecimientos",fetch = FetchType.LAZY)
-    private List<RegistroProducto> registroProductos;
+    @OneToMany(mappedBy = "regitroEstablecimiento", fetch = FetchType.LAZY)
+    private List<RegistroProducto> registroProductos = new ArrayList<>();
 
     @NotBlank(message = "la categoria anterior no puede estar vacia")
     private String categoriaAnt;

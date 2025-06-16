@@ -20,7 +20,7 @@ public class RegistroProducto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_registroProducto;
+    private long id_RegistroProducto;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto_id")
@@ -29,27 +29,12 @@ public class RegistroProducto {
     @OneToMany(mappedBy = "registroProducto",fetch = FetchType.LAZY)
     private List<Mantenimiento> mantenimiento = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "registro_producto_Establecimiento",
-            joinColumns = @JoinColumn(name = "registro_producto_id"),
-            inverseJoinColumns = @JoinColumn(name = "registro_establecimiento_id")
-    )
-    private List<RegistroEstablecimiento> registrosEstablecimientos = new ArrayList<>();
 
-    @NotNull(message = "El numero de RNPA es obligatorio")
-    private long nroRnpaActual;
+    @OneToMany(mappedBy = "registroProducto",fetch = FetchType.LAZY)
+    private List<RegistroEstablecimiento> registrosPorEstablecimientos = new ArrayList<>();
+
 
     @NotBlank(message = "El tipo no puede estar vacio")
     private String tipo;
 
-    @NotNull(message = "La fecha de emision es obligatoria")
-    private Date fecha_Emision;
-
-    @NotNull(message = "El numero anterior de RNPA es obligatorio")
-    private long nroAnteriorRnpa;
-
-    private String certificado;
-
-    private long expediente;
 }

@@ -19,6 +19,10 @@ public class Producto {
     @OneToOne(mappedBy = "producto", fetch = FetchType.LAZY)
     private RegistroProducto registroProducto;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "establecimiento_producto",nullable = false)
+    private Establecimiento establecimiento;
+
     @NotBlank(message = "La marca no puede estar vacia")
     private String marca;
 
