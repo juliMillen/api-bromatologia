@@ -2,6 +2,7 @@ package com.bromatologia.backend.Controller;
 
 import com.bromatologia.backend.Entity.Usuario;
 import com.bromatologia.backend.Service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<Usuario>> listarUsuarios() {
         List<Usuario> listaUsuarios = usuarioService.obtenerUsuarios();
         if (listaUsuarios.isEmpty()) {
@@ -30,22 +31,25 @@ public class UsuarioController {
         return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Usuario> guardarUsuario(@RequestBody Usuario usuario) {
         Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
-    @PutMapping("/")
-    public ResponseEntity<Usuario> actualizarUsuario(@RequestBody Usuario usuario) {
-        Usuario aModificar = usuarioService.modificarUsuario(usuario);
+    @PutMapping("/{id}")
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable long id, @Valid @RequestBody Usuario usuario) {
+        Usuario aModificar = usuarioService.modificarUsuario(id,usuario);
         return new ResponseEntity<>(aModificar, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Usuario> eliminarUsuario(@PathVariable long id) {
-        Usuario usuario = usuarioService.obtenerUsuarioPorId(id);
-        usuarioService.eliminarUsuario(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> eliminarUsuario(@PathVariable long id) {
+        try {
+            usuarioService.eliminarUsuario(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
