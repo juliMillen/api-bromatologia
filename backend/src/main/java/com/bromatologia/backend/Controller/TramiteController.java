@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tramite")
-@CrossOrigin("http://localhost:4200/")
+//@CrossOrigin("http://localhost:4200/")
 public class TramiteController {
     @Autowired
     private TramiteService tramiteService;

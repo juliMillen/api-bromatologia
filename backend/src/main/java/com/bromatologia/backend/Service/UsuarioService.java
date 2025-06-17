@@ -1,9 +1,8 @@
 package com.bromatologia.backend.Service;
 
 import com.bromatologia.backend.Entity.Usuario;
-import com.bromatologia.backend.Enum.Rol;
 import com.bromatologia.backend.Exception.UsuarioException;
-import com.bromatologia.backend.Repository.IUsuarioRepositoy;
+import com.bromatologia.backend.Repository.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +11,7 @@ import java.util.List;
 @Service
 public class UsuarioService {
     @Autowired
-    private IUsuarioRepositoy usuarioRepository;
+    private IUsuarioRepository usuarioRepository;
 
     public List<Usuario> obtenerUsuarios(){
         return usuarioRepository.findAll();

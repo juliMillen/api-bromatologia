@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/titular")
-@CrossOrigin("http://localhost:4200/")
+//@CrossOrigin("http://localhost:4200/")
 public class TitularController {
     @Autowired
     private TitularService titularService;

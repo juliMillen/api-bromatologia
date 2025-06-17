@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/registroProducto")
-@CrossOrigin("http://localhost:4200/")
+//@CrossOrigin("http://localhost:4200/")
 public class RegistroProductoController {
     @Autowired
     private RegistroProductoService registroProductoService;
