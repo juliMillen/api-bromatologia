@@ -18,10 +18,10 @@ public class UsuarioDetailsService implements UserDetailsService {
     private IUsuarioRepository usuarioRepository;
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
-        Usuario usuario = usuarioRepository.obtenerUsuarioPorNombre(username).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        Usuario usuario = usuarioRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + usuario.getRol().name());
         return new User(
-                usuario.getNombreUsuario(),
+                usuario.getUsername(),
                 usuario.getPassword(),
                 List.of(authority)
         );

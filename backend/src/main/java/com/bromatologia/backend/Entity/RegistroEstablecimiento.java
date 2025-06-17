@@ -33,7 +33,7 @@ public class RegistroEstablecimiento {
     @OneToMany(mappedBy = "registroEstablecimiento", fetch = FetchType.LAZY)
     private List<Mantenimiento> mantenimiento = new ArrayList<>();
 
-    @OneToMany(mappedBy = "regitroEstablecimiento", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "registroEstablecimiento", fetch = FetchType.LAZY)
     private List<RegistroProducto> registroProductos = new ArrayList<>();
 
     @NotBlank(message = "la categoria anterior no puede estar vacia")

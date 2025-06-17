@@ -34,7 +34,7 @@ public class UsuarioService {
     public Usuario modificarUsuario(Usuario usuario){
         if(usuario != null){
             Usuario nuevoUsuario = usuarioRepository.findById(usuario.getId()).orElseThrow(()-> new UsuarioException("Usuario no encontrado"));
-            nuevoUsuario.setNombreUsuario(usuario.getNombreUsuario());
+            nuevoUsuario.setUsername(usuario.getUsername());
             nuevoUsuario.setPassword(usuario.getPassword());
             nuevoUsuario.setRol(usuario.getRol());
             return usuarioRepository.save(nuevoUsuario);

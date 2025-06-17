@@ -31,7 +31,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Usuario> insertarUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<Usuario> guardarUsuario(@RequestBody Usuario usuario) {
         Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }

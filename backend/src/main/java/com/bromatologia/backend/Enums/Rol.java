@@ -1,4 +1,4 @@
-package com.bromatologia.backend.Enum;
+package com.bromatologia.backend.Enums;
 
 public enum Rol {
     ADMIN,

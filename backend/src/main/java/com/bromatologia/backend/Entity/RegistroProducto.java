@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -30,8 +29,9 @@ public class RegistroProducto {
     private List<Mantenimiento> mantenimiento = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "registroProducto",fetch = FetchType.LAZY)
-    private List<RegistroEstablecimiento> registrosPorEstablecimientos = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_registro_establecimiento")
+    private RegistroEstablecimiento registroEstablecimiento;
 
 
     @NotBlank(message = "El tipo no puede estar vacio")

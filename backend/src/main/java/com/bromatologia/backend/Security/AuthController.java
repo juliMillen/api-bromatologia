@@ -1,7 +1,7 @@
 package com.bromatologia.backend.Security;
 
 import com.bromatologia.backend.Entity.Usuario;
-import com.bromatologia.backend.Enum.Rol;
+import com.bromatologia.backend.Enums.Rol;
 import com.bromatologia.backend.Repository.IUsuarioRepository;
 import com.bromatologia.backend.Security.DTO.JwtResponse;
 import com.bromatologia.backend.Security.DTO.LoginRequests;
@@ -46,7 +46,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?>register(@RequestBody RegisterRequest registerRequest) {
-        if(usuarioRepository.obtenerUsuarioPorNombre(registerRequest.getUsername()).isPresent()) {
+        if(usuarioRepository.findByUsername(registerRequest.getUsername()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuario ya existe");
         }
         String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
