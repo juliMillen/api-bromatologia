@@ -2,7 +2,6 @@ package com.bromatologia.backend.Entity;
 
 import com.bromatologia.backend.Enum.Rol;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -27,5 +26,11 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     @NotEmpty(message = "El usuario debe tener un rol asignado")
     private Rol rol;
+
+    public Usuario(String nombreUsuario, String password, Rol rol){
+        this.nombreUsuario = nombreUsuario;
+        this.password = password;
+        this.rol = rol;
+    }
 
 }
