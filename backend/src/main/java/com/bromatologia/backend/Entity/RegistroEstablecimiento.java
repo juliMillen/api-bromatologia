@@ -20,7 +20,7 @@ public class RegistroEstablecimiento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_Registro_establecimiento;
+    private long id_registroEstablecimiento;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_titular", nullable = false)

@@ -42,11 +42,11 @@ public class TitularService {
     }
 
 
-    public Titular actualizarTitular(Titular titular) {
-        if (titular == null) {
+    public Titular actualizarTitular(Long cuit,Titular titular) {
+        if (titular == null || cuit == null || cuit <= 0) {
             throw new TitularException("El titular no puede ser nulo");
         }
-        Titular aActualizar = titularRepository.findById(titular.getCuit_titular()).orElseThrow(() -> new TitularException("No existe titular con ese cuit"));
+        Titular aActualizar = titularRepository.findById(cuit).orElseThrow(() -> new TitularException("No existe titular con ese cuit"));
         aActualizar.setNombreTitular(titular.getNombreTitular());
         aActualizar.setEmail(titular.getEmail());
         aActualizar.setTelefono(titular.getTelefono());

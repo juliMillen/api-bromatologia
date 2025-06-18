@@ -40,11 +40,11 @@ public class ProductoService {
     }
 
 
-    public Producto editarProducto(Producto producto) {
-        if (producto == null) {
+    public Producto editarProducto(Long id,Producto producto) {
+        if (producto == null || id == null || id <= 0) {
             throw new ProductoException("Los campos no pueden ser nulos");
         }
-        Producto aActualizar = productoRepository.findById(producto.getId_Producto()).orElseThrow(() -> new ProductoException("El id no encontrado"));
+        Producto aActualizar = productoRepository.findById(id).orElseThrow(() -> new ProductoException("El id no encontrado"));
         aActualizar.setDenominacion(producto.getDenominacion());
         aActualizar.setMarca(producto.getMarca());
         aActualizar.setNombreFantasia(producto.getNombreFantasia());

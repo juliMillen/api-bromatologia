@@ -27,9 +27,9 @@ public class TitularController {
         return new ResponseEntity<>(listaTitulares, HttpStatus.OK);
     }
 
-    @GetMapping("/{cuit}")
-    public ResponseEntity<Titular> obtenerTitular(@PathVariable long cuit) {
-        Titular buscado = titularService.obtenerTitularPorCuit(cuit);
+    @GetMapping("/{cuit_Titular}")
+    public ResponseEntity<Titular> obtenerTitular(@PathVariable long cuit_Titular) {
+        Titular buscado = titularService.obtenerTitularPorCuit(cuit_Titular);
         return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 
@@ -39,16 +39,16 @@ public class TitularController {
         return new ResponseEntity<>(nuevoTitular, HttpStatus.CREATED);
     }
 
-    @PutMapping("/")
-    public ResponseEntity<Titular> actualizarTitular(@RequestBody @Valid Titular titular) {
+    @PutMapping("/{cuit_Titular}")
+    public ResponseEntity<Titular> actualizarTitular(long cuit_Titular,@RequestBody @Valid Titular titular) {
 
-        Titular nuevoTitular = titularService.actualizarTitular(titular);
+        Titular nuevoTitular = titularService.actualizarTitular(cuit_Titular,titular);
         return new ResponseEntity<>(nuevoTitular, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{cuit}")
-    public ResponseEntity<String> eliminarTitular(@PathVariable long cuit) {
-        titularService.eliminarTitular(cuit);
+    @DeleteMapping("/{cuit_Titular}")
+    public ResponseEntity<String> eliminarTitular(@PathVariable long cuit_Titular) {
+        titularService.eliminarTitular(cuit_Titular);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

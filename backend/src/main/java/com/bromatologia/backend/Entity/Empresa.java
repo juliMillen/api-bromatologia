@@ -2,6 +2,7 @@ package com.bromatologia.backend.Entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,12 +23,14 @@ public class Empresa {
     @OneToMany(mappedBy = "empresa", fetch = FetchType.LAZY)
     private List<Establecimiento> establecimientos = new ArrayList<>();
 
-    @OneToOne(mappedBy = "empresa",fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cuit_Titular")
     private Titular titular;
 
     @NotBlank
     private String email;
     @NotBlank
-    private long telefono;
+    @Pattern(regexp = "^\\+?\\d{7,15}$", message = "Formato de teléfono inválido")
+    private String telefono;
 
 }

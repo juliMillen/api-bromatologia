@@ -35,15 +35,15 @@ public class EmpresaController {
         return new ResponseEntity<>(nuevaEmpresa, HttpStatus.CREATED);
     }
 
-    @PutMapping("/")
-    public ResponseEntity<Empresa> actualizarEmpresa(@RequestBody @Valid Empresa empresa) {
-        Empresa nuevaEmpresa = empresaService.actualizarEmpresa(empresa);
+    @PutMapping("/{cuit_Empresa}")
+    public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable Long cuit_Empresa,@RequestBody @Valid Empresa empresa) {
+        Empresa nuevaEmpresa = empresaService.actualizarEmpresa(cuit_Empresa,empresa);
         return new ResponseEntity<>(nuevaEmpresa, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Empresa> eliminarEmpresa(@PathVariable long id) {
-        empresaService.eliminarEmpresaPorId(id);
+    @DeleteMapping("/{cuit_Empresa}")
+    public ResponseEntity<Void> eliminarEmpresa(@PathVariable long cuit_Empresa) {
+        empresaService.eliminarEmpresaPorId(cuit_Empresa);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

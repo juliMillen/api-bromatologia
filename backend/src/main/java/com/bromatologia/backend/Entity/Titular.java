@@ -1,10 +1,7 @@
 package com.bromatologia.backend.Entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,8 +15,7 @@ public class Titular {
     @Id
     private long cuit_titular;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cuit_empresa")
+    @OneToOne(mappedBy = "titular",fetch = FetchType.LAZY)
     private Empresa empresa;
 
     @NotBlank(message = "El nombre del titular es obligatorio")
@@ -29,5 +25,6 @@ public class Titular {
     private String email;
 
     @NotNull(message = "El telefono no puede ser nulo")
-    private long telefono;
+    @Pattern(regexp = "^\\+?\\d{7,15}$", message = "Formato de teléfono inválido")
+    private String telefono;
 }

@@ -43,11 +43,11 @@ public class EmpresaService {
         empresaRepository.delete(aEliminar);
     }
 
-    public Empresa actualizarEmpresa(Empresa empresa) {
-        if (empresa == null) {
-            throw new EmpresaException("Empresa no encontrada");
+    public Empresa actualizarEmpresa(Long cuit,Empresa empresa) {
+        if (empresa == null || cuit <= 0) {
+            throw new EmpresaException("Empresa no encontrada o cuit invalido");
         }
-        Empresa aActualizar = empresaRepository.findById(empresa.getCuit_Empresa()).orElseThrow(() -> new EmpresaException("Empresa no encontrada"));
+        Empresa aActualizar = empresaRepository.findById(cuit).orElseThrow(() -> new EmpresaException("Empresa no encontrada"));
         aActualizar.setEmail(empresa.getEmail());
         aActualizar.setTelefono(empresa.getTelefono());
 
