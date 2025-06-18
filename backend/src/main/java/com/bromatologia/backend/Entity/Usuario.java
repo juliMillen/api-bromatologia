@@ -24,7 +24,7 @@ public class Usuario {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @NotEmpty(message = "El usuario debe tener un rol asignado")
+    @NotNull(message = "El usuario debe tener un rol asignado")
     private Rol rol;
 
     public Usuario(String username, String password, Rol rol){
