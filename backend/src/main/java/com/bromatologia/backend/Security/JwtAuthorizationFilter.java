@@ -26,11 +26,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String path= request.getServletPath();
-        /*/excluimmos por ahora /login y /register del filtro JWT
+
         if(path.equals("/login") || path.equals("/register")){
             filterChain.doFilter(request, response);
             return;
-        }*/
+        }
 
         String header = request.getHeader("Authorization");
 
@@ -40,16 +40,22 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
 
         try{
-            Claims claims = jwtUtils.getClaims(header);
-            String username = claims.getSubject();
-            List<String> roles = claims.get("authorities", List.class);
+            if(jwtUtils.validarToken(header)){
+                Claims claims = jwtUtils.getClaims(header);
+                String username = claims.getSubject();
+                List<String> roles = claims.get("authorities", List.class);
 
-            List<SimpleGrantedAuthority> authorities = roles.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
+                List<SimpleGrantedAuthority> authorities = roles.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
 
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
-            SecurityContextHolder.getContext().setAuthentication(auth);
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }else{
+                //Token invalido
+                SecurityContextHolder.clearContext();
+            }
+
         }catch(Exception e){
             //Si el token es invalido o ya expiro, limpiamos el contexto
             SecurityContextHolder.clearContext();
