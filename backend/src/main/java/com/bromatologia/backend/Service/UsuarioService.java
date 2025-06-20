@@ -1,9 +1,11 @@
 package com.bromatologia.backend.Service;
 
 import com.bromatologia.backend.Entity.Usuario;
+import com.bromatologia.backend.Enums.Rol;
 import com.bromatologia.backend.Exception.UsuarioException;
 import com.bromatologia.backend.Repository.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.Optional;
 public class UsuarioService {
     @Autowired
     private IUsuarioRepository usuarioRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<Usuario> obtenerUsuarios(){
         return usuarioRepository.findAll();
@@ -45,29 +49,22 @@ public class UsuarioService {
 
         if(usuario.getUsername() != null){
             String nuevoUsername = usuario.getUsername();
-            if(nuevoUsername.isEmpty()){
-                throw new UsuarioException("El nombre de usuario no puede ser nulo");
+            if(nuevoUsername.isEmpty() && !nuevoUsername.equals(aModificar.getUsername())){
+                validarUsername(nuevoUsername);
+                aModificar.setUsername(nuevoUsername);
             }
-
-            if(!nuevoUsername.equals(usuario.getUsername())){
-                Optional<Usuario> usuarioConMismoNombre = usuarioRepository.findByUsername(nuevoUsername);
-                if(usuarioConMismoNombre.isPresent()){
-                    throw new UsuarioException("El nombre de usuario ya existe");
-                }
-            }
-
-            aModificar.setUsername(nuevoUsername);
         }
 
         if(usuario.getPassword() != null){
             String nuevoPassword = usuario.getPassword().trim();
-            if(!nuevoPassword.isEmpty()){
-                aModificar.setPassword(nuevoPassword);
-            }
+            validarPassword(nuevoPassword);
+            aModificar.setPassword(passwordEncoder.encode(nuevoPassword)); //encriptamos la nueva contraseña
         }
 
         if(usuario.getRol() != null){
-            aModificar.setRol(usuario.getRol());
+            String nuevoRol = usuario.getRol().name(); //convertir enum --> string
+            validarRol(nuevoRol); // validar ese string
+            aModificar.setRol(Rol.valueOf(nuevoRol)); // Volver a conver string --> enum
         }
         return usuarioRepository.save(aModificar);
     }
@@ -79,4 +76,35 @@ public class UsuarioService {
         Usuario aEliminar = usuarioRepository.findById(id).orElseThrow(()-> new UsuarioException("Usuario no encontrado"));
         usuarioRepository.delete(aEliminar);
     }
+
+
+    private void validarUsername(String username){
+        if( username == null ||username.trim().isEmpty()){
+            throw new UsuarioException("El nombre de usuario no puede ser nulo");
+        }
+
+        if(usuarioRepository.findByUsername(username).isPresent()){
+            throw new UsuarioException("El nombre de usuario ya existe");
+        }
+    }
+
+    private void validarPassword(String password){
+        if(password == null || password.trim().isEmpty()){
+            throw new UsuarioException("El password no puede ser nulo");
+        }
+    }
+
+    private void validarRol(String rol){
+        if(rol == null || rol.trim().isEmpty()){
+            throw new UsuarioException("El rol no puede ser nulo");
+        }
+
+        try{
+            Rol.valueOf(rol.toUpperCase()); //Aseguro que sea un nombre valido del enum
+        }catch(IllegalArgumentException e){
+            throw new UsuarioException("El rol no es valido");
+        }
+    }
+
 }
+
