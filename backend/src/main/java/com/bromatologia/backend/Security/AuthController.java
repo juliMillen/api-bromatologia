@@ -34,25 +34,42 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?>login(@RequestBody LoginRequests loginRequests) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequests.getUsername(), loginRequests.getPassword()
-                )
-        );
-        String token = jwtUtils.generateToken(authentication);
-        return ResponseEntity.ok(new JwtResponse(token));
+
+        System.out.println("=== DEBUG LOGIN ===");
+        System.out.println("Username recibido: " + loginRequests.getUsername());
+        System.out.println("Password recibido: " + loginRequests.getPassword());
+        try{
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequests.getUsername(), loginRequests.getPassword()
+                    )
+            );
+            System.out.println("Autenticacion Exitosa");
+            String token = jwtUtils.generateToken(authentication);
+            return ResponseEntity.ok(new JwtResponse(token));
+        }catch(Exception e){
+            System.out.println("Error en autenticación: " + e.getClass().getSimpleName());
+            System.out.println("Mensaje de error: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
     }
 
 
     @PostMapping("/register")
     public ResponseEntity<?>register(@RequestBody RegisterRequest registerRequest) {
-        if(usuarioRepository.findByUsername(registerRequest.getUsername()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuario ya existe");
+        try{
+            String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
+            Rol rolEnum = Rol.valueOf(registerRequest.getRole().toUpperCase()); //convierte todo a mayuscula sin importar que se lo pase en minuscula
+            Usuario nuevoUsuario = new Usuario(registerRequest.getUsername(), hashedPassword, rolEnum);
+            usuarioRepository.save(nuevoUsuario);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
+        }catch(IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Rol invalido");
         }
-        String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
-        Rol rolEnum = Rol.valueOf(registerRequest.getRole().toUpperCase()); //convierte todo a mayuscula sin importar que se lo pase en minuscula
-        Usuario nuevoUsuario = new Usuario(registerRequest.getUsername(), hashedPassword, rolEnum);
-        usuarioRepository.save(nuevoUsuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el usuario");
+        }
     }
 }

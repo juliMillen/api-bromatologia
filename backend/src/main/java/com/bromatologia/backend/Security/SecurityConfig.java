@@ -24,8 +24,6 @@ public class SecurityConfig {
 
 
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
-
-
     private final UsuarioDetailsService usuarioDetailsService;
 
 
@@ -51,6 +49,7 @@ public class SecurityConfig {
         builder.userDetailsService(usuarioDetailsService).passwordEncoder(passwordEncoder());
         return builder.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

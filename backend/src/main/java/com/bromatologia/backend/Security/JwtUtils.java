@@ -1,69 +1,77 @@
 package com.bromatologia.backend.Security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 public class JwtUtils {
     //clase que genera el token
 
-    private final String SECRET_KEY = "secretKey";
-    private final long EXPIRATION_TIME = 1000 * 60 * 30; // 30 minutos de duracion
+    @Value("${jwt.secret:mySecretKey}")
+    private String jwtSecret;
+
+    @Value("${jwt.expiration:86400000}") //24 horas por defecto
+    private int jwtExpiration;
+
 
     public String generateToken(Authentication authentication) {
-        Object principal = authentication.getPrincipal();
+        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 
-        String username;
-        Collection<? extends GrantedAuthority> authorities;
-        if (principal instanceof User) {
-            User user = (User) principal;
-            username = user.getUsername();
-            authorities = user.getAuthorities();
-        }else{
-            username = principal.toString();
-            authorities = Collections.emptySet();
-        }
-
+        List<String> authorities = userPrincipal.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
 
         return Jwts.builder()
-                .setSubject(username)
-                .claim("authorities", authorities.stream()
-                .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .setSubject(userPrincipal.getUsername())
+                .claim("authorities", authorities)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY.getBytes())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
 
     }
 
     public Claims getClaims(String token) {
-        try {
-            return Jwts.parser()
-                    .setSigningKey(SECRET_KEY.getBytes())
-                    .parseClaimsJws(token.replace("Bearer ", ""))
-                    .getBody();
-        } catch (Exception e) {
-            throw new RuntimeException("Token invalido" + e);
-        }
+
+        return Jwts.parser()
+                .setSigningKey(getSigningKey())
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     //Metodo adicional para validar token
     public boolean validarToken(String token){
         try{
-            Claims claims = getClaims(token);
-            return !claims.getExpiration().before(new Date());
-        }catch (Exception e){
+            String jwt = token.replace("Bearer ", "");
+            Jwts.parser()
+                    .setSigningKey(getSigningKey())
+                    .parseClaimsJws(jwt);
+            return true;
+        }catch (JwtException  | IllegalFormatException e){
             return false;
         }
+    }
+
+    //Metodo para obtener el usuario por token
+    public String getUsernameFromToken(String token){
+        return getClaims(token).getSubject();
+    }
+
+    //creacion de llave secreta
+    private SecretKey getSigningKey(){
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 }
