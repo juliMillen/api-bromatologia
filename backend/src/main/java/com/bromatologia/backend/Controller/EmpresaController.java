@@ -1,6 +1,7 @@
 package com.bromatologia.backend.Controller;
 
 import com.bromatologia.backend.Entity.Empresa;
+import com.bromatologia.backend.Entity.Establecimiento;
 import com.bromatologia.backend.Service.EmpresaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,18 @@ public class EmpresaController {
         return new ResponseEntity<>(empresas, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Empresa> obtenerEmpresaPorId(@PathVariable long id) {
-        Empresa empresa = empresaService.obtenerEmpresaPorId(id);
+    @GetMapping("/{cuit_Empresa}")
+    public ResponseEntity<Empresa> obtenerEmpresaPorId(@PathVariable Long cuit_Empresa) {
+        Empresa empresa = empresaService.obtenerEmpresaPorId(cuit_Empresa);
         return new ResponseEntity<>(empresa, HttpStatus.OK);
     }
+
+    @GetMapping("/{cuit}/establecimientos")
+    public ResponseEntity<List<Establecimiento>> obtenerEstablecimientosDeEmpresa(@PathVariable Long cuit) {
+        Empresa empresa = empresaService.obtenerEmpresaPorId(cuit);
+        return new ResponseEntity<>(empresa.getEstablecimientos(), HttpStatus.OK);
+    }
+
 
     @PostMapping("/")
     public ResponseEntity<Empresa> crearEmpresa(@RequestBody @Valid Empresa empresa) {
@@ -35,7 +43,13 @@ public class EmpresaController {
         return new ResponseEntity<>(nuevaEmpresa, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{cuit_Empresa}")
+    @PostMapping("/{cuit_Empresa}/establecimientos")
+    public ResponseEntity<Establecimiento> agregarEstablecimiento(@PathVariable Long cuit_Empresa, @RequestBody @Valid Establecimiento establecimiento){
+        Establecimiento creado = empresaService.agregarEstablecimiento(cuit_Empresa, establecimiento);
+        return new ResponseEntity<>(creado, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{cuit_Empresa}")
     public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable Long cuit_Empresa,@RequestBody @Valid Empresa empresa) {
         Empresa nuevaEmpresa = empresaService.actualizarEmpresa(cuit_Empresa,empresa);
         return new ResponseEntity<>(nuevaEmpresa, HttpStatus.OK);
@@ -46,4 +60,5 @@ public class EmpresaController {
         empresaService.eliminarEmpresaPorId(cuit_Empresa);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }

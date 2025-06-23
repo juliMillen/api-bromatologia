@@ -1,5 +1,6 @@
 package com.bromatologia.backend.Entity;
 
+import com.bromatologia.backend.Exception.MantenimientoException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -13,7 +14,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Mantenimiento {
     @Id
@@ -28,8 +28,8 @@ public class Mantenimiento {
     @JoinColumn(name = "registro_producto", nullable = false)
     private RegistroProducto registroProducto;
 
-    @OneToMany(mappedBy = "mantenimiento")
-    private List<Recibo> recibos = new ArrayList<>();
+    @OneToMany(mappedBy = "mantenimiento", cascade = CascadeType.ALL)
+    private List<Tramite> tramites = new ArrayList<>();
 
     @NotNull(message = "La fecha de mantenimiento es obligatoria")
     private Date fecha_mantenimiento;
@@ -37,5 +37,20 @@ public class Mantenimiento {
     private String tramiteAsociado;
 
     private String enlaceRecibido;
+
+    public Mantenimiento(Date fecha_mantenimiento, String tramiteAsociado, String enlaceRecibido){
+        this.fecha_mantenimiento = fecha_mantenimiento;
+        this.tramiteAsociado = tramiteAsociado;
+        this.enlaceRecibido = enlaceRecibido;
+    }
+
+    public void agregarTramite(Tramite tramite){
+        if(tramite != null){
+            tramite.setMantenimiento(this);
+            this.tramites.add(tramite);
+        }else{
+            throw new MantenimientoException("El tramite es nulo");
+        }
+    }
 
 }

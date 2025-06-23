@@ -1,6 +1,9 @@
 package com.bromatologia.backend.Controller;
 
+import com.bromatologia.backend.Entity.Empresa;
+import com.bromatologia.backend.Entity.Establecimiento;
 import com.bromatologia.backend.Entity.Mantenimiento;
+import com.bromatologia.backend.Entity.Tramite;
 import com.bromatologia.backend.Service.MantenimientoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +33,23 @@ public class MantenimientoController {
         return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/tramites")
+    public ResponseEntity<List<Tramite>> obtenerTramitesPorMantenimiento(@PathVariable Long id) {
+        Mantenimiento buscado = mantenimientoService.obtenerMantenimiento(id);
+        return new ResponseEntity<>(buscado.getTramites(), HttpStatus.OK);
+    }
+
     @PostMapping("/")
     public ResponseEntity<Mantenimiento> registrarMantenimiento(@RequestBody @Valid Mantenimiento mantenimiento){
 
         Mantenimiento registrado = mantenimientoService.registrarMantenimiento(mantenimiento);
         return new ResponseEntity<>(registrado, HttpStatus.CREATED);
+    }
+
+    @PostMapping("{id}/tramites")
+    public ResponseEntity<Tramite> agregarTramite(@PathVariable long id, @RequestBody @Valid Tramite tramite){
+        Tramite nuevo = mantenimientoService.agregarTramite(id, tramite);
+        return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

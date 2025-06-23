@@ -7,7 +7,6 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Titular {
 
@@ -26,4 +25,10 @@ public class Titular {
     @NotNull(message = "El telefono no puede ser nulo")
     @Pattern(regexp = "^\\+?\\d{7,15}$", message = "Formato de teléfono inválido")
     private String telefono;
+
+    public Titular(String nombreTitular, String email, String telefono) {
+        this.nombreTitular = nombreTitular;
+        this.email = email;
+        this.telefono = telefono;
+    }
 }

@@ -1,28 +1,32 @@
 package com.bromatologia.backend.Entity;
 
+import com.bromatologia.backend.Exception.EstablecimientoException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Establecimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id_Establecimiento;
 
+    @OneToOne(mappedBy = "establecimiento", fetch = FetchType.LAZY)
+    private RegistroEstablecimiento registroEstablecimiento;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id",nullable = false)
     private Empresa empresa;
 
     @OneToMany(mappedBy = "establecimiento",fetch = FetchType.LAZY)
-    private List<Producto> productos;
+    private List<Producto> productos = new ArrayList<>();
 
     @NotBlank(message = "El departamento no puede estar vacio")
     private String departamento;
@@ -32,4 +36,22 @@ public class Establecimiento {
     private String calle;
     @NotNull(message = "El numero de la calle no puede estar vacia")
     private int nroCalle;
+
+
+    public Establecimiento(String departamento, String localidad, String calle, int nroCalle) {
+        this.departamento = departamento;
+        this.localidad = localidad;
+        this.calle = calle;
+        this.nroCalle = nroCalle;
+    }
+
+    public void agregarProductos(Producto producto) {
+        if(producto != null) {
+            producto.setEstablecimiento(this); //bidireccionalidad
+            productos.add(producto);
+        }else{
+            throw new EstablecimientoException("El producto es nulo");
+        }
+    }
+
 }

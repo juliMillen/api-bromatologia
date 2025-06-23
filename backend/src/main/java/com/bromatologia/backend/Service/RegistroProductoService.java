@@ -1,8 +1,15 @@
 package com.bromatologia.backend.Service;
 
+import com.bromatologia.backend.Entity.Mantenimiento;
+import com.bromatologia.backend.Entity.Producto;
+import com.bromatologia.backend.Entity.RegistroEstablecimiento;
 import com.bromatologia.backend.Entity.RegistroProducto;
 import com.bromatologia.backend.Exception.RegistroProductoException;
+import com.bromatologia.backend.Repository.IMantenimientoRepository;
+import com.bromatologia.backend.Repository.IProductoRepository;
+import com.bromatologia.backend.Repository.IRegistroEstablecimientoRepository;
 import com.bromatologia.backend.Repository.IRegistroProductoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +19,15 @@ import java.util.List;
 public class RegistroProductoService {
     @Autowired
     private IRegistroProductoRepository registroProductoRepository;
+
+    @Autowired
+    private IRegistroEstablecimientoRepository registroEstablecimientoRepository;
+
+    @Autowired
+    private IProductoRepository productoRepository;
+
+    @Autowired
+    private IMantenimientoRepository mantenimientoRepository;
 
     public List<RegistroProducto> obtenerRegistrosProducto() {
         return registroProductoRepository.findAll();
@@ -37,5 +53,29 @@ public class RegistroProductoService {
         }
         RegistroProducto aEliminar = registroProductoRepository.findById(id).orElseThrow(() -> new RegistroProductoException("El id del registro no existe"));
         registroProductoRepository.delete(aEliminar);
+    }
+
+    @Transactional
+    public Producto asignarProducto(Long id, Producto producto){
+        RegistroProducto registro = registroProductoRepository.findById(id).orElseThrow(() -> new RegistroProductoException("El id del registro no se ha encontrado"));
+        productoRepository.save(producto);
+        registro.asignarProducto(producto);
+        return producto;
+    }
+
+    @Transactional
+    public RegistroEstablecimiento asignarRegistroEstablecimiento(Long id, RegistroEstablecimiento registroEstablecimiento){
+        RegistroProducto registro = registroProductoRepository.findById(id).orElseThrow(() -> new RegistroProductoException("El id del registro no se ha encontrado"));
+        registro.asignarRegistroEstablecimientos(registroEstablecimiento);
+        registroEstablecimientoRepository.save(registroEstablecimiento);
+        return registroEstablecimiento;
+    }
+
+    @Transactional
+    public Mantenimiento agregarMantenimiento(Long id, Mantenimiento mantenimiento){
+        RegistroProducto registro = registroProductoRepository.findById(id).orElseThrow(() -> new RegistroProductoException("El id del registro no se encontro"));
+        registro.agregarMantenimiento(mantenimiento);
+        mantenimientoRepository.save(mantenimiento);
+        return mantenimiento;
     }
 }

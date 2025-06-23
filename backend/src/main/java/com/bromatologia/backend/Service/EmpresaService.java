@@ -1,8 +1,10 @@
 package com.bromatologia.backend.Service;
 
 import com.bromatologia.backend.Entity.Empresa;
+import com.bromatologia.backend.Entity.Establecimiento;
 import com.bromatologia.backend.Exception.EmpresaException;
 import com.bromatologia.backend.Repository.IEmpresaRepository;
+import com.bromatologia.backend.Repository.IEstablecimientoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,9 @@ import java.util.Optional;
 public class EmpresaService {
     @Autowired
     private IEmpresaRepository empresaRepository;
+
+    @Autowired
+    private IEstablecimientoRepository establecimientoRepository;
 
     public List<Empresa> obtenerEmpresas() {
         return empresaRepository.findAll();
@@ -54,6 +59,12 @@ public class EmpresaService {
         return empresaRepository.save(aActualizar);
     }
 
-
+    public Establecimiento agregarEstablecimiento(Long cuitEmpresa,Establecimiento establecimiento){
+        Empresa empresa = empresaRepository.findById(cuitEmpresa).orElseThrow(() -> new EmpresaException("Empresa invalida"));
+        establecimiento.setEmpresa(empresa);
+        empresa.agregarEstablecimiento(establecimiento);
+        establecimientoRepository.save(establecimiento);
+        return establecimiento;
+    }
 
 }

@@ -7,7 +7,6 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Producto {
 
@@ -30,4 +29,10 @@ public class Producto {
 
     @NotBlank(message = "El nombre de fantasia de no puede estar vacio")
     private String nombreFantasia;
+
+    public Producto( String marca, String denominacion, String nombreFantasia) {
+        this.marca = marca;
+        this.denominacion = denominacion;
+        this.nombreFantasia = nombreFantasia;
+    }
 }
