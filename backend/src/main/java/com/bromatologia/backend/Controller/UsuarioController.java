@@ -1,5 +1,6 @@
 package com.bromatologia.backend.Controller;
 
+import com.bromatologia.backend.DTO.UsuarioDTO;
 import com.bromatologia.backend.Entity.Usuario;
 import com.bromatologia.backend.Service.UsuarioService;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -17,8 +19,11 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> listarUsuarios() {
-        List<Usuario> listaUsuarios = usuarioService.obtenerUsuarios();
+    public ResponseEntity<List<UsuarioDTO>> listarUsuarios() {
+        List<UsuarioDTO> listaUsuarios = usuarioService.obtenerUsuarios()
+                .stream()
+                .map(UsuarioDTO::new)
+                .collect(Collectors.toList());
         if (listaUsuarios.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -26,9 +31,9 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> obtenerUsuario(@PathVariable long id) {
+    public ResponseEntity<UsuarioDTO> obtenerUsuario(@PathVariable Long id) {
         Usuario buscado = usuarioService.obtenerUsuarioPorId(id);
-        return new ResponseEntity<>(buscado, HttpStatus.OK);
+        return new ResponseEntity<>(new UsuarioDTO(buscado), HttpStatus.OK);
     }
 
     @PostMapping
@@ -37,7 +42,7 @@ public class UsuarioController {
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Usuario> actualizarUsuario(@PathVariable long id, @Valid @RequestBody Usuario usuario) {
         Usuario aModificar = usuarioService.modificarUsuario(id,usuario);
         return new ResponseEntity<>(aModificar, HttpStatus.OK);

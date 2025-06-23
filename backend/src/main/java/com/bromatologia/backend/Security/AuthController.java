@@ -1,11 +1,12 @@
 package com.bromatologia.backend.Security;
 
+import com.bromatologia.backend.DTO.UsuarioDTO;
 import com.bromatologia.backend.Entity.Usuario;
 import com.bromatologia.backend.Enums.Rol;
 import com.bromatologia.backend.Repository.IUsuarioRepository;
-import com.bromatologia.backend.Security.DTO.JwtResponse;
-import com.bromatologia.backend.Security.DTO.LoginRequests;
-import com.bromatologia.backend.Security.DTO.RegisterRequest;
+import com.bromatologia.backend.DTO.JwtResponse;
+import com.bromatologia.backend.DTO.LoginRequests;
+import com.bromatologia.backend.DTO.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,7 +65,7 @@ public class AuthController {
             Rol rolEnum = Rol.valueOf(registerRequest.getRole().toUpperCase()); //convierte todo a mayuscula sin importar que se lo pase en minuscula
             Usuario nuevoUsuario = new Usuario(registerRequest.getUsername(), hashedPassword, rolEnum);
             usuarioRepository.save(nuevoUsuario);
-            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new UsuarioDTO(nuevoUsuario));
         }catch(IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Rol invalido");
         }

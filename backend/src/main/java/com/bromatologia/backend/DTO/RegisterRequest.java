@@ -1,4 +1,4 @@
-package com.bromatologia.backend.Security.DTO;
+package com.bromatologia.backend.DTO;
 
 import lombok.Data;
 
