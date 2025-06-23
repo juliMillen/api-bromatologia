@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class ProductoController {
         return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
     public ResponseEntity<Producto> agregarProducto(@RequestBody @Valid Producto producto) {
 
@@ -37,12 +39,14 @@ public class ProductoController {
         return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}")
     public ResponseEntity<Producto> actualizarProducto(@PathVariable long id,@RequestBody @Valid Producto producto) {
         Producto actualizado = productoService.editarProducto(id,producto);
         return new ResponseEntity<>(actualizado, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Producto> eliminarProducto(@PathVariable long id) {
         productoService.eliminarProductoPorId(id);

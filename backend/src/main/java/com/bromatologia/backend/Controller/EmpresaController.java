@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,24 +38,28 @@ public class EmpresaController {
     }
 
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
     public ResponseEntity<Empresa> crearEmpresa(@RequestBody @Valid Empresa empresa) {
         Empresa nuevaEmpresa = empresaService.crearEmpresa(empresa);
         return new ResponseEntity<>(nuevaEmpresa, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{cuit_Empresa}/establecimientos")
     public ResponseEntity<Establecimiento> agregarEstablecimiento(@PathVariable long cuit_Empresa, @RequestBody @Valid Establecimiento establecimiento){
         Establecimiento creado = empresaService.agregarEstablecimiento(cuit_Empresa, establecimiento);
         return new ResponseEntity<>(creado, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{cuit_Empresa}")
     public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable long cuit_Empresa,@RequestBody @Valid Empresa empresa) {
         Empresa nuevaEmpresa = empresaService.actualizarEmpresa(cuit_Empresa,empresa);
         return new ResponseEntity<>(nuevaEmpresa, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{cuit_Empresa}")
     public ResponseEntity<Void> eliminarEmpresa(@PathVariable long cuit_Empresa) {
         empresaService.eliminarEmpresaPorId(cuit_Empresa);

@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class ReciboController {
         return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
     public ResponseEntity<Recibo> agregarRecibo(@RequestBody @Valid Recibo recibo) {
 
@@ -38,6 +40,7 @@ public class ReciboController {
         return new ResponseEntity<>(nuevoRecibo, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Recibo> eliminarRecibo(@PathVariable long id) {
         reciboService.eliminarReciboPorId(id);

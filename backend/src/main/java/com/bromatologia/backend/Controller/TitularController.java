@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,21 +34,24 @@ public class TitularController {
         return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
     public ResponseEntity<Titular> crearTitular(@RequestBody @Valid Titular titular) {
         Titular nuevoTitular = titularService.crearTitular(titular);
         return new ResponseEntity<>(nuevoTitular, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{cuit_Titular}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{cuit_Titular}")
     public ResponseEntity<Titular> actualizarTitular(long cuit_Titular,@RequestBody @Valid Titular titular) {
 
         Titular nuevoTitular = titularService.actualizarTitular(cuit_Titular,titular);
         return new ResponseEntity<>(nuevoTitular, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{cuit_Titular}")
-    public ResponseEntity<String> eliminarTitular(@PathVariable long cuit_Titular) {
+    public ResponseEntity<Void> eliminarTitular(@PathVariable long cuit_Titular) {
         titularService.eliminarTitular(cuit_Titular);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

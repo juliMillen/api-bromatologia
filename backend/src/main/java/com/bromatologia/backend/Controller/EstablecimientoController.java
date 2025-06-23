@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class EstablecimientoController {
         return new ResponseEntity<>(buscado.getProductos(), HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
     public ResponseEntity<Establecimiento> crearEstablecimiento(@RequestBody @Valid Establecimiento establecimiento){
 
@@ -48,12 +50,14 @@ public class EstablecimientoController {
     return new ResponseEntity<>(nuevoEstablecimiento, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}/productos")
     public ResponseEntity<Producto> agregarProducto(@PathVariable long id, @RequestBody @Valid Producto producto){
         Producto nuevo = establecimientoService.agregarProducto(id, producto);
         return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Establecimiento> eliminarEstablecimiento(@PathVariable long id){
         establecimientoService.eliminarEstablecimiento(id);

@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,36 +34,42 @@ public class RegistroEstablecimientoController {
         return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
     public ResponseEntity<RegistroEstablecimiento> guardarRegistro(@RequestBody @Valid RegistroEstablecimiento registro) {
         RegistroEstablecimiento nuevoRegistro = registroEstablecimientoService.guardarRegistro(registro);
         return new ResponseEntity<>(nuevoRegistro, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}/empresa")
     public ResponseEntity<Empresa> asignarEmpresa(@PathVariable long id, @RequestBody @Valid Empresa empresa) {
         Empresa nueva = registroEstablecimientoService.asignarEmpresa(id,empresa);
         return new ResponseEntity<>(nueva, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}/titular")
-    public ResponseEntity<Titular> asignarTitular(@PathVariable Long id, @RequestBody @Valid Titular titular) {
+    public ResponseEntity<Titular> asignarTitular(@PathVariable long id, @RequestBody @Valid Titular titular) {
         Titular nuevo = registroEstablecimientoService.asignarTitular(id,titular);
         return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}/establecimiento")
-    public ResponseEntity<Establecimiento> asignarEstablecimiento(@PathVariable Long id, @RequestBody @Valid Establecimiento establecimiento) {
+    public ResponseEntity<Establecimiento> asignarEstablecimiento(@PathVariable long id, @RequestBody @Valid Establecimiento establecimiento) {
         Establecimiento nuevo = registroEstablecimientoService.asignarEstablecimiento(id,establecimiento);
         return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("{id}/mantenimiento")
-    public ResponseEntity<Mantenimiento> agregarMantenimiento(@PathVariable Long id, @RequestBody @Valid Mantenimiento mantenimiento) {
+    public ResponseEntity<Mantenimiento> agregarMantenimiento(@PathVariable long id, @RequestBody @Valid Mantenimiento mantenimiento) {
         Mantenimiento nuevo = registroEstablecimientoService.agregarMantenimiento(id, mantenimiento);
         return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<RegistroEstablecimiento> eliminarRegistro(@PathVariable long id) {
         registroEstablecimientoService.obtenerEstablecimientoById(id);

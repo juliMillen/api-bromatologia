@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class MantenimientoController {
         return new ResponseEntity<>(buscado.getTramites(), HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
     public ResponseEntity<Mantenimiento> registrarMantenimiento(@RequestBody @Valid Mantenimiento mantenimiento){
 
@@ -46,12 +48,14 @@ public class MantenimientoController {
         return new ResponseEntity<>(registrado, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("{id}/tramites")
     public ResponseEntity<Tramite> agregarTramite(@PathVariable long id, @RequestBody @Valid Tramite tramite){
         Tramite nuevo = mantenimientoService.agregarTramite(id, tramite);
         return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Mantenimiento> eliminarMantenimiento(@PathVariable long id){
         mantenimientoService.eliminarMantenimiento(id);

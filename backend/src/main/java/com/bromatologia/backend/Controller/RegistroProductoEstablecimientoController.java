@@ -3,10 +3,13 @@ package com.bromatologia.backend.Controller;
 import com.bromatologia.backend.Entity.RegistroProductoEstablecimiento;
 import com.bromatologia.backend.Entity.RegistroProductoEstablecimientoId;
 import com.bromatologia.backend.Service.RegistroProductoEstablecimientoService;
+import jakarta.validation.Valid;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,8 +38,9 @@ public class RegistroProductoEstablecimientoController {
     }
 
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
-    public ResponseEntity<RegistroProductoEstablecimiento> guardarRegistroProductoEstablecimiento(@RequestBody RegistroProductoEstablecimiento registroProdEst){
+    public ResponseEntity<RegistroProductoEstablecimiento> guardarRegistroProductoEstablecimiento( @Valid @RequestBody RegistroProductoEstablecimiento registroProdEst){
         if(registroProdEst == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -44,6 +48,7 @@ public class RegistroProductoEstablecimientoController {
         return new ResponseEntity<>(reg, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{idProducto}/{idEstablecimiento}")
     public ResponseEntity<Void> eliminarRegistroProductoEstablecimiento(@PathVariable long idProducto,@PathVariable long idEstablecimiento){
         registroProductoEstablecimientoService.eliminarRegistroProductoEstablecimiento(idProducto,idEstablecimiento);

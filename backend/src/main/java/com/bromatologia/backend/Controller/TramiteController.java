@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,12 +31,14 @@ public class TramiteController {
         return new ResponseEntity<>(buscado, HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
     public ResponseEntity<Tramite> crearTramite(@RequestBody @Valid Tramite tramite) {
         Tramite nuevoTramite = tramiteService.crearTramite(tramite);
         return new ResponseEntity<>(nuevoTramite, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Tramite> eliminarTramite(@PathVariable long id) {
         tramiteService.eliminarTramite(id);

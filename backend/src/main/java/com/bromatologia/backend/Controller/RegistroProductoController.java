@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,32 +32,35 @@ public class RegistroProductoController {
     }
 
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
     public ResponseEntity<RegistroProducto> guardarRegistroProducto(@RequestBody RegistroProducto registroProducto) {
         RegistroProducto nuevoRegistroProducto = registroProductoService.guardarRegistroProducto(registroProducto);
         return new ResponseEntity<>(nuevoRegistroProducto, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}/producto")
     public ResponseEntity<Producto> asignarProducto(@PathVariable long id, @RequestBody @Valid Producto producto) {
         Producto nuevo = registroProductoService.asignarProducto(id, producto);
         return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}/mantenimiento")
     public ResponseEntity<Mantenimiento> agregarMantenimiento(@PathVariable long id, @RequestBody @Valid Mantenimiento mantenimiento) {
         Mantenimiento nuevo = registroProductoService.agregarMantenimiento(id, mantenimiento);
         return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}/registroEstablecimiento")
     public ResponseEntity<RegistroEstablecimiento> agregarRegistroEstablecimiento(@PathVariable long id, @RequestBody @Valid RegistroEstablecimiento regisroEstablecimiento) {
         RegistroEstablecimiento nuevo = registroProductoService.asignarRegistroEstablecimiento(id,regisroEstablecimiento);
         return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
     }
 
-
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<RegistroProducto> eliminarRegistroProducto(@PathVariable long id) {
         registroProductoService.eliminarRegistroProducto(id);
