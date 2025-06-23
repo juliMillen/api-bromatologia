@@ -24,7 +24,7 @@ public class EstablecimientoService {
         return establecimientoRepository.findAll();
     }
 
-    public Establecimiento obtenerEstablecimientoPorId(Long id){
+    public Establecimiento obtenerEstablecimientoPorId(long id){
         if(id <= 0){
             throw new EstablecimientoException("id invalido");
         }
@@ -38,7 +38,7 @@ public class EstablecimientoService {
         return establecimientoRepository.save(establecimiento);
     }
 
-    public void eliminarEstablecimiento(Long id){
+    public void eliminarEstablecimiento(long id){
         if(id <= 0){
             throw new EstablecimientoException("Id invalido");
         }
@@ -46,7 +46,7 @@ public class EstablecimientoService {
         establecimientoRepository.delete(aEliminar);
     }
 
-    public Producto agregarProducto(Long id,Producto producto){
+    public Producto agregarProducto(long id,Producto producto){
         Establecimiento establecimiento = establecimientoRepository.findById(id).orElseThrow(() -> new EstablecimientoException("Establecimiento no encontrado"));
         producto.setEstablecimiento(establecimiento);
         establecimiento.agregarProductos(producto);

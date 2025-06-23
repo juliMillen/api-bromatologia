@@ -40,8 +40,8 @@ public class ProductoService {
     }
 
 
-    public Producto editarProducto(Long id,Producto producto) {
-        if (producto == null || id == null || id <= 0) {
+    public Producto editarProducto(long id,Producto producto) {
+        if (producto == null || id <= 0) {
             throw new ProductoException("Los campos no pueden ser nulos");
         }
         Producto aActualizar = productoRepository.findById(id).orElseThrow(() -> new ProductoException("El id no encontrado"));

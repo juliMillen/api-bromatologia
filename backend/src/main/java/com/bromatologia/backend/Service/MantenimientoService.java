@@ -23,7 +23,7 @@ public class MantenimientoService {
         return mantenimientoRepository.findAll();
     }
 
-    public Mantenimiento obtenerMantenimiento(Long id){
+    public Mantenimiento obtenerMantenimiento(long id){
         if (id <= 0) {
             throw new MantenimientoException("El id del mantenimiento no es valido");
         }
@@ -39,7 +39,7 @@ public class MantenimientoService {
     }
 
 
-    public void eliminarMantenimiento(Long id) {
+    public void eliminarMantenimiento(long id) {
         if (id <= 0) {
           throw new MantenimientoException("id invalido");
         }
@@ -47,7 +47,7 @@ public class MantenimientoService {
         mantenimientoRepository.delete(aEliminar);
     }
 
-    public Tramite agregarTramite(Long id, Tramite tramite){
+    public Tramite agregarTramite(long id, Tramite tramite){
         Mantenimiento mantenimiento = mantenimientoRepository.findById(id).orElseThrow(() -> new MantenimientoException("No se encontro el id"));
         tramite.setMantenimiento(mantenimiento);
         mantenimiento.agregarTramite(tramite);

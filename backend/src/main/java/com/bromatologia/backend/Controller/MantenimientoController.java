@@ -34,7 +34,7 @@ public class MantenimientoController {
     }
 
     @GetMapping("/{id}/tramites")
-    public ResponseEntity<List<Tramite>> obtenerTramitesPorMantenimiento(@PathVariable Long id) {
+    public ResponseEntity<List<Tramite>> obtenerTramitesPorMantenimiento(@PathVariable long id) {
         Mantenimiento buscado = mantenimientoService.obtenerMantenimiento(id);
         return new ResponseEntity<>(buscado.getTramites(), HttpStatus.OK);
     }

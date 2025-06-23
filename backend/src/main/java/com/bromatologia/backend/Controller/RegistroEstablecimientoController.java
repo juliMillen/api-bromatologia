@@ -40,7 +40,7 @@ public class RegistroEstablecimientoController {
     }
 
     @PostMapping("/{id}/empresa")
-    public ResponseEntity<Empresa> asignarEmpresa(@PathVariable Long id, @RequestBody @Valid Empresa empresa) {
+    public ResponseEntity<Empresa> asignarEmpresa(@PathVariable long id, @RequestBody @Valid Empresa empresa) {
         Empresa nueva = registroEstablecimientoService.asignarEmpresa(id,empresa);
         return new ResponseEntity<>(nueva, HttpStatus.CREATED);
     }

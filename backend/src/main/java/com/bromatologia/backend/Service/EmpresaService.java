@@ -48,7 +48,7 @@ public class EmpresaService {
         empresaRepository.delete(aEliminar);
     }
 
-    public Empresa actualizarEmpresa(Long cuit,Empresa empresa) {
+    public Empresa actualizarEmpresa(long cuit,Empresa empresa) {
         if (empresa == null || cuit <= 0) {
             throw new EmpresaException("Empresa no encontrada o cuit invalido");
         }
@@ -59,7 +59,7 @@ public class EmpresaService {
         return empresaRepository.save(aActualizar);
     }
 
-    public Establecimiento agregarEstablecimiento(Long cuitEmpresa,Establecimiento establecimiento){
+    public Establecimiento agregarEstablecimiento(long cuitEmpresa,Establecimiento establecimiento){
         Empresa empresa = empresaRepository.findById(cuitEmpresa).orElseThrow(() -> new EmpresaException("Empresa invalida"));
         establecimiento.setEmpresa(empresa);
         empresa.agregarEstablecimiento(establecimiento);

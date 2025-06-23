@@ -44,13 +44,13 @@ public class EmpresaController {
     }
 
     @PostMapping("/{cuit_Empresa}/establecimientos")
-    public ResponseEntity<Establecimiento> agregarEstablecimiento(@PathVariable Long cuit_Empresa, @RequestBody @Valid Establecimiento establecimiento){
+    public ResponseEntity<Establecimiento> agregarEstablecimiento(@PathVariable long cuit_Empresa, @RequestBody @Valid Establecimiento establecimiento){
         Establecimiento creado = empresaService.agregarEstablecimiento(cuit_Empresa, establecimiento);
         return new ResponseEntity<>(creado, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{cuit_Empresa}")
-    public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable Long cuit_Empresa,@RequestBody @Valid Empresa empresa) {
+    public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable long cuit_Empresa,@RequestBody @Valid Empresa empresa) {
         Empresa nuevaEmpresa = empresaService.actualizarEmpresa(cuit_Empresa,empresa);
         return new ResponseEntity<>(nuevaEmpresa, HttpStatus.OK);
     }

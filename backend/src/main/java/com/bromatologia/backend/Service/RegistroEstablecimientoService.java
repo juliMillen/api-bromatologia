@@ -54,7 +54,7 @@ public class RegistroEstablecimientoService {
     }
 
     @Transactional
-    public Empresa asignarEmpresa(Long id, Empresa empresa){
+    public Empresa asignarEmpresa(long id, Empresa empresa){
         RegistroEstablecimiento registro = registroEstablecimientoRepository.findById(id).orElseThrow(() -> new RegistroEstablecimientoException("El id no se ha encontrado"));
         empresaRepository.save(empresa);
         registro.asignarEmpresa(empresa);
@@ -62,7 +62,7 @@ public class RegistroEstablecimientoService {
     }
 
     @Transactional
-    public Titular asignarTitular(Long id, Titular titular){
+    public Titular asignarTitular(long id, Titular titular){
         RegistroEstablecimiento registro = registroEstablecimientoRepository.findById(id).orElseThrow(() -> new RegistroEstablecimientoException("El id no se ha encontrado"));
         titularRepository.save(titular);
         registro.asignarTitular(titular);
@@ -70,7 +70,7 @@ public class RegistroEstablecimientoService {
     }
 
     @Transactional
-    public Establecimiento asignarEstablecimiento(Long id, Establecimiento establecimiento){
+    public Establecimiento asignarEstablecimiento(long id, Establecimiento establecimiento){
         RegistroEstablecimiento registro = registroEstablecimientoRepository.findById(id).orElseThrow(() -> new RegistroEstablecimientoException("El id no se ha encontrado"));
         establecimientoRepository.save(establecimiento);
         registro.asignarEstablecimiento(establecimiento);
@@ -78,7 +78,7 @@ public class RegistroEstablecimientoService {
     }
 
     @Transactional
-    public Mantenimiento agregarMantenimiento(Long id,Mantenimiento mantenimiento){
+    public Mantenimiento agregarMantenimiento(long id,Mantenimiento mantenimiento){
         RegistroEstablecimiento registro = registroEstablecimientoRepository.findById(id).orElseThrow(() -> new RegistroEstablecimientoException("El id no se ha encontrado"));
         mantenimientoRepository.save(mantenimiento);
         registro.agregarMantenimiento(mantenimiento);

@@ -31,13 +31,13 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> obtenerUsuario(@PathVariable Long id) {
+    public ResponseEntity<UsuarioDTO> obtenerUsuario(@PathVariable long id) {
         Usuario buscado = usuarioService.obtenerUsuarioPorId(id);
         return new ResponseEntity<>(new UsuarioDTO(buscado), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> guardarUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<Usuario> guardarUsuario( @Valid @RequestBody Usuario usuario) {
         Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }

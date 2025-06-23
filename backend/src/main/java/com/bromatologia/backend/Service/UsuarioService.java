@@ -22,7 +22,7 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    public Usuario obtenerUsuarioPorId(Long id){
+    public Usuario obtenerUsuarioPorId(long id){
         if(id <= 0){
             throw new UsuarioException("El id del usuario no puede ser negativo");
         }
@@ -69,7 +69,7 @@ public class UsuarioService {
         return usuarioRepository.save(aModificar);
     }
 
-    public void eliminarUsuario(Long id){
+    public void eliminarUsuario(long id){
         if(id <= 0){
             throw new UsuarioException("El id ha sido invalido");
         }

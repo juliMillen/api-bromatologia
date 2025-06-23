@@ -56,7 +56,7 @@ public class RegistroProductoService {
     }
 
     @Transactional
-    public Producto asignarProducto(Long id, Producto producto){
+    public Producto asignarProducto(long id, Producto producto){
         RegistroProducto registro = registroProductoRepository.findById(id).orElseThrow(() -> new RegistroProductoException("El id del registro no se ha encontrado"));
         productoRepository.save(producto);
         registro.asignarProducto(producto);
@@ -64,7 +64,7 @@ public class RegistroProductoService {
     }
 
     @Transactional
-    public RegistroEstablecimiento asignarRegistroEstablecimiento(Long id, RegistroEstablecimiento registroEstablecimiento){
+    public RegistroEstablecimiento asignarRegistroEstablecimiento(long id, RegistroEstablecimiento registroEstablecimiento){
         RegistroProducto registro = registroProductoRepository.findById(id).orElseThrow(() -> new RegistroProductoException("El id del registro no se ha encontrado"));
         registro.asignarRegistroEstablecimientos(registroEstablecimiento);
         registroEstablecimientoRepository.save(registroEstablecimiento);
@@ -72,7 +72,7 @@ public class RegistroProductoService {
     }
 
     @Transactional
-    public Mantenimiento agregarMantenimiento(Long id, Mantenimiento mantenimiento){
+    public Mantenimiento agregarMantenimiento(long id, Mantenimiento mantenimiento){
         RegistroProducto registro = registroProductoRepository.findById(id).orElseThrow(() -> new RegistroProductoException("El id del registro no se encontro"));
         registro.agregarMantenimiento(mantenimiento);
         mantenimientoRepository.save(mantenimiento);

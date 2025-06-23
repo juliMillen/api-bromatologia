@@ -36,7 +36,7 @@ public class EstablecimientoController {
     }
 
     @GetMapping("/{id}/productos")
-    public ResponseEntity<List<Producto>> obtenerProductosDeEstablecimientos(@PathVariable Long id) {
+    public ResponseEntity<List<Producto>> obtenerProductosDeEstablecimientos(@PathVariable long id) {
         Establecimiento buscado = establecimientoService.obtenerEstablecimientoPorId(id);
         return new ResponseEntity<>(buscado.getProductos(), HttpStatus.OK);
     }

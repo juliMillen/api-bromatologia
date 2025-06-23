@@ -35,7 +35,7 @@ public class Empresa {
     @Pattern(regexp = "^\\+?\\d{7,15}$", message = "Formato de teléfono inválido")
     private String telefono;
 
-    public Empresa(Long cuit_Empresa, String nombreEmpresa, Titular titular, String email, String telefono) {
+    public Empresa(long cuit_Empresa, String nombreEmpresa, Titular titular, String email, String telefono) {
         this.cuit_Empresa = cuit_Empresa;
         this.nombreEmpresa = nombreEmpresa;
         this.titular = titular;
