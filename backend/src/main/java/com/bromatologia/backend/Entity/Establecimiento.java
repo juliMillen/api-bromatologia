@@ -22,7 +22,7 @@ public class Establecimiento {
     private RegistroEstablecimiento registroEstablecimiento;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "empresa_id",nullable = false)
+    @JoinColumn(name = "empresa_id", nullable = false)
     private Empresa empresa;
 
     @OneToMany(mappedBy = "establecimiento",fetch = FetchType.LAZY)

@@ -51,10 +51,10 @@ public class EstablecimientoController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{id}/productos")
-    public ResponseEntity<Producto> agregarProducto(@PathVariable long id, @RequestBody @Valid Producto producto){
-        Producto nuevo = establecimientoService.agregarProducto(id, producto);
-        return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
+    @PostMapping("/{idEstablecimiento}/productos/{idProducto}")
+    public ResponseEntity<Producto> agregarProducto(@PathVariable long idEstablecimiento, @PathVariable long idProducto){
+        Producto nuevo = establecimientoService.agregarProducto(idEstablecimiento, idProducto);
+        return ResponseEntity.ok(nuevo);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

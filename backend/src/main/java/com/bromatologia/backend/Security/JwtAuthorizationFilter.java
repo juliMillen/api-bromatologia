@@ -39,9 +39,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
+        String token = header.replace("Bearer ", "").trim(); //limpiar el token
+
         try{
-            if(jwtUtils.validarToken(header)){
-                Claims claims = jwtUtils.getClaims(header);
+            if(jwtUtils.validarToken(token)){
+                Claims claims = jwtUtils.getClaims(token);
                 String username = claims.getSubject();
                 List<String> roles = claims.get("authorities", List.class);
 

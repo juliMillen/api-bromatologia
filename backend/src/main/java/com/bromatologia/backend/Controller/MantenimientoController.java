@@ -41,7 +41,7 @@ public class MantenimientoController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<Mantenimiento> registrarMantenimiento(@RequestBody @Valid Mantenimiento mantenimiento){
 
         Mantenimiento registrado = mantenimientoService.registrarMantenimiento(mantenimiento);

@@ -46,7 +46,7 @@ public class EmpresaController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{cuit_Empresa}/establecimientos")
+    @PostMapping("/{cuit_Empresa}")
     public ResponseEntity<Establecimiento> agregarEstablecimiento(@PathVariable long cuit_Empresa, @RequestBody @Valid Establecimiento establecimiento){
         Establecimiento creado = empresaService.agregarEstablecimiento(cuit_Empresa, establecimiento);
         return new ResponseEntity<>(creado, HttpStatus.CREATED);

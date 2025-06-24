@@ -19,6 +19,7 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> listarUsuarios() {
         List<UsuarioDTO> listaUsuarios = usuarioService.obtenerUsuarios()
@@ -29,6 +30,7 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(listaUsuarios, HttpStatus.OK);
+
     }
 
     @GetMapping("/{id}")

@@ -11,6 +11,8 @@ import lombok.*;
 public class Titular {
 
     @Id
+    @NotNull
+    @Min(value = 20000000000L, message = "El CUIT debe tener al menos 11 dígitos")
     private long cuit_titular;
 
     @OneToOne(mappedBy = "titular",fetch = FetchType.LAZY)
@@ -26,7 +28,8 @@ public class Titular {
     @Pattern(regexp = "^\\+?\\d{7,15}$", message = "Formato de teléfono inválido")
     private String telefono;
 
-    public Titular(String nombreTitular, String email, String telefono) {
+    public Titular(long cuit_titular ,String nombreTitular, String email, String telefono) {
+        this.cuit_titular = cuit_titular;
         this.nombreTitular = nombreTitular;
         this.email = email;
         this.telefono = telefono;

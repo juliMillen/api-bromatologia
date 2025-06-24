@@ -17,7 +17,7 @@ public class Tramite {
     private String nombreTramite;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_mantenimiento", nullable = false)
+    @JoinColumn(name = "id_mantenimiento",nullable = true)
     private Mantenimiento mantenimiento;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

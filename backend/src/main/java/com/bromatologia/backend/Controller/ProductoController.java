@@ -32,7 +32,7 @@ public class ProductoController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<Producto> agregarProducto(@RequestBody @Valid Producto producto) {
 
         Producto nuevoProducto = productoService.registrarProducto(producto);

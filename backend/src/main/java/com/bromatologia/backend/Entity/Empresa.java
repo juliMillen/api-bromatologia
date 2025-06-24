@@ -2,8 +2,7 @@ package com.bromatologia.backend.Entity;
 
 import com.bromatologia.backend.Exception.EmpresaException;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -17,6 +16,8 @@ public class Empresa {
 
 
     @Id
+    @NotNull
+    @Min(value = 20000000000L, message = "El CUIT debe tener al menos 11 dígitos")
     private long cuit_Empresa;
 
     @NotBlank

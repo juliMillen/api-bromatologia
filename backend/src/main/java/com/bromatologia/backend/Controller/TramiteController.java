@@ -32,7 +32,7 @@ public class TramiteController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<Tramite> crearTramite(@RequestBody @Valid Tramite tramite) {
         Tramite nuevoTramite = tramiteService.crearTramite(tramite);
         return new ResponseEntity<>(nuevoTramite, HttpStatus.CREATED);

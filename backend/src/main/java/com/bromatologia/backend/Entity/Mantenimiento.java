@@ -21,11 +21,11 @@ public class Mantenimiento {
     private long id_mantenimiento;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "registro_establecimiento", nullable = false)
+    @JoinColumn(name = "registro_establecimiento", nullable = true)
     private RegistroEstablecimiento registroEstablecimiento;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "registro_producto", nullable = false)
+    @JoinColumn(name = "registro_producto", nullable = true)
     private RegistroProducto registroProducto;
 
     @OneToMany(mappedBy = "mantenimiento", cascade = CascadeType.ALL)

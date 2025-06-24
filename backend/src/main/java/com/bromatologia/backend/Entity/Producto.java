@@ -18,7 +18,7 @@ public class Producto {
     private RegistroProducto registroProducto;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "establecimiento_producto",nullable = false)
+    @JoinColumn(name = "establecimiento_producto", nullable = false)
     private Establecimiento establecimiento;
 
     @NotBlank(message = "La marca no puede estar vacia")
