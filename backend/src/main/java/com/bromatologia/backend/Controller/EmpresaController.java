@@ -42,6 +42,7 @@ public class EmpresaController {
     @PostMapping("/")
     public ResponseEntity<Empresa> crearEmpresa(@RequestBody @Valid Empresa empresa) {
         Empresa nuevaEmpresa = empresaService.crearEmpresa(empresa);
+        System.out.println("Empresa creada correctamente");
         return new ResponseEntity<>(nuevaEmpresa, HttpStatus.CREATED);
     }
 
