@@ -19,10 +19,7 @@ public class ReciboService {
     }
 
     public Recibo obtenerReciboPorId(long id){
-        if (id <= 0) {
-            throw new ReciboException("El id del recibo no es valido");
-        }
-        return reciboRepository.findById(id).orElseThrow(() -> new ReciboException("El recibo no se ha encontrado"));
+        return obtenerReciboExistente(id);
     }
 
     public Recibo crearRecibo(Recibo recibo){
@@ -37,7 +34,14 @@ public class ReciboService {
         if (id <= 0) {
             throw new ReciboException("El id del recibo no es valido");
         }
-        Recibo aEliminar = reciboRepository.findById(id).orElseThrow(() -> new ReciboException("El recibo no existe"));
+        Recibo aEliminar = obtenerReciboExistente(id);
         reciboRepository.delete(aEliminar);
+    }
+
+    public Recibo obtenerReciboExistente(long id){
+        if (id <= 0) {
+            throw new ReciboException("El id del recibo no es valido");
+        }
+        return reciboRepository.findById(id).orElseThrow(() -> new ReciboException("El recibo no se ha encontrado"));
     }
 }

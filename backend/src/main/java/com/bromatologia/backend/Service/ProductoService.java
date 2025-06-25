@@ -23,10 +23,7 @@ public class ProductoService {
     }
 
     public Producto obtenerProductoPorId(long id){
-        if(id <= 0){
-            throw new ProductoException("El id no es valido");
-        }
-        return productoRepository.findById(id).orElseThrow(() -> new ProductoException("El id no se ha encontrado"));
+        return obtenerProductoExistente(id);
     }
 
     public Producto registrarProducto(Producto producto) {
@@ -43,7 +40,7 @@ public class ProductoService {
         if(id <= 0){
             throw new ProductoException("El id no es valido");
         }
-        Producto aEliminar = productoRepository.findById(id).orElseThrow(() -> new ProductoException("El id no existe"));
+        Producto aEliminar = obtenerProductoExistente(id);
         productoRepository.delete(aEliminar);
     }
 
@@ -52,10 +49,17 @@ public class ProductoService {
         if (producto == null || id <= 0) {
             throw new ProductoException("Los campos no pueden ser nulos");
         }
-        Producto aActualizar = productoRepository.findById(id).orElseThrow(() -> new ProductoException("El id no encontrado"));
+        Producto aActualizar = obtenerProductoExistente(id);
         aActualizar.setDenominacion(producto.getDenominacion());
         aActualizar.setMarca(producto.getMarca());
         aActualizar.setNombreFantasia(producto.getNombreFantasia());
         return productoRepository.save(aActualizar);
+    }
+
+    public Producto obtenerProductoExistente(long id_producto){
+        if(id_producto <= 0){
+            throw new ProductoException("El id no es valido");
+        }
+        return productoRepository.findById(id_producto).orElseThrow(() -> new ProductoException("El id no se ha encontrado"));
     }
 }

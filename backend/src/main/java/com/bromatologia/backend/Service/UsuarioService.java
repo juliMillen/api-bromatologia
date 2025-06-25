@@ -23,10 +23,7 @@ public class UsuarioService {
     }
 
     public Usuario obtenerUsuarioPorId(long id){
-        if(id <= 0){
-            throw new UsuarioException("El id del usuario no puede ser negativo");
-        }
-        return usuarioRepository.findById(id).orElseThrow(()-> new UsuarioException("Usuario no encontrado"));
+        return obtenerUsuarioExistente(id);
     }
 
     public Usuario crearUsuario(Usuario usuario){
@@ -45,7 +42,7 @@ public class UsuarioService {
             throw new UsuarioException("El usuario no puede ser nulo");
         }
 
-        Usuario aModificar = usuarioRepository.findById(id).orElseThrow(()-> new UsuarioException("Usuario no encontrado"));
+        Usuario aModificar = obtenerUsuarioExistente(id);
 
         if(usuario.getUsername() != null){
             String nuevoUsername = usuario.getUsername();
@@ -73,7 +70,7 @@ public class UsuarioService {
         if(id <= 0){
             throw new UsuarioException("El id ha sido invalido");
         }
-        Usuario aEliminar = usuarioRepository.findById(id).orElseThrow(()-> new UsuarioException("Usuario no encontrado"));
+        Usuario aEliminar = obtenerUsuarioExistente(id);
         usuarioRepository.delete(aEliminar);
     }
 
@@ -104,6 +101,13 @@ public class UsuarioService {
         }catch(IllegalArgumentException e){
             throw new UsuarioException("El rol no es valido");
         }
+    }
+
+    public Usuario obtenerUsuarioExistente(long id){
+        if(id <= 0){
+            throw new UsuarioException("El id del usuario no puede ser negativo");
+        }
+        return usuarioRepository.findById(id).orElseThrow(()-> new UsuarioException("Usuario no encontrado"));
     }
 
 }

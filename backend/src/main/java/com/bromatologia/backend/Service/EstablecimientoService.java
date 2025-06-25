@@ -6,6 +6,7 @@ import com.bromatologia.backend.Exception.EstablecimientoException;
 import com.bromatologia.backend.Exception.ProductoException;
 import com.bromatologia.backend.Repository.IEstablecimientoRepository;
 import com.bromatologia.backend.Repository.IProductoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +27,7 @@ public class EstablecimientoService {
     }
 
     public Establecimiento obtenerEstablecimientoPorId(long id){
-        if(id <= 0){
-            throw new EstablecimientoException("id invalido");
-        }
-        return establecimientoRepository.findById(id).orElseThrow(() -> new EstablecimientoException("Establecimiento no encontrado"));
+     return obtenerEstablecimientoExistente(id);
     }
 
     public Establecimiento crearEstablecimiento(Establecimiento establecimiento){
@@ -43,16 +41,24 @@ public class EstablecimientoService {
         if(id <= 0){
             throw new EstablecimientoException("Id invalido");
         }
-        Establecimiento aEliminar = establecimientoRepository.findById(id).orElseThrow(() -> new EstablecimientoException("Establecimiento no encontrado"));
+        Establecimiento aEliminar = obtenerEstablecimientoExistente(id);
         establecimientoRepository.delete(aEliminar);
     }
 
+    @Transactional
     public Producto agregarProducto(long idEstablecimiento,long idProducto){
-        Establecimiento establecimiento = establecimientoRepository.findById(idEstablecimiento).orElseThrow(() -> new EstablecimientoException("Establecimiento no encontrado"));
+        Establecimiento establecimiento = obtenerEstablecimientoExistente(idEstablecimiento);
         Producto producto = productoRepository.findById(idProducto).orElseThrow(() -> new ProductoException("Producto invalido"));
         establecimiento.agregarProductos(producto);
         productoRepository.save(producto);
         return producto;
+    }
+
+    public Establecimiento obtenerEstablecimientoExistente(long idEstablecimiento){
+        if(idEstablecimiento <= 0){
+            throw new EstablecimientoException("id invalido");
+        }
+        return establecimientoRepository.findById(idEstablecimiento).orElseThrow(() -> new EstablecimientoException("Establecimiento no encontrado"));
     }
 }
 

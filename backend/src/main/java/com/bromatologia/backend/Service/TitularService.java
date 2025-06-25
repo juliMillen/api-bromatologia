@@ -24,7 +24,7 @@ public class TitularService {
         if(cuit <= 0) {
             throw new TitularException("El cuit no puede ser menor que 0");
         }
-        Titular aEliminar = titularRepository.findById(cuit).orElseThrow(() -> new TitularException("No existe titular con ese cuit"));
+        Titular aEliminar = obtenerTitularExistente(cuit);
         titularRepository.delete(aEliminar);
     }
 
@@ -34,11 +34,7 @@ public class TitularService {
     }
 
     public Titular obtenerTitularPorCuit(long cuit_titular) {
-
-        if (cuit_titular <= 0) {
-            throw new TitularException("El cuit no puede ser menor que 0");
-        }
-        return titularRepository.findById(cuit_titular).orElseThrow(() -> new TitularException("No existe titular con ese cuit"));
+        return obtenerTitularExistente(cuit_titular);
     }
 
 
@@ -46,10 +42,18 @@ public class TitularService {
         if (titular == null || cuit <= 0) {
             throw new TitularException("El titular no puede ser nulo");
         }
-        Titular aActualizar = titularRepository.findById(cuit).orElseThrow(() -> new TitularException("No existe titular con ese cuit"));
+        Titular aActualizar = obtenerTitularExistente(cuit);
         aActualizar.setNombreTitular(titular.getNombreTitular());
         aActualizar.setEmail(titular.getEmail());
         aActualizar.setTelefono(titular.getTelefono());
         return titularRepository.save(aActualizar);
+    }
+
+
+    public Titular obtenerTitularExistente(long cuit_titular) {
+        if (cuit_titular <= 0) {
+            throw new TitularException("El cuit no puede ser menor que 0");
+        }
+        return titularRepository.findById(cuit_titular).orElseThrow(() -> new TitularException("No existe titular con ese cuit"));
     }
 }

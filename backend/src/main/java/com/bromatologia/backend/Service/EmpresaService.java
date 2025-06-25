@@ -5,11 +5,11 @@ import com.bromatologia.backend.Entity.Establecimiento;
 import com.bromatologia.backend.Exception.EmpresaException;
 import com.bromatologia.backend.Repository.IEmpresaRepository;
 import com.bromatologia.backend.Repository.IEstablecimientoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EmpresaService {
@@ -25,11 +25,7 @@ public class EmpresaService {
 
 
     public Empresa obtenerEmpresaPorId(long id){
-        if(id <= 0){
-            throw new EmpresaException("Id invalido");
-        }
-
-        return empresaRepository.findById(id).orElseThrow(() -> new EmpresaException("Empresa no encontrada"));
+        return obtenerEmpresaExistente(id);
     }
 
 
@@ -44,7 +40,7 @@ public class EmpresaService {
         if(id <= 0){
             throw new EmpresaException("Id invalido");
         }
-        Empresa aEliminar = empresaRepository.findById(id).orElseThrow(() -> new EmpresaException("Empresa no encontrada"));
+        Empresa aEliminar = obtenerEmpresaExistente(id);
         empresaRepository.delete(aEliminar);
     }
 
@@ -52,19 +48,27 @@ public class EmpresaService {
         if (empresa == null || cuit <= 0) {
             throw new EmpresaException("Empresa no encontrada o cuit invalido");
         }
-        Empresa aActualizar = empresaRepository.findById(cuit).orElseThrow(() -> new EmpresaException("Empresa no encontrada"));
+        Empresa aActualizar = obtenerEmpresaExistente(cuit);
         aActualizar.setEmail(empresa.getEmail());
         aActualizar.setTelefono(empresa.getTelefono());
 
         return empresaRepository.save(aActualizar);
     }
 
+    @Transactional
     public Establecimiento agregarEstablecimiento(long cuitEmpresa,Establecimiento establecimiento){
-        Empresa empresa = empresaRepository.findById(cuitEmpresa).orElseThrow(() -> new EmpresaException("Empresa invalida"));
+        Empresa empresa = obtenerEmpresaExistente(cuitEmpresa);
         establecimiento.setEmpresa(empresa);
         empresa.agregarEstablecimiento(establecimiento);
         establecimientoRepository.save(establecimiento);
         return establecimiento;
+    }
+
+    public Empresa obtenerEmpresaExistente(long cuitEmpresa){
+        if(cuitEmpresa <= 0){
+            throw new EmpresaException("Id invalido");
+        }
+        return empresaRepository.findById(cuitEmpresa).orElseThrow(() -> new EmpresaException("Empresa invalida"));
     }
 
 }

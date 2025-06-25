@@ -18,10 +18,7 @@ public class TramiteService {
     }
 
     public Tramite obtenerTramitePorId(long id){
-        if(id <= 0){
-            throw new TramiteException("El id del tramite no es valido");
-        }
-        return tramiteRepository.findById(id).orElseThrow(() -> new TramiteException("El tramite buscado no se ha encontrado"));
+       return obtenerTramiteExistente(id);
     }
 
     public Tramite crearTramite(Tramite tramite) {
@@ -35,7 +32,15 @@ public class TramiteService {
         if(id <= 0){
             throw new TramiteException("El id del tramite no es valido");
         }
-        Tramite aElimar = tramiteRepository.findById(id).orElseThrow(() -> new TramiteException("El tramite no se ha encontrado"));
+        Tramite aElimar = obtenerTramitePorId(id);
         tramiteRepository.delete(aElimar);
+    }
+
+
+    public Tramite obtenerTramiteExistente(long id) {
+        if(id <= 0){
+            throw new TramiteException("El id del tramite no es valido");
+        }
+        return tramiteRepository.findById(id).orElseThrow(() -> new TramiteException("El tramite buscado no se ha encontrado"));
     }
 }

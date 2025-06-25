@@ -31,11 +31,9 @@ public class RegistroEstablecimientoService {
     }
 
     public RegistroEstablecimiento obtenerEstablecimientoById(long id) {
-        if(id <= 0){
-            throw new RegistroEstablecimientoException("El id del registro es invalido");
-        }
-        return registroEstablecimientoRepository.findById(id).orElseThrow(() -> new RegistroEstablecimientoException("El id no se ha encontrado"));
+       return obtenerRegistroEstablecimientoExistente(id);
     }
+
 
     public RegistroEstablecimiento guardarRegistro(RegistroEstablecimiento registro) {
         if(registro == null){
@@ -48,14 +46,14 @@ public class RegistroEstablecimientoService {
         if(id <= 0){
             throw new RegistroEstablecimientoException("El id es invalido");
         }
-        RegistroEstablecimiento aEliminar = registroEstablecimientoRepository.findById(id).orElseThrow(() -> new RegistroEstablecimientoException("El id no se ha podido eliminar"));
+        RegistroEstablecimiento aEliminar = obtenerRegistroEstablecimientoExistente(id);
         registroEstablecimientoRepository.delete(aEliminar);
 
     }
 
     @Transactional
     public Empresa asignarEmpresa(long id, Empresa empresa){
-        RegistroEstablecimiento registro = registroEstablecimientoRepository.findById(id).orElseThrow(() -> new RegistroEstablecimientoException("El id no se ha encontrado"));
+        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(id);
         empresaRepository.save(empresa);
         registro.asignarEmpresa(empresa);
         return empresa;
@@ -63,7 +61,7 @@ public class RegistroEstablecimientoService {
 
     @Transactional
     public Titular asignarTitular(long id, Titular titular){
-        RegistroEstablecimiento registro = registroEstablecimientoRepository.findById(id).orElseThrow(() -> new RegistroEstablecimientoException("El id no se ha encontrado"));
+        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(id);
         titularRepository.save(titular);
         registro.asignarTitular(titular);
         return titular;
@@ -71,7 +69,7 @@ public class RegistroEstablecimientoService {
 
     @Transactional
     public Establecimiento asignarEstablecimiento(long id, Establecimiento establecimiento){
-        RegistroEstablecimiento registro = registroEstablecimientoRepository.findById(id).orElseThrow(() -> new RegistroEstablecimientoException("El id no se ha encontrado"));
+        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(id);
         establecimientoRepository.save(establecimiento);
         registro.asignarEstablecimiento(establecimiento);
         return establecimiento;
@@ -79,9 +77,17 @@ public class RegistroEstablecimientoService {
 
     @Transactional
     public Mantenimiento agregarMantenimiento(long id,Mantenimiento mantenimiento){
-        RegistroEstablecimiento registro = registroEstablecimientoRepository.findById(id).orElseThrow(() -> new RegistroEstablecimientoException("El id no se ha encontrado"));
+        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(id);
         mantenimientoRepository.save(mantenimiento);
         registro.agregarMantenimiento(mantenimiento);
         return mantenimiento;
+    }
+
+
+    public RegistroEstablecimiento obtenerRegistroEstablecimientoExistente(long id){
+        if(id <= 0){
+            throw new RegistroEstablecimientoException("El id del registro es invalido");
+        }
+        return registroEstablecimientoRepository.findById(id).orElseThrow(() -> new RegistroEstablecimientoException("El id no se ha encontrado"));
     }
 }

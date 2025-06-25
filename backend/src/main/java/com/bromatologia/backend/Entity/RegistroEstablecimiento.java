@@ -22,15 +22,15 @@ public class RegistroEstablecimiento {
     private long id_registroEstablecimiento;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_titular", nullable = false)
+    @JoinColumn(name = "id_titular", nullable = true)
     private Titular titular;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_empresa",nullable = false)
+    @JoinColumn(name = "id_empresa",nullable = true)
     private Empresa empresa;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "establecimiento_id", nullable = false)
+    @JoinColumn(name = "establecimiento_id", nullable = true)
     private Establecimiento establecimiento;
 
     @OneToMany(mappedBy = "registroEstablecimiento", cascade = CascadeType.ALL)

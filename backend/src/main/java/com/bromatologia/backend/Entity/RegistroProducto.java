@@ -19,7 +19,7 @@ public class RegistroProducto {
     private long id_RegistroProducto;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "producto_id", nullable = false)
+    @JoinColumn(name = "producto_id", nullable = true)
     private Producto producto;
 
     @OneToMany(mappedBy = "registroProducto",cascade = CascadeType.ALL, orphanRemoval = true)
@@ -27,7 +27,7 @@ public class RegistroProducto {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_registro_establecimiento", nullable = false)
+    @JoinColumn(name = "id_registro_establecimiento", nullable = true)
     private RegistroEstablecimiento registroEstablecimiento;
 
 
