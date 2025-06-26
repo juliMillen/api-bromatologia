@@ -67,9 +67,9 @@ public class RegistroProductoEstablecimientoController {
         RegistroProductoEstablecimientoDTO dto = new RegistroProductoEstablecimientoDTO();
         dto.setIdProducto(entidad.getId().getRegistroProductoId());
         dto.setIdEstablecimiento(entidad.getId().getRegistroEstablecimientoId());
-        dto.setNroRnpaActual(entidad.getNroRnpaActual());
+        dto.setRnpaActual(entidad.getNroRnpaActual());
         dto.setFechaDeEmision(entidad.getFechaDeEmision());
-        dto.setNroAnteriorRnpa(entidad.getNroAnteriorRnpa());
+        dto.setRnpaAnterior(entidad.getNroAnteriorRnpa());
         dto.setTipo(entidad.getTipo());
         dto.setNroRne(entidad.getNroRne());
         dto.setCertificado(entidad.getCertificado());
@@ -84,9 +84,9 @@ public class RegistroProductoEstablecimientoController {
 
         RegistroProductoEstablecimiento entidad = new RegistroProductoEstablecimiento();
         entidad.setId(id);
-        entidad.setNroRnpaActual(dto.getNroRnpaActual());
+        entidad.setNroRnpaActual(dto.getRnpaActual());
         entidad.setFechaDeEmision(dto.getFechaDeEmision());
-        entidad.setNroAnteriorRnpa(dto.getNroAnteriorRnpa());
+        entidad.setNroAnteriorRnpa(dto.getRnpaAnterior());
         entidad.setTipo(dto.getTipo());
         entidad.setNroRne(dto.getNroRne());
         entidad.setCertificado(dto.getCertificado());

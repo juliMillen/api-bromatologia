@@ -1,7 +1,6 @@
 package com.bromatologia.backend.Controller;
 
 import com.bromatologia.backend.Entity.*;
-import com.bromatologia.backend.Exception.RegistroProductoException;
 import com.bromatologia.backend.Service.RegistroProductoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

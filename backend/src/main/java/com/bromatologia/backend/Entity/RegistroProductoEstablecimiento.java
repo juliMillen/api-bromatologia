@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "registro_producto_establecimiento")
@@ -34,7 +34,7 @@ public class RegistroProductoEstablecimiento {
 
     @NotNull(message = "La fecha de emision es obligatoria")
     @Temporal(TemporalType.DATE)
-    private Date fechaDeEmision;
+    private LocalDate fechaDeEmision;
 
     @NotNull(message = "El numero anterior de RNPA es obligatorio")
     private long nroAnteriorRnpa;
