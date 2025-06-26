@@ -32,17 +32,13 @@ public class Establecimiento {
     private String departamento;
     @NotBlank(message = "La localidad no puede estar vacia")
     private String localidad;
-    @NotBlank(message = "La calle no puede estar vacia")
-    private String calle;
-    @NotNull(message = "El numero de la calle no puede estar vacia")
-    private int nroCalle;
+    @NotBlank(message = "La direccion no puede estar vacia")
+    private String direccion;
 
-
-    public Establecimiento(String departamento, String localidad, String calle, int nroCalle) {
+    public Establecimiento(String departamento, String localidad, String direccion) {
         this.departamento = departamento;
         this.localidad = localidad;
-        this.calle = calle;
-        this.nroCalle = nroCalle;
+        this.direccion = direccion;
     }
 
     public void agregarProductos(Producto producto) {

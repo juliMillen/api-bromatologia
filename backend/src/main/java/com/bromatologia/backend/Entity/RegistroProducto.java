@@ -26,11 +26,6 @@ public class RegistroProducto {
     private List<Mantenimiento> mantenimientos = new ArrayList<>();
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_registro_establecimiento", nullable = true)
-    private RegistroEstablecimiento registroEstablecimiento;
-
-
     @NotBlank(message = "El tipo no puede estar vacio")
     private String tipo;
 
@@ -46,12 +41,6 @@ public class RegistroProducto {
         this.producto = producto;
     }
 
-    public void asignarRegistroEstablecimientos(RegistroEstablecimiento registroEstablecimiento) {
-        if (registroEstablecimiento == null) {
-            throw new RegistroProductoException("Registro establecimiento no puede ser nulo");
-        }
-        this.registroEstablecimiento = registroEstablecimiento;
-    }
 
     public void agregarMantenimiento(Mantenimiento mantenimiento){
         if(mantenimiento != null){

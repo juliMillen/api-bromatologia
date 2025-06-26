@@ -36,8 +36,6 @@ public class RegistroEstablecimiento {
     @OneToMany(mappedBy = "registroEstablecimiento", cascade = CascadeType.ALL)
     private List<Mantenimiento> mantenimientos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "registroEstablecimiento", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<RegistroProducto> registroProductos = new ArrayList<>();
 
     @NotBlank(message = "la categoria anterior no puede estar vacia")
     private String categoriaAnt;

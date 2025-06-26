@@ -33,14 +33,11 @@ public class Mantenimiento {
 
     @NotNull(message = "La fecha de mantenimiento es obligatoria")
     private Date fecha_mantenimiento;
-    @NotBlank(message = "El tramite asociado es obligatorio")
-    private String tramiteAsociado;
 
     private String enlaceRecibido;
 
-    public Mantenimiento(Date fecha_mantenimiento, String tramiteAsociado, String enlaceRecibido){
+    public Mantenimiento(Date fecha_mantenimiento, String enlaceRecibido){
         this.fecha_mantenimiento = fecha_mantenimiento;
-        this.tramiteAsociado = tramiteAsociado;
         this.enlaceRecibido = enlaceRecibido;
     }
 
