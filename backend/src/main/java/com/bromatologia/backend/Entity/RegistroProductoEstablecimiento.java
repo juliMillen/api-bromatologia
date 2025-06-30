@@ -30,14 +30,14 @@ public class RegistroProductoEstablecimiento {
 
     //solo datos pertenecientes a la relacion
     @NotNull(message = "El numero de RNPA es obligatorio")
-    private long nroRnpaActual;
+    private long rnpaActual;
 
     @NotNull(message = "La fecha de emision es obligatoria")
     @Temporal(TemporalType.DATE)
     private LocalDate fechaDeEmision;
 
     @NotNull(message = "El numero anterior de RNPA es obligatorio")
-    private long nroAnteriorRnpa;
+    private long rnpaAnterior;
 
     @NotBlank(message = "El tipo no puede estar vacio")
     private String tipo;

@@ -1,5 +1,6 @@
 package com.bromatologia.backend.Service;
 
+import com.bromatologia.backend.DTO.RegistroProductoEstablecimientoDTO;
 import com.bromatologia.backend.Entity.RegistroEstablecimiento;
 import com.bromatologia.backend.Entity.RegistroProducto;
 import com.bromatologia.backend.Entity.RegistroProductoEstablecimiento;
@@ -10,6 +11,7 @@ import com.bromatologia.backend.Exception.RegistroProductoException;
 import com.bromatologia.backend.Repository.IRegistroEstablecimientoRepository;
 import com.bromatologia.backend.Repository.IRegistroProductoEstablecimientoRepository;
 import com.bromatologia.backend.Repository.IRegistroProductoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,26 +37,27 @@ public class RegistroProductoEstablecimientoService {
         return registroProductoEstablecimientoRepository.findById(id).orElseThrow(() -> new RegistroProductoEstablecimientoException("El registro del establecimiento no existe"));
     }
 
-    public RegistroProductoEstablecimiento crearRegistroProductoEstablecimiento(RegistroProductoEstablecimiento reg) {
-        if(reg == null || reg.getId() == null) {
+    @Transactional
+    public RegistroProductoEstablecimiento crearRegistroProductoEstablecimiento(long idRegProducto, long idRegEstablecimiento, RegistroProductoEstablecimiento entidad) {
+        if(idRegProducto <= 0 || idRegEstablecimiento <= 0) {
             throw new IllegalArgumentException("El registro o su id no pueden ser nulo");
-
         }
-        long idProducto = reg.getId().getRegistroProductoId();
-        long idEstablecimiento = reg.getId().getRegistroEstablecimientoId();
 
         //obtener las entidades relacionadas
 
-        RegistroProducto producto = registroProductoRepository.findById(idProducto).orElseThrow(() -> new RegistroProductoException("El registro del producto no existe"));
-        RegistroEstablecimiento establecimiento = registroEstablecimientoRepository.findById(idEstablecimiento).orElseThrow(() -> new RegistroEstablecimientoException("El registro del establecimiento no existe"));
+        RegistroProducto producto = registroProductoRepository.findById(idRegProducto).orElseThrow(() -> new RegistroProductoException("El registro del producto no existe"));
+        RegistroEstablecimiento establecimiento = registroEstablecimientoRepository.findById(idRegEstablecimiento).orElseThrow(() -> new RegistroEstablecimientoException("El registro del establecimiento no existe"));
 
         //asigno las entidades
-        reg.setRegistroProducto(producto);
-        reg.setRegistroEstablecimiento(establecimiento);
+        RegistroProductoEstablecimientoId reg = new RegistroProductoEstablecimientoId(idRegProducto,idRegEstablecimiento);
+        reg.setRegistroProductoId(producto.getIdRegistroProducto());
+        reg.setRegistroEstablecimientoId(establecimiento.getIdRegistroEstablecimiento());
 
-        //asegurar que el ID embebido este bien construido
-        reg.setId(new RegistroProductoEstablecimientoId(idProducto,idEstablecimiento));
-        return registroProductoEstablecimientoRepository.save(reg);
+        entidad.setId(reg);
+        entidad.setRegistroProducto(producto);
+        entidad.setRegistroEstablecimiento(establecimiento);
+
+        return registroProductoEstablecimientoRepository.save(entidad);
     }
 
     public void eliminarRegistroProductoEstablecimiento(long idProducto, long idEstablecimiento) {

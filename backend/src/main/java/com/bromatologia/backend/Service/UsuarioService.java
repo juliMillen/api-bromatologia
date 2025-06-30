@@ -1,5 +1,6 @@
 package com.bromatologia.backend.Service;
 
+import com.bromatologia.backend.DTO.UsuarioUpdateDTO;
 import com.bromatologia.backend.Entity.Usuario;
 import com.bromatologia.backend.Enums.Rol;
 import com.bromatologia.backend.Exception.UsuarioException;
@@ -33,36 +34,34 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario modificarUsuario(long id,Usuario usuario){
+    public Usuario modificarUsuario(long id, UsuarioUpdateDTO dto){
         if(id <= 0){
             throw new UsuarioException("El id del usuario no puede ser nulo");
         }
 
-        if(usuario == null){
+        if(dto == null){
             throw new UsuarioException("El usuario no puede ser nulo");
         }
 
         Usuario aModificar = obtenerUsuarioExistente(id);
 
-        if(usuario.getUsername() != null){
-            String nuevoUsername = usuario.getUsername();
-            if(nuevoUsername.isEmpty() && !nuevoUsername.equals(aModificar.getUsername())){
+        if(dto.getUsername() != null && !dto.getUsername().trim().isEmpty()){
+            String nuevoUsername = dto.getUsername().trim();
+            if(!nuevoUsername.equals(aModificar.getUsername())){
                 validarUsername(nuevoUsername);
                 aModificar.setUsername(nuevoUsername);
             }
         }
 
-        if(usuario.getPassword() != null){
-            String nuevoPassword = usuario.getPassword().trim();
+        if(dto.getPassword() != null){
+            String nuevoPassword = dto.getPassword().trim();
             validarPassword(nuevoPassword);
             aModificar.setPassword(passwordEncoder.encode(nuevoPassword)); //encriptamos la nueva contraseña
         }
 
-        if(usuario.getRol() != null){
-            String nuevoRol = usuario.getRol().name(); //convertir enum --> string
-            validarRol(nuevoRol); // validar ese string
-            aModificar.setRol(Rol.valueOf(nuevoRol)); // Volver a conver string --> enum
-        }
+        String nuevoRol = dto.getRol().name(); //convertir enum --> string
+        validarRol(nuevoRol); // validar ese string
+        aModificar.setRol(Rol.valueOf(nuevoRol)); // Volver a conver string --> enum
         return usuarioRepository.save(aModificar);
     }
 

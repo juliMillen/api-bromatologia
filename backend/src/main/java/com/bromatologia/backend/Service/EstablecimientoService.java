@@ -50,7 +50,6 @@ public class EstablecimientoService {
         Establecimiento establecimiento = obtenerEstablecimientoExistente(idEstablecimiento);
         Producto producto = productoRepository.findById(idProducto).orElseThrow(() -> new ProductoException("Producto invalido"));
         establecimiento.agregarProductos(producto);
-        productoRepository.save(producto);
         return producto;
     }
 

@@ -1,6 +1,7 @@
 package com.bromatologia.backend.Controller;
 
 import com.bromatologia.backend.DTO.UsuarioDTO;
+import com.bromatologia.backend.DTO.UsuarioUpdateDTO;
 import com.bromatologia.backend.Entity.Usuario;
 import com.bromatologia.backend.Service.UsuarioService;
 import jakarta.validation.Valid;
@@ -48,8 +49,8 @@ public class UsuarioController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable long id, @Valid @RequestBody Usuario usuario) {
-        Usuario aModificar = usuarioService.modificarUsuario(id,usuario);
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable long id, @Valid @RequestBody UsuarioUpdateDTO dto) {
+        Usuario aModificar = usuarioService.modificarUsuario(id,dto);
         return new ResponseEntity<>(aModificar, HttpStatus.OK);
     }
 

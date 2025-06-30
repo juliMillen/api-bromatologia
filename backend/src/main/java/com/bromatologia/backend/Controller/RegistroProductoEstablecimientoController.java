@@ -32,7 +32,7 @@ public class RegistroProductoEstablecimientoController {
     }
 
     @GetMapping("/{idProducto}/{idEstablecimiento}")
-    public ResponseEntity<RegistroProductoEstablecimientoDTO> obtenerRegistroProductoEstablecimientoPorId(@PathVariable long idProducto,@PathVariable long idEstablecimiento){
+    public ResponseEntity<RegistroProductoEstablecimientoDTO> obtenerRegistroProductoEstablecimientoPorId(@PathVariable long idProducto,@PathVariable long idEstablecimiento) {
         RegistroProductoEstablecimiento buscado = registroProductoEstablecimientoService.obtenerRegistroProductoEstablecimientoPorId(idProducto,idEstablecimiento);
         if(buscado == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -43,15 +43,12 @@ public class RegistroProductoEstablecimientoController {
 
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/")
-    public ResponseEntity<RegistroProductoEstablecimientoDTO> guardarRegistroProductoEstablecimiento( @Valid @RequestBody RegistroProductoEstablecimientoDTO registroProdEst){
-        if(registroProdEst == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        RegistroProductoEstablecimiento regEntidad = convertirADominio(registroProdEst);
-        RegistroProductoEstablecimiento regGuardado = registroProductoEstablecimientoService
-                .crearRegistroProductoEstablecimiento(regEntidad);
-        return new ResponseEntity<>(convertirARegistroDTO(regGuardado), HttpStatus.CREATED);
+    @PostMapping("/{idRegProducto}/{idRegEstablecimiento}")
+    public ResponseEntity<RegistroProductoEstablecimientoDTO> guardarRegistroProductoEstablecimiento( @PathVariable long idRegProducto,@PathVariable long idRegEstablecimiento, @RequestBody @Valid RegistroProductoEstablecimientoDTO dto) {
+        RegistroProductoEstablecimiento registro = convertirADominio(dto);
+        RegistroProductoEstablecimiento regGuardado = registroProductoEstablecimientoService.crearRegistroProductoEstablecimiento(idRegProducto,idRegEstablecimiento,registro);
+        RegistroProductoEstablecimientoDTO regGuardadoDTO = convertirARegistroDTO(regGuardado);
+        return new ResponseEntity<>(regGuardadoDTO, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -65,11 +62,11 @@ public class RegistroProductoEstablecimientoController {
     //metodos de mapeo DTO <---> entidad
     private RegistroProductoEstablecimientoDTO convertirARegistroDTO(RegistroProductoEstablecimiento entidad){
         RegistroProductoEstablecimientoDTO dto = new RegistroProductoEstablecimientoDTO();
-        dto.setIdProducto(entidad.getId().getRegistroProductoId());
-        dto.setIdEstablecimiento(entidad.getId().getRegistroEstablecimientoId());
-        dto.setRnpaActual(entidad.getNroRnpaActual());
+        dto.setIdRegistroProducto(entidad.getId().getRegistroProductoId());
+        dto.setIdRegistroEstablecimiento(entidad.getId().getRegistroEstablecimientoId());
+        dto.setRnpaActual(entidad.getRnpaActual());
         dto.setFechaDeEmision(entidad.getFechaDeEmision());
-        dto.setRnpaAnterior(entidad.getNroAnteriorRnpa());
+        dto.setRnpaAnterior(entidad.getRnpaAnterior());
         dto.setTipo(entidad.getTipo());
         dto.setNroRne(entidad.getNroRne());
         dto.setCertificado(entidad.getCertificado());
@@ -79,14 +76,14 @@ public class RegistroProductoEstablecimientoController {
 
     private RegistroProductoEstablecimiento convertirADominio(RegistroProductoEstablecimientoDTO dto){
         RegistroProductoEstablecimientoId id = new RegistroProductoEstablecimientoId();
-        id.setRegistroProductoId(dto.getIdProducto());
-        id.setRegistroEstablecimientoId(dto.getIdEstablecimiento());
+        id.setRegistroProductoId(dto.getIdRegistroProducto());
+        id.setRegistroEstablecimientoId(dto.getIdRegistroEstablecimiento());
 
         RegistroProductoEstablecimiento entidad = new RegistroProductoEstablecimiento();
         entidad.setId(id);
-        entidad.setNroRnpaActual(dto.getRnpaActual());
+        entidad.setRnpaActual(dto.getRnpaActual());
         entidad.setFechaDeEmision(dto.getFechaDeEmision());
-        entidad.setNroAnteriorRnpa(dto.getRnpaAnterior());
+        entidad.setRnpaAnterior(dto.getRnpaAnterior());
         entidad.setTipo(dto.getTipo());
         entidad.setNroRne(dto.getNroRne());
         entidad.setCertificado(dto.getCertificado());

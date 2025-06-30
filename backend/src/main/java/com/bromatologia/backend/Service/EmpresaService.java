@@ -1,8 +1,10 @@
 package com.bromatologia.backend.Service;
 
+import com.bromatologia.backend.DTO.EmpresaUpdateDTO;
 import com.bromatologia.backend.Entity.Empresa;
 import com.bromatologia.backend.Entity.Establecimiento;
 import com.bromatologia.backend.Exception.EmpresaException;
+import com.bromatologia.backend.Exception.EstablecimientoException;
 import com.bromatologia.backend.Repository.IEmpresaRepository;
 import com.bromatologia.backend.Repository.IEstablecimientoRepository;
 import jakarta.transaction.Transactional;
@@ -44,24 +46,23 @@ public class EmpresaService {
         empresaRepository.delete(aEliminar);
     }
 
-    public Empresa actualizarEmpresa(long cuit,Empresa empresa) {
-        if (empresa == null || cuit <= 0) {
+    public Empresa actualizarEmpresa(long cuit, EmpresaUpdateDTO dto) {
+        if (dto == null || cuit <= 0) {
             throw new EmpresaException("Empresa no encontrada o cuit invalido");
         }
         Empresa aActualizar = obtenerEmpresaExistente(cuit);
-        aActualizar.setEmail(empresa.getEmail());
-        aActualizar.setTelefono(empresa.getTelefono());
+        aActualizar.setEmail(dto.getEmail());
+        aActualizar.setTelefono(dto.getTelefono());
 
         return empresaRepository.save(aActualizar);
     }
 
     @Transactional
-    public Establecimiento agregarEstablecimiento(long cuitEmpresa,Establecimiento establecimiento){
+    public Establecimiento agregarEstablecimiento(long cuitEmpresa,long idEstablecimiento){
         Empresa empresa = obtenerEmpresaExistente(cuitEmpresa);
-        establecimiento.setEmpresa(empresa);
-        empresa.agregarEstablecimiento(establecimiento);
-        establecimientoRepository.save(establecimiento);
-        return establecimiento;
+        Establecimiento nuevo = establecimientoRepository.findById(idEstablecimiento).orElseThrow(() -> new EstablecimientoException("El establecimiento no existe"));
+        empresa.agregarEstablecimiento(nuevo);
+        return nuevo;
     }
 
     public Empresa obtenerEmpresaExistente(long cuitEmpresa){

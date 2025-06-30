@@ -2,13 +2,12 @@ package com.bromatologia.backend.Entity;
 
 import com.bromatologia.backend.Exception.MantenimientoException;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -18,7 +17,7 @@ import java.util.List;
 public class Mantenimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_mantenimiento;
+    private long idMantenimiento;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "registro_establecimiento", nullable = true)
@@ -32,12 +31,12 @@ public class Mantenimiento {
     private List<Tramite> tramites = new ArrayList<>();
 
     @NotNull(message = "La fecha de mantenimiento es obligatoria")
-    private Date fecha_mantenimiento;
+    private LocalDate fechaMantenimiento;
 
     private String enlaceRecibido;
 
-    public Mantenimiento(Date fecha_mantenimiento, String enlaceRecibido){
-        this.fecha_mantenimiento = fecha_mantenimiento;
+    public Mantenimiento(LocalDate fechaMantenimiento, String enlaceRecibido){
+        this.fechaMantenimiento = fechaMantenimiento;
         this.enlaceRecibido = enlaceRecibido;
     }
 

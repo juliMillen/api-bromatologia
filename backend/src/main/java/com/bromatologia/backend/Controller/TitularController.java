@@ -1,6 +1,10 @@
 package com.bromatologia.backend.Controller;
 
 
+import com.bromatologia.backend.DTO.ProductoDTO;
+import com.bromatologia.backend.DTO.TitularDTO;
+import com.bromatologia.backend.DTO.TitularUpdateDTO;
+import com.bromatologia.backend.Entity.Producto;
 import com.bromatologia.backend.Entity.Titular;
 import com.bromatologia.backend.Service.TitularService;
 import jakarta.validation.Valid;
@@ -28,31 +32,53 @@ public class TitularController {
         return new ResponseEntity<>(listaTitulares, HttpStatus.OK);
     }
 
-    @GetMapping("/{cuit_Titular}")
-    public ResponseEntity<Titular> obtenerTitular(@PathVariable long cuit_Titular) {
-        Titular buscado = titularService.obtenerTitularPorCuit(cuit_Titular);
-        return new ResponseEntity<>(buscado, HttpStatus.OK);
+    @GetMapping("/{cuitTitular}")
+    public ResponseEntity<TitularDTO> obtenerTitular(@PathVariable long cuitTitular) {
+        Titular buscado = titularService.obtenerTitularPorCuit(cuitTitular);
+        TitularDTO respuesta = convertirADTO(buscado);
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
-    public ResponseEntity<Titular> crearTitular(@RequestBody @Valid Titular titular) {
-        Titular nuevoTitular = titularService.crearTitular(titular);
-        return new ResponseEntity<>(nuevoTitular, HttpStatus.CREATED);
+    public ResponseEntity<TitularDTO> crearTitular(@RequestBody @Valid TitularDTO titular) {
+        Titular nuevoTitular = convertirADominio(titular);
+        Titular guardado = titularService.crearTitular(nuevoTitular);
+        TitularDTO respuesta = convertirADTO(guardado);
+        return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/{cuit_Titular}")
-    public ResponseEntity<Titular> actualizarTitular(long cuit_Titular,@RequestBody @Valid Titular titular) {
+    @PatchMapping("/{cuitTitular}")
+    public ResponseEntity<Titular> actualizarTitular(@PathVariable long cuitTitular,@RequestBody @Valid TitularUpdateDTO dto) {
 
-        Titular nuevoTitular = titularService.actualizarTitular(cuit_Titular,titular);
+        Titular nuevoTitular = titularService.actualizarTitular(cuitTitular,dto);
         return new ResponseEntity<>(nuevoTitular, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{cuit_Titular}")
-    public ResponseEntity<Void> eliminarTitular(@PathVariable long cuit_Titular) {
-        titularService.eliminarTitular(cuit_Titular);
+    @DeleteMapping("/{cuitTitular}")
+    public ResponseEntity<Void> eliminarTitular(@PathVariable long cuitTitular) {
+        titularService.eliminarTitular(cuitTitular);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    //metodos de mapeo DTO <---> entidad
+    private TitularDTO convertirADTO(Titular entidad) {
+        TitularDTO dto = new TitularDTO();
+        dto.setCuitTitular(entidad.getCuitTitular());
+        dto.setNombreTitular(entidad.getNombreTitular());
+        dto.setEmail(entidad.getEmail());
+        dto.setTelefono(entidad.getTelefono());
+        return dto;
+    }
+
+    private Titular convertirADominio(TitularDTO dto) {
+        Titular entidad = new Titular();
+        entidad.setCuitTitular(dto.getCuitTitular());
+        entidad.setNombreTitular(dto.getNombreTitular());
+        entidad.setEmail(dto.getEmail());
+        entidad.setTelefono(dto.getTelefono());
+        return entidad;
     }
 }

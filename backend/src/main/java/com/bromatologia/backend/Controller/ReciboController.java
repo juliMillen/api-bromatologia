@@ -1,5 +1,8 @@
 package com.bromatologia.backend.Controller;
 
+import com.bromatologia.backend.DTO.ProductoDTO;
+import com.bromatologia.backend.DTO.ReciboDTO;
+import com.bromatologia.backend.Entity.Producto;
 import com.bromatologia.backend.Entity.Recibo;
 import com.bromatologia.backend.Service.ReciboService;
 import jakarta.validation.Valid;
@@ -27,17 +30,20 @@ public class ReciboController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Recibo> obtenerReciboPorId(@PathVariable long id) {
+    public ResponseEntity<ReciboDTO> obtenerReciboPorId(@PathVariable long id) {
         Recibo buscado = reciboService.obtenerReciboPorId(id);
-        return new ResponseEntity<>(buscado, HttpStatus.OK);
+        ReciboDTO respuesta = convertirADTO(buscado);
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
-    public ResponseEntity<Recibo> agregarRecibo(@RequestBody @Valid Recibo recibo) {
+    public ResponseEntity<ReciboDTO> agregarRecibo(@RequestBody @Valid ReciboDTO recibo) {
 
-        Recibo nuevoRecibo = reciboService.crearRecibo(recibo);
-        return new ResponseEntity<>(nuevoRecibo, HttpStatus.CREATED);
+        Recibo nuevoRecibo = convertirADominio(recibo);
+        Recibo guardado = reciboService.crearRecibo(nuevoRecibo);
+        ReciboDTO respuesta = convertirADTO(guardado);
+        return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -45,5 +51,22 @@ public class ReciboController {
     public ResponseEntity<Recibo> eliminarRecibo(@PathVariable long id) {
         reciboService.eliminarReciboPorId(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    //metodos de mapeo DTO <---> entidad
+    private ReciboDTO convertirADTO(Recibo entidad) {
+        ReciboDTO dto = new ReciboDTO();
+        dto.setIdRecibo(entidad.getIdRecibo());
+        dto.setFechaRecibo(entidad.getFechaRecibo());
+        dto.setImporte(entidad.getImporte());
+        return dto;
+    }
+
+    private Recibo convertirADominio(ReciboDTO dto) {
+        Recibo entidad = new Recibo();
+        entidad.setIdRecibo(dto.getIdRecibo());
+        entidad.setFechaRecibo(dto.getFechaRecibo());
+        entidad.setImporte(dto.getImporte());
+        return entidad;
     }
 }

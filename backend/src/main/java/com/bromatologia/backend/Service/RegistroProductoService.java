@@ -2,12 +2,11 @@ package com.bromatologia.backend.Service;
 
 import com.bromatologia.backend.Entity.Mantenimiento;
 import com.bromatologia.backend.Entity.Producto;
-import com.bromatologia.backend.Entity.RegistroEstablecimiento;
 import com.bromatologia.backend.Entity.RegistroProducto;
+import com.bromatologia.backend.Exception.ProductoException;
 import com.bromatologia.backend.Exception.RegistroProductoException;
 import com.bromatologia.backend.Repository.IMantenimientoRepository;
 import com.bromatologia.backend.Repository.IProductoRepository;
-import com.bromatologia.backend.Repository.IRegistroEstablecimientoRepository;
 import com.bromatologia.backend.Repository.IRegistroProductoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,6 @@ import java.util.List;
 public class RegistroProductoService {
     @Autowired
     private IRegistroProductoRepository registroProductoRepository;
-
-    @Autowired
-    private IRegistroEstablecimientoRepository registroEstablecimientoRepository;
 
     @Autowired
     private IProductoRepository productoRepository;
@@ -53,27 +49,20 @@ public class RegistroProductoService {
     }
 
     @Transactional
-    public Producto asignarProducto(long id, Producto producto){
-        RegistroProducto registro = obtenerRegistroProductoExistente(id);
-        productoRepository.save(producto);
-        registro.asignarProducto(producto);
-        return producto;
+    public Producto asignarProducto(long idRegistroProducto, long idProducto){
+        RegistroProducto registro = obtenerRegistroProductoExistente(idRegistroProducto);
+        Producto nuevo = productoRepository.findById(idProducto).orElseThrow(() -> new ProductoException("El producto no existe"));
+        registro.asignarProducto(nuevo);
+        return nuevo;
     }
 
-    @Transactional
-    public RegistroEstablecimiento asignarRegistroEstablecimiento(long id, RegistroEstablecimiento registroEstablecimiento){
-        RegistroProducto registro = obtenerRegistroProductoExistente(id);
-        registro.asignarRegistroEstablecimientos(registroEstablecimiento);
-        registroEstablecimientoRepository.save(registroEstablecimiento);
-        return registroEstablecimiento;
-    }
 
     @Transactional
-    public Mantenimiento agregarMantenimiento(long id, Mantenimiento mantenimiento){
-        RegistroProducto registroProd = obtenerRegistroProductoExistente(id);
-        registroProd.agregarMantenimiento(mantenimiento);
-        mantenimientoRepository.save(mantenimiento);
-        return mantenimiento;
+    public Mantenimiento agregarMantenimiento(long idRegistroProducto, long idMantenimiento){
+        RegistroProducto registroProd = obtenerRegistroProductoExistente(idRegistroProducto);
+        Mantenimiento nuevo = mantenimientoRepository.findById(idMantenimiento).orElseThrow(() -> new RegistroProductoException("El mantenimiento no se ha encontrado"));
+        registroProd.agregarMantenimiento(nuevo);
+        return nuevo;
     }
 
     public RegistroProducto obtenerRegistroProductoExistente(long id){

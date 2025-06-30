@@ -1,7 +1,7 @@
 package com.bromatologia.backend.Service;
 
 import com.bromatologia.backend.Entity.*;
-import com.bromatologia.backend.Exception.RegistroEstablecimientoException;
+import com.bromatologia.backend.Exception.*;
 import com.bromatologia.backend.Repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,43 +42,42 @@ public class RegistroEstablecimientoService {
         return registroEstablecimientoRepository.save(registro);
     }
 
-    public void EliminarRegistro(long id) {
+    public void eliminarRegistro(long id) {
         if(id <= 0){
             throw new RegistroEstablecimientoException("El id es invalido");
         }
         RegistroEstablecimiento aEliminar = obtenerRegistroEstablecimientoExistente(id);
         registroEstablecimientoRepository.delete(aEliminar);
-
     }
 
     @Transactional
-    public Empresa asignarEmpresa(long id, Empresa empresa){
-        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(id);
-        empresaRepository.save(empresa);
+    public Empresa asignarEmpresa(long idRegistroEstablecimiento, long cuitEmpresa){
+        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(idRegistroEstablecimiento);
+        Empresa empresa = empresaRepository.findById(cuitEmpresa).orElseThrow(() -> new EmpresaException("El empresa no existe"));
         registro.asignarEmpresa(empresa);
         return empresa;
     }
 
     @Transactional
-    public Titular asignarTitular(long id, Titular titular){
-        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(id);
-        titularRepository.save(titular);
+    public Titular asignarTitular(long idRegistroEstablecimiento, long cuitTitular){
+        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(idRegistroEstablecimiento);
+        Titular titular = titularRepository.findById(cuitTitular).orElseThrow(() -> new TitularException("No existe el titular registro"));
         registro.asignarTitular(titular);
         return titular;
     }
 
     @Transactional
-    public Establecimiento asignarEstablecimiento(long id, Establecimiento establecimiento){
-        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(id);
-        establecimientoRepository.save(establecimiento);
+    public Establecimiento asignarEstablecimiento(long idRegistroEstablecimiento, long idEstablecimiento){
+        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(idRegistroEstablecimiento);
+        Establecimiento establecimiento = establecimientoRepository.findById(idEstablecimiento).orElseThrow(() -> new EstablecimientoException("El establecimiento no se encontro"));
         registro.asignarEstablecimiento(establecimiento);
         return establecimiento;
     }
 
     @Transactional
-    public Mantenimiento agregarMantenimiento(long id,Mantenimiento mantenimiento){
-        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(id);
-        mantenimientoRepository.save(mantenimiento);
+    public Mantenimiento agregarMantenimiento(long idRegistroEstablecimiento,long idMantenimiento){
+        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(idRegistroEstablecimiento);
+        Mantenimiento mantenimiento = mantenimientoRepository.findById(idMantenimiento).orElseThrow(() -> new MantenimientoException("no se ha encontrado el mantenimiento"));
         registro.agregarMantenimiento(mantenimiento);
         return mantenimiento;
     }

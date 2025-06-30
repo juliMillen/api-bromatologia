@@ -12,13 +12,13 @@ public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_Producto;
+    private long idProducto;
 
     @OneToOne(mappedBy = "producto", fetch = FetchType.LAZY)
     private RegistroProducto registroProducto;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "establecimiento_producto", nullable = false)
+    @JoinColumn(name = "establecimiento_producto", nullable = true)
     private Establecimiento establecimiento;
 
     @NotBlank(message = "La marca no puede estar vacia")

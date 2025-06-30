@@ -18,7 +18,7 @@ public class Empresa {
     @Id
     @NotNull
     @Min(value = 20000000000L, message = "El CUIT debe tener al menos 11 dígitos")
-    private long cuit_Empresa;
+    private long cuitEmpresa;
 
     @NotBlank
     private String nombreEmpresa;
@@ -36,8 +36,8 @@ public class Empresa {
     @Pattern(regexp = "^\\+?\\d{7,15}$", message = "Formato de teléfono inválido")
     private String telefono;
 
-    public Empresa(long cuit_Empresa, String nombreEmpresa, Titular titular, String email, String telefono) {
-        this.cuit_Empresa = cuit_Empresa;
+    public Empresa(long cuitEmpresa, String nombreEmpresa, Titular titular, String email, String telefono) {
+        this.cuitEmpresa = cuitEmpresa;
         this.nombreEmpresa = nombreEmpresa;
         this.titular = titular;
         this.email = email;

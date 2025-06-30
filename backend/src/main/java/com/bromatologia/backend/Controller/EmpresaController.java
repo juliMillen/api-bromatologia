@@ -1,7 +1,11 @@
 package com.bromatologia.backend.Controller;
 
+import com.bromatologia.backend.DTO.EmpresaDTO;
+import com.bromatologia.backend.DTO.EmpresaUpdateDTO;
+import com.bromatologia.backend.DTO.EstablecimientoDTO;
 import com.bromatologia.backend.Entity.Empresa;
 import com.bromatologia.backend.Entity.Establecimiento;
+import com.bromatologia.backend.Entity.Titular;
 import com.bromatologia.backend.Service.EmpresaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +29,11 @@ public class EmpresaController {
         return new ResponseEntity<>(empresas, HttpStatus.OK);
     }
 
-    @GetMapping("/{cuit_Empresa}")
-    public ResponseEntity<Empresa> obtenerEmpresaPorId(@PathVariable Long cuit_Empresa) {
-        Empresa empresa = empresaService.obtenerEmpresaPorId(cuit_Empresa);
-        return new ResponseEntity<>(empresa, HttpStatus.OK);
+    @GetMapping("/{cuitEmpresa}")
+    public ResponseEntity<EmpresaDTO> obtenerEmpresaPorId(@PathVariable Long cuitEmpresa) {
+        Empresa empresa = empresaService.obtenerEmpresaPorId(cuitEmpresa);
+        EmpresaDTO empresaDTO = convertirAEmpresaDTO(empresa);
+        return new ResponseEntity<>(empresaDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{cuit}/establecimientos")
@@ -40,31 +45,88 @@ public class EmpresaController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
-    public ResponseEntity<Empresa> crearEmpresa(@RequestBody @Valid Empresa empresa) {
-        Empresa nuevaEmpresa = empresaService.crearEmpresa(empresa);
-        System.out.println("Empresa creada correctamente");
-        return new ResponseEntity<>(nuevaEmpresa, HttpStatus.CREATED);
+    public ResponseEntity<EmpresaDTO> crearEmpresa(@RequestBody @Valid EmpresaDTO dto) {
+        Empresa empresa = convertirADominio(dto);
+        Empresa guardada = empresaService.crearEmpresa(empresa);
+        EmpresaDTO respuesta = convertirAEmpresaDTO(guardada);
+        return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{cuit_Empresa}")
-    public ResponseEntity<Establecimiento> agregarEstablecimiento(@PathVariable long cuit_Empresa, @RequestBody @Valid Establecimiento establecimiento){
-        Establecimiento creado = empresaService.agregarEstablecimiento(cuit_Empresa, establecimiento);
+    @PostMapping("/{cuitEmpresa}/establecimiento/{idEstablecimiento}")
+    public ResponseEntity<Establecimiento> agregarEstablecimiento(@PathVariable long cuitEmpresa, @PathVariable long idEstablecimiento){
+        Establecimiento creado = empresaService.agregarEstablecimiento(cuitEmpresa, idEstablecimiento);
         return new ResponseEntity<>(creado, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/{cuit_Empresa}")
-    public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable long cuit_Empresa,@RequestBody @Valid Empresa empresa) {
-        Empresa nuevaEmpresa = empresaService.actualizarEmpresa(cuit_Empresa,empresa);
-        return new ResponseEntity<>(nuevaEmpresa, HttpStatus.OK);
+    @PatchMapping("/{cuitEmpresa}")
+    public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable long cuitEmpresa, @RequestBody @Valid EmpresaUpdateDTO dto) {
+        Empresa empresaActualizada = empresaService.actualizarEmpresa(cuitEmpresa,dto);
+        return new ResponseEntity<>(empresaActualizada, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{cuit_Empresa}")
-    public ResponseEntity<Void> eliminarEmpresa(@PathVariable long cuit_Empresa) {
-        empresaService.eliminarEmpresaPorId(cuit_Empresa);
+    @DeleteMapping("/{cuitEmpresa}")
+    public ResponseEntity<Void> eliminarEmpresa(@PathVariable long cuitEmpresa) {
+        empresaService.eliminarEmpresaPorId(cuitEmpresa);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+    //metodos de mapeo DTO <---> entidad
+    private EmpresaDTO convertirAEmpresaDTO(Empresa entidad){
+        EmpresaDTO dto = new EmpresaDTO();
+        dto.setCuitEmpresa(entidad.getCuitEmpresa());
+        dto.setNombreEmpresa(entidad.getNombreEmpresa());
+        dto.setEmail(entidad.getEmail());
+        dto.setTelefono(entidad.getTelefono());
+
+        //Establecimiento
+        List<EstablecimientoDTO> establecimientosDTO = entidad.getEstablecimientos()
+                .stream()
+                .map(e ->{
+                    EstablecimientoDTO establecimientoDTO = new EstablecimientoDTO();
+                    establecimientoDTO.setIdEstablecimiento(e.getIdEstablecimiento());
+                    establecimientoDTO.setLocalidad(e.getLocalidad());
+                    establecimientoDTO.setDepartamento(e.getDepartamento());
+                    establecimientoDTO.setDireccion(e.getDireccion());
+                    establecimientoDTO.setCuitEmpresa(e.getEmpresa().getCuitEmpresa());
+                    return establecimientoDTO;
+                }).toList();
+        dto.setEstablecimientos(establecimientosDTO);
+        return dto;
+    }
+
+    private Empresa convertirADominio(EmpresaDTO dto){
+
+        Empresa entidad = new Empresa();
+        entidad.setCuitEmpresa(dto.getCuitEmpresa());
+        entidad.setNombreEmpresa(dto.getNombreEmpresa());
+        entidad.setEmail(dto.getEmail());
+        entidad.setTelefono(dto.getTelefono());
+
+        //titular
+        Titular titular = new Titular();
+        titular.setCuitTitular(dto.getTitular().getCuitTitular());
+        titular.setNombreTitular(dto.getTitular().getNombreTitular());
+        titular.setEmail(dto.getTitular().getEmail());
+        titular.setTelefono(dto.getTitular().getTelefono());
+        entidad.setTitular(titular);
+
+        //establecimiento
+        List<Establecimiento> establecimiento = dto.getEstablecimientos()
+                .stream()
+                .map(e->{
+                    Establecimiento est = new Establecimiento();
+                    est.setIdEstablecimiento(e.getIdEstablecimiento());
+                    est.setLocalidad(e.getLocalidad());
+                    est.setDepartamento(e.getDepartamento());
+                    est.setDireccion(e.getDireccion());
+                    return est;
+                }).toList();
+        entidad.setEstablecimientos(establecimiento);
+        return entidad;
     }
 
 }

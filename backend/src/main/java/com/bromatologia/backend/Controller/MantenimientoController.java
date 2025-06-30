@@ -1,9 +1,9 @@
 package com.bromatologia.backend.Controller;
 
-import com.bromatologia.backend.Entity.Empresa;
-import com.bromatologia.backend.Entity.Establecimiento;
-import com.bromatologia.backend.Entity.Mantenimiento;
-import com.bromatologia.backend.Entity.Tramite;
+import com.bromatologia.backend.DTO.MantenimientoDTO;
+import com.bromatologia.backend.DTO.ProductoDTO;
+import com.bromatologia.backend.DTO.TramiteDTO;
+import com.bromatologia.backend.Entity.*;
 import com.bromatologia.backend.Service.MantenimientoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +29,10 @@ public class MantenimientoController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Mantenimiento> obtenerMantenimientoPorId(@PathVariable long id){
-        Mantenimiento buscado = mantenimientoService.obtenerMantenimiento(id);
-        return new ResponseEntity<>(buscado, HttpStatus.OK);
+    public ResponseEntity<MantenimientoDTO> obtenerMantenimientoPorId(@PathVariable long id){
+        Mantenimiento encontrado = mantenimientoService.obtenerMantenimiento(id);
+        MantenimientoDTO respuesta = convertirADTO(encontrado);
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/tramites")
@@ -42,16 +43,16 @@ public class MantenimientoController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping()
-    public ResponseEntity<Mantenimiento> registrarMantenimiento(@RequestBody @Valid Mantenimiento mantenimiento){
-
-        Mantenimiento registrado = mantenimientoService.registrarMantenimiento(mantenimiento);
-        return new ResponseEntity<>(registrado, HttpStatus.CREATED);
+    public ResponseEntity<MantenimientoDTO> registrarMantenimiento(@RequestBody @Valid MantenimientoDTO mantenimiento){
+        Mantenimiento nuevo = mantenimientoService.registrarMantenimiento(convertirADominio(mantenimiento));
+        MantenimientoDTO respuesta = convertirADTO(nuevo);
+        return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("{id}/tramites")
-    public ResponseEntity<Tramite> agregarTramite(@PathVariable long id, @RequestBody @Valid Tramite tramite){
-        Tramite nuevo = mantenimientoService.agregarTramite(id, tramite);
+    @PostMapping("/{idMantenimiento}/tramite/{idTramite}")
+    public ResponseEntity<Tramite> agregarTramite(@PathVariable long idMantenimiento, @PathVariable long idTramite){
+        Tramite nuevo = mantenimientoService.agregarTramite(idMantenimiento, idTramite);
         return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
     }
 
@@ -60,5 +61,43 @@ public class MantenimientoController {
     public ResponseEntity<Mantenimiento> eliminarMantenimiento(@PathVariable long id){
         mantenimientoService.eliminarMantenimiento(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    //metodos de mapeo DTO <---> entidad
+    private MantenimientoDTO convertirADTO(Mantenimiento entidad) {
+        MantenimientoDTO dto = new MantenimientoDTO();
+        dto.setIdMantenimiento(entidad.getIdMantenimiento());
+        dto.setFechaMantenimiento(entidad.getFechaMantenimiento());
+        dto.setEnlaceRecibido(entidad.getEnlaceRecibido());
+
+        //Tramites
+        List<TramiteDTO> tramites = entidad.getTramites()
+                .stream()
+                .map(e->{
+                    TramiteDTO tramite = new TramiteDTO();
+                    tramite.setIdTramite(e.getIdTramite());
+                    tramite.setNombreTramite(e.getNombreTramite());
+                    return tramite;
+                }).toList();
+        return dto;
+    }
+
+    private Mantenimiento convertirADominio(MantenimientoDTO dto) {
+        Mantenimiento entidad = new Mantenimiento();
+        entidad.setIdMantenimiento(dto.getIdMantenimiento());
+        entidad.setFechaMantenimiento(dto.getFechaMantenimiento());
+        entidad.setEnlaceRecibido(dto.getEnlaceRecibido());
+
+        //Tramites
+
+        List<Tramite> tramites = dto.getTramites()
+                .stream()
+                .map(e ->{
+                    Tramite tramite = new Tramite();
+                    tramite.setIdTramite(e.getIdTramite());
+                    tramite.setNombreTramite(e.getNombreTramite());
+                    return tramite;
+                }).toList();
+        return entidad;
     }
 }

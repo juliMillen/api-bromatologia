@@ -36,21 +36,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?>login(@RequestBody LoginRequests loginRequests) {
 
-        System.out.println("=== DEBUG LOGIN ===");
-        System.out.println("Username recibido: " + loginRequests.getUsername());
-        System.out.println("Password recibido: " + loginRequests.getPassword());
+
         try{
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginRequests.getUsername(), loginRequests.getPassword()
                     )
             );
-            System.out.println("Autenticacion Exitosa");
             String token = jwtUtils.generateToken(authentication);
             return ResponseEntity.ok(new JwtResponse(token));
         }catch(Exception e){
-            System.out.println("Error en autenticación: " + e.getClass().getSimpleName());
-            System.out.println("Mensaje de error: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }

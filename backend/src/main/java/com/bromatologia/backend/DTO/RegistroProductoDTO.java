@@ -7,17 +7,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductoDTO {
+public class RegistroProductoDTO {
+
+    @NotNull(message = "El id no puede ser nulo")
+    private long idRegistroProducto;
+    @NotBlank(message = "El tipo es obligatorio")
+    private String tipo;
+
     @NotNull(message = "El id no puede ser nulo")
     private long idProducto;
-    @NotBlank(message = "La marca es obligatoria")
-    private String marca;
-    @NotBlank(message = "La denominacion es obligatoria")
-    private String denominacion;
-    @NotBlank(message = "El nombre de fantasia es obligatorio")
-    private String nombreFantasia;
+
+    private List<MantenimientoDTO> mantenimientos = new ArrayList<>();
 }

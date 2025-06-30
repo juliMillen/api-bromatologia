@@ -3,7 +3,9 @@ package com.bromatologia.backend.Entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -14,18 +16,18 @@ public class Recibo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_Recibo;
+    private long idRecibo;
 
     @OneToOne(mappedBy = "recibo",fetch = FetchType.LAZY)
     private Tramite tramite;
 
     @NotNull(message = "La fecha del recibo es obligatoria")
-    private Date fecha_Recibo;
+    private LocalDate fechaRecibo;
     @NotNull(message = "El importe no puede estar vacio")
     private double importe;
 
-    public Recibo(Date fecha_Recibo, double importe) {
-        this.fecha_Recibo = fecha_Recibo;
+    public Recibo(LocalDate fechaRecibo, double importe) {
+        this.fechaRecibo = fechaRecibo;
         this.importe = importe;
     }
 }

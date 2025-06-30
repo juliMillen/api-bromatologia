@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +20,7 @@ public class RegistroEstablecimiento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_registroEstablecimiento;
+    private long idRegistroEstablecimiento;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_titular", nullable = true)
@@ -44,15 +45,15 @@ public class RegistroEstablecimiento {
     private double arancel;
 
     @NotNull(message = "La fecha de emision es obligatoria")
-    private Date fechaEmision;
+    private LocalDate fechaEmision;
 
     @NotNull(message = "La fecha de vencimiento es obligatoria")
-    private Date fechaVencimiento;
+    private LocalDate fechaVencimiento;
 
     @NotBlank(message = "El estado no puede estar vacio")
     private String estado;
 
-    public RegistroEstablecimiento(String categoriaAnt, double arancel, Date fechaEmision, Date fechaVencimiento, String estado) {
+    public RegistroEstablecimiento(String categoriaAnt, double arancel, LocalDate fechaEmision, LocalDate fechaVencimiento, String estado) {
         this.categoriaAnt = categoriaAnt;
         this.arancel = arancel;
         this.fechaEmision = fechaEmision;

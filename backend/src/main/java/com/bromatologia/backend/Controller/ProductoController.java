@@ -1,5 +1,5 @@
 package com.bromatologia.backend.Controller;
-
+import com.bromatologia.backend.DTO.ProductoDTO;
 import com.bromatologia.backend.Entity.Producto;
 import com.bromatologia.backend.Service.ProductoService;
 import jakarta.validation.Valid;
@@ -26,24 +26,28 @@ public class ProductoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Producto> obtenerProducto(@PathVariable long id) {
+    public ResponseEntity<ProductoDTO> obtenerProducto(@PathVariable long id) {
         Producto buscado = productoService.obtenerProductoPorId(id);
-        return new ResponseEntity<>(buscado, HttpStatus.OK);
+        ProductoDTO respuesta = convertirADTO(buscado);
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping()
-    public ResponseEntity<Producto> agregarProducto(@RequestBody @Valid Producto producto) {
+    public ResponseEntity<ProductoDTO> agregarProducto(@RequestBody @Valid ProductoDTO dto) {
 
-        Producto nuevoProducto = productoService.registrarProducto(producto);
-        return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
+        Producto producto = convertirADominio(dto);
+        Producto guardado = productoService.registrarProducto(producto);
+        ProductoDTO respuesta = convertirADTO(guardado);
+        return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
-    public ResponseEntity<Producto> actualizarProducto(@PathVariable long id,@RequestBody @Valid Producto producto) {
-        Producto actualizado = productoService.editarProducto(id,producto);
-        return new ResponseEntity<>(actualizado, HttpStatus.OK);
+    public ResponseEntity<ProductoDTO> actualizarProducto(@PathVariable long id, @RequestBody @Valid ProductoDTO dto) {
+        Producto actualizado = productoService.editarProducto(id, convertirADominio(dto));
+        ProductoDTO respuesta = convertirADTO(actualizado);
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -52,4 +56,24 @@ public class ProductoController {
         productoService.eliminarProductoPorId(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    //metodos de mapeo DTO <---> entidad
+    private ProductoDTO convertirADTO(Producto entidad) {
+        ProductoDTO dto = new ProductoDTO();
+        dto.setIdProducto(entidad.getIdProducto());
+        dto.setMarca(entidad.getMarca());
+        dto.setDenominacion(entidad.getDenominacion());
+        dto.setNombreFantasia(entidad.getNombreFantasia());
+        return dto;
+    }
+
+    private Producto convertirADominio(ProductoDTO dto) {
+        Producto entidad = new Producto();
+        entidad.setIdProducto(dto.getIdProducto());
+        entidad.setMarca(dto.getMarca());
+        entidad.setDenominacion(dto.getDenominacion());
+        entidad.setNombreFantasia(dto.getNombreFantasia());
+        return entidad;
+    }
+
 }

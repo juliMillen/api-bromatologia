@@ -1,5 +1,7 @@
 package com.bromatologia.backend.Controller;
 
+import com.bromatologia.backend.DTO.EstablecimientoDTO;
+import com.bromatologia.backend.DTO.ProductoDTO;
 import com.bromatologia.backend.Entity.Empresa;
 import com.bromatologia.backend.Entity.Establecimiento;
 import com.bromatologia.backend.Entity.Producto;
@@ -31,9 +33,10 @@ public class EstablecimientoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Establecimiento> obtenerEstablecimiento(@PathVariable long id){
+    public ResponseEntity<EstablecimientoDTO> obtenerEstablecimientoPorId(@PathVariable long id){
         Establecimiento buscado = establecimientoService.obtenerEstablecimientoPorId(id);
-        return new ResponseEntity<>(buscado, HttpStatus.OK);
+        EstablecimientoDTO respuesta = convertirADTO(buscado);
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/productos")
@@ -44,10 +47,12 @@ public class EstablecimientoController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
-    public ResponseEntity<Establecimiento> crearEstablecimiento(@RequestBody @Valid Establecimiento establecimiento){
+    public ResponseEntity<EstablecimientoDTO> crearEstablecimiento(@RequestBody @Valid EstablecimientoDTO dto){
 
-    Establecimiento nuevoEstablecimiento = establecimientoService.crearEstablecimiento(establecimiento);
-    return new ResponseEntity<>(nuevoEstablecimiento, HttpStatus.CREATED);
+    Establecimiento nuevoEstablecimiento = convertirADominio(dto);
+    Establecimiento guardado = establecimientoService.crearEstablecimiento(nuevoEstablecimiento);
+    EstablecimientoDTO respuesta = convertirADTO(guardado);
+    return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -64,8 +69,57 @@ public class EstablecimientoController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    //metodos de mapeo DTO <---> entidad
+    private EstablecimientoDTO convertirADTO(Establecimiento entidad){
+        EstablecimientoDTO dto = new EstablecimientoDTO();
+        dto.setIdEstablecimiento(entidad.getIdEstablecimiento());
+        dto.setDepartamento(entidad.getDepartamento());
+        dto.setLocalidad(entidad.getLocalidad());
+        dto.setDireccion(entidad.getDireccion());
+        dto.setCuitEmpresa(entidad.getEmpresa().getCuitEmpresa());
+
+        //Producto
+        List<ProductoDTO> productosDTO = entidad.getProductos()
+                .stream()
+                .map(e->{
+                    ProductoDTO productoDTO = new ProductoDTO();
+                    productoDTO.setIdProducto(e.getIdProducto());
+                    productoDTO.setDenominacion(e.getDenominacion());
+                    productoDTO.setMarca(e.getMarca());
+                    productoDTO.setNombreFantasia(e.getNombreFantasia());
+                    return productoDTO;
+                }).toList();
+        dto.setProductos(productosDTO);
+        return dto;
+    }
+
+    private Establecimiento convertirADominio(EstablecimientoDTO dto){
+
+        Establecimiento entidad = new Establecimiento();
+        entidad.setIdEstablecimiento(dto.getIdEstablecimiento());
+        entidad.setDepartamento(dto.getDepartamento());
+        entidad.setLocalidad(dto.getLocalidad());
+        entidad.setDireccion(dto.getDireccion());
 
 
+        //Empresa
+        Empresa empresa = new Empresa();
+        empresa.setCuitEmpresa(dto.getCuitEmpresa());
+        entidad.setEmpresa(empresa);
 
+        //Producto
+        List<Producto> productos = dto.getProductos()
+                .stream()
+                .map(e->{
+                    Producto prod = new Producto();
+                    prod.setIdProducto(e.getIdProducto());
+                    prod.setDenominacion(e.getDenominacion());
+                    prod.setMarca(e.getMarca());
+                    prod.setNombreFantasia(e.getNombreFantasia());
+                    return prod;
+                }).toList();
+        entidad.setProductos(productos);
+        return entidad;
+    }
 
 }

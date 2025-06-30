@@ -11,7 +11,7 @@ import lombok.*;
 public class Tramite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_tramite;
+    private long idTramite;
 
     @NotBlank(message = "El nombre del tramite es obligatorio")
     private String nombreTramite;

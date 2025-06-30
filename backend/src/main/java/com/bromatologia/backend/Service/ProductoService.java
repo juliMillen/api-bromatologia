@@ -27,11 +27,14 @@ public class ProductoService {
     }
 
     public Producto registrarProducto(Producto producto) {
-        long id_establecimiento = producto.getEstablecimiento().getId_Establecimiento();
-        Establecimiento establecimiento = establecimientoRepository.findById(id_establecimiento).orElseThrow(() -> new ProductoException("El id no se ha encontrado"));
-        producto.setEstablecimiento(establecimiento);
         if(producto == null) {
             throw new ProductoException("Los campos no pueden ser nulos");
+        }
+
+        if(producto.getEstablecimiento() != null) {
+            long idEstablecimiento = producto.getEstablecimiento().getIdEstablecimiento();
+            Establecimiento establecimiento = establecimientoRepository.findById(idEstablecimiento).orElseThrow(()-> new ProductoException("No existe el establecimiento"));
+            producto.setEstablecimiento(establecimiento);
         }
         return productoRepository.save(producto);
     }

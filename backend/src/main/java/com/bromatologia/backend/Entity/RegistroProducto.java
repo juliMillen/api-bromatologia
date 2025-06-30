@@ -16,7 +16,7 @@ public class RegistroProducto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_RegistroProducto;
+    private long idRegistroProducto;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto_id", nullable = true)

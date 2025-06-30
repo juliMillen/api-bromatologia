@@ -1,12 +1,14 @@
 package com.bromatologia.backend.DTO;
 
 import com.bromatologia.backend.Entity.Tramite;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,9 +17,13 @@ import java.util.List;
 @AllArgsConstructor
 public class MantenimientoDTO {
 
-    private Date fechaMantenimiento;
+    @NotNull(message = "El id no puede ser nulo")
+    private long idMantenimiento;
+    @NotNull(message = "La fecha no puede ser nulo")
+    private LocalDate fechaMantenimiento;
+
     private String enlaceRecibido;
 
     //Datos del tramite
-    private List<Tramite> tramites;
+    private List<TramiteDTO> tramites = new ArrayList<>();
 }

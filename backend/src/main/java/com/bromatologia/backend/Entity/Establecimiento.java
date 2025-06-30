@@ -3,7 +3,6 @@ package com.bromatologia.backend.Entity;
 import com.bromatologia.backend.Exception.EstablecimientoException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import java.util.List;
 public class Establecimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_Establecimiento;
+    private long idEstablecimiento;
 
     @OneToOne(mappedBy = "establecimiento", fetch = FetchType.LAZY)
     private RegistroEstablecimiento registroEstablecimiento;
