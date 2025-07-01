@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/registroEstablecimiento")
@@ -21,9 +21,17 @@ public class RegistroEstablecimientoController {
 
 
     @GetMapping("/")
-    public ResponseEntity<List<RegistroEstablecimiento>> getRegistroEstablecimiento() {
+    public ResponseEntity<List<RegistroEstablecimientoDTO>> getRegistroEstablecimiento() {
         List<RegistroEstablecimiento> listaRegistrosEst = registroEstablecimientoService.obtenerEstablecimientos();
-        return new ResponseEntity<>(listaRegistrosEst, HttpStatus.OK);
+        if(listaRegistrosEst == null || listaRegistrosEst.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        List<RegistroEstablecimientoDTO> listaDTO = listaRegistrosEst
+                .stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

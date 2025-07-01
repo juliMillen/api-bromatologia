@@ -1,8 +1,6 @@
 package com.bromatologia.backend.Controller;
 
-import com.bromatologia.backend.DTO.ProductoDTO;
 import com.bromatologia.backend.DTO.ReciboDTO;
-import com.bromatologia.backend.Entity.Producto;
 import com.bromatologia.backend.Entity.Recibo;
 import com.bromatologia.backend.Service.ReciboService;
 import jakarta.validation.Valid;
@@ -13,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/recibo")
@@ -24,9 +23,17 @@ public class ReciboController {
 
 
     @GetMapping("/")
-    public ResponseEntity<List<Recibo>> obtenerRecibos() {
+    public ResponseEntity<List<ReciboDTO>> obtenerRecibos() {
         List<Recibo> listaRecibos = reciboService.obtenerRecibos();
-        return new ResponseEntity<>(listaRecibos, HttpStatus.OK);
+        if(listaRecibos == null || listaRecibos.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        List<ReciboDTO> listaDTO = listaRecibos
+                .stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

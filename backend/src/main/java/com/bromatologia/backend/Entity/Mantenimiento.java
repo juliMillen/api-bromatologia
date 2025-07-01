@@ -2,10 +2,8 @@ package com.bromatologia.backend.Entity;
 
 import com.bromatologia.backend.Exception.MantenimientoException;
 import jakarta.persistence.*;
-
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

@@ -2,7 +2,6 @@ package com.bromatologia.backend.Entity;
 
 import com.bromatologia.backend.Enums.Rol;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 

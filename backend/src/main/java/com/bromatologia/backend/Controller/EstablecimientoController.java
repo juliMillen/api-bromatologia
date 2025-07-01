@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/establecimiento")
@@ -24,12 +25,19 @@ public class EstablecimientoController {
     private EstablecimientoService establecimientoService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Establecimiento>> obtenerEstablecimientos(){
-        List<Establecimiento> listaEstablecimiento = establecimientoService.obtenerEstablecimientos();
-        if(listaEstablecimiento.isEmpty()){
+    public ResponseEntity<List<EstablecimientoDTO>> obtenerEstablecimientos(){
+
+        List<Establecimiento> listaEstablecimientos = establecimientoService.obtenerEstablecimientos();
+        if(listaEstablecimientos == null ||listaEstablecimientos.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(listaEstablecimiento, HttpStatus.OK);
+
+        List<EstablecimientoDTO> listaDTO = listaEstablecimientos
+                .stream()
+                .map( this::convertirADTO)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

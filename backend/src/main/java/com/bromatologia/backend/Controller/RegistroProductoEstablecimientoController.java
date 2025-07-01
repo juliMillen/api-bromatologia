@@ -25,6 +25,9 @@ public class RegistroProductoEstablecimientoController {
     @GetMapping("/")
     public ResponseEntity<List<RegistroProductoEstablecimientoDTO>> obtenerRegistroProductoEstablecimiento() {
        List<RegistroProductoEstablecimiento> listaRegistrosEnt = registroProductoEstablecimientoService.obtenerRegistroProductoEstablecimiento();
+       if(listaRegistrosEnt == null || listaRegistrosEnt.isEmpty()){
+           return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+       }
        List<RegistroProductoEstablecimientoDTO> dtos = listaRegistrosEnt.stream()
                .map(this::convertirARegistroDTO)
                .collect(Collectors.toList());

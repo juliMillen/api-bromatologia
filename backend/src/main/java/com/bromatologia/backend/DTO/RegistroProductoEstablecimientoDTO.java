@@ -2,6 +2,7 @@ package com.bromatologia.backend.DTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,15 +21,18 @@ public class RegistroProductoEstablecimientoDTO {
     private long idRegistroEstablecimiento;
 
     @NotNull(message = "El numero de RNPA es obligatorio")
-    private long rnpaActual;
+    @Pattern(regexp = "\\d{1,10}", message = "El numero de RNPA debe contener solo digitos ")
+    private String rnpaActual;
     @NotNull(message = "La fecha de emision es oblgiatoria")
     private LocalDate fechaDeEmision;
     @NotNull(message = "El numero de RNPA Anterior es obligatorio")
-    private long rnpaAnterior;
+    @Pattern(regexp = "\\d{1,10}", message = "El numero de RNPA debe contener solo digitos ")
+    private String rnpaAnterior;
     @NotBlank(message = "El tipo de registro es obligatorio")
     private String tipo;
-    @NotNull(message = "El numero de RNE es obligatorio")
-    private long nroRne;
+    @NotBlank(message = "El numero de RNE es obligatorio")
+    @Pattern(regexp = "\\d{1,10}", message = "El numero de RNE debe contener solo digitos ")
+    private String nroRne;
     @NotBlank(message = "El certificado no puede estar vacio")
     private String certificado;
     @NotNull(message = "El numero de expediente no puede ser nulo")

@@ -1,7 +1,6 @@
 package com.bromatologia.backend.Controller;
 
 import com.bromatologia.backend.DTO.MantenimientoDTO;
-import com.bromatologia.backend.DTO.ProductoDTO;
 import com.bromatologia.backend.DTO.TramiteDTO;
 import com.bromatologia.backend.Entity.*;
 import com.bromatologia.backend.Service.MantenimientoService;
@@ -13,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/mantenimiento")
@@ -22,9 +22,17 @@ public class MantenimientoController {
     private MantenimientoService mantenimientoService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Mantenimiento>>obtenerMantenimientos(){
+    public ResponseEntity<List<MantenimientoDTO>>obtenerMantenimientos(){
         List<Mantenimiento> listaMantenimientos = mantenimientoService.obtenerMantenimientos();
-        return new ResponseEntity<>(listaMantenimientos, HttpStatus.OK);
+        if(listaMantenimientos == null ||listaMantenimientos.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        List<MantenimientoDTO> listaDTO = listaMantenimientos
+                .stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
 

@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/producto")
@@ -20,9 +21,17 @@ public class ProductoController {
     private ProductoService productoService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Producto>> listaProductos() {
+    public ResponseEntity<List<ProductoDTO>> listaProductos() {
         List<Producto> listaProductos = productoService.obtenerTodosProductos();
-        return new ResponseEntity<>(listaProductos, HttpStatus.OK);
+        if(listaProductos == null || listaProductos.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        List<ProductoDTO> listaDTO = listaProductos
+                .stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

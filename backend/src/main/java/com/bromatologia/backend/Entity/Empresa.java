@@ -4,7 +4,6 @@ import com.bromatologia.backend.Exception.EmpresaException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
 

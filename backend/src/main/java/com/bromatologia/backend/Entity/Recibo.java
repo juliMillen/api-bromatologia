@@ -3,10 +3,7 @@ package com.bromatologia.backend.Entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.cglib.core.Local;
-
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Getter

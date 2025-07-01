@@ -2,7 +2,6 @@ package com.bromatologia.backend.Entity;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;
-
 import java.io.Serializable;
 
 @Embeddable

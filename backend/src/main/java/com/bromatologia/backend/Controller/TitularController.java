@@ -1,10 +1,7 @@
 package com.bromatologia.backend.Controller;
 
-
-import com.bromatologia.backend.DTO.ProductoDTO;
 import com.bromatologia.backend.DTO.TitularDTO;
 import com.bromatologia.backend.DTO.TitularUpdateDTO;
-import com.bromatologia.backend.Entity.Producto;
 import com.bromatologia.backend.Entity.Titular;
 import com.bromatologia.backend.Service.TitularService;
 import jakarta.validation.Valid;
@@ -15,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/titular")
@@ -24,12 +22,17 @@ public class TitularController {
     private TitularService titularService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Titular>> obtenerTitulares() {
+    public ResponseEntity<List<TitularDTO>> obtenerTitulares() {
         List<Titular> listaTitulares = titularService.obtenerTitular();
-        if(listaTitulares.isEmpty()){
+        if(listaTitulares == null || listaTitulares.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(listaTitulares, HttpStatus.OK);
+
+        List<TitularDTO> listaDTO = listaTitulares
+                .stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{cuitTitular}")

@@ -1,6 +1,5 @@
 package com.bromatologia.backend.DTO;
 
-import com.bromatologia.backend.Entity.Tramite;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

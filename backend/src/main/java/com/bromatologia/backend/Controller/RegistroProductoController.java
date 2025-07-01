@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/registroProducto")
@@ -20,9 +21,17 @@ public class RegistroProductoController {
     private RegistroProductoService registroProductoService;
 
     @GetMapping("/")
-    public ResponseEntity<List<RegistroProducto>> obtenerRegistrosProductos() {
+    public ResponseEntity<List<RegistroProductoDTO>> obtenerRegistrosProductos() {
        List<RegistroProducto> listaRegistrosProd = registroProductoService.obtenerRegistrosProducto();
-       return new ResponseEntity<>(listaRegistrosProd, HttpStatus.OK);
+       if(listaRegistrosProd == null || listaRegistrosProd.isEmpty()) {
+           return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+       }
+
+       List<RegistroProductoDTO> listaDTO = listaRegistrosProd
+               .stream()
+               .map(this::convertirADTO)
+               .collect(Collectors.toList());
+       return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

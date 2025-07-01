@@ -11,8 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tramite")
@@ -23,9 +23,17 @@ public class TramiteController {
 
 
     @GetMapping("/")
-    public ResponseEntity<List<Tramite>> obtenerTramites() {
+    public ResponseEntity<List<TramiteDTO>> obtenerTramites() {
         List<Tramite> listaTramites = tramiteService.obtenerTramites();
-        return new ResponseEntity<>(listaTramites, HttpStatus.OK);
+        if(listaTramites == null || listaTramites.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        List<TramiteDTO> listaDTO = listaTramites
+                .stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

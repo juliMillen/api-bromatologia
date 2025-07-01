@@ -1,6 +1,5 @@
 package com.bromatologia.backend.Service;
 
-import com.bromatologia.backend.DTO.RegistroProductoEstablecimientoDTO;
 import com.bromatologia.backend.Entity.RegistroEstablecimiento;
 import com.bromatologia.backend.Entity.RegistroProducto;
 import com.bromatologia.backend.Entity.RegistroProductoEstablecimiento;
