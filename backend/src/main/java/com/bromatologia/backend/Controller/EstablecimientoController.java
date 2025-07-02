@@ -48,9 +48,14 @@ public class EstablecimientoController {
     }
 
     @GetMapping("/{id}/productos")
-    public ResponseEntity<List<Producto>> obtenerProductosDeEstablecimientos(@PathVariable long id) {
+    public ResponseEntity<List<ProductoDTO>> obtenerProductosDeEstablecimientos(@PathVariable long id) {
         Establecimiento buscado = establecimientoService.obtenerEstablecimientoPorId(id);
-        return new ResponseEntity<>(buscado.getProductos(), HttpStatus.OK);
+
+        List<ProductoDTO>listaDTO = buscado.getProductos()
+                .stream()
+                .map(this::convertirAProductoDTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -128,6 +133,15 @@ public class EstablecimientoController {
                 }).toList();
         entidad.setProductos(productos);
         return entidad;
+    }
+
+    private ProductoDTO convertirAProductoDTO(Producto e){
+        ProductoDTO dto = new ProductoDTO();
+        dto.setIdProducto(e.getIdProducto());
+        dto.setDenominacion(e.getDenominacion());
+        dto.setMarca(e.getMarca());
+        dto.setNombreFantasia(e.getNombreFantasia());
+        return dto;
     }
 
 }

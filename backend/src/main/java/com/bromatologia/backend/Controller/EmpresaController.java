@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/empresa")
@@ -37,9 +38,14 @@ public class EmpresaController {
     }
 
     @GetMapping("/{cuit}/establecimientos")
-    public ResponseEntity<List<Establecimiento>> obtenerEstablecimientosDeEmpresa(@PathVariable Long cuit) {
+    public ResponseEntity<List<EstablecimientoDTO>> obtenerEstablecimientosDeEmpresa(@PathVariable Long cuit) {
         Empresa empresa = empresaService.obtenerEmpresaPorId(cuit);
-        return new ResponseEntity<>(empresa.getEstablecimientos(), HttpStatus.OK);
+
+        List<EstablecimientoDTO> listaDTO = empresa.getEstablecimientos()
+                .stream()
+                .map(this::convertirAEstablecimientoDTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
 
@@ -127,6 +133,16 @@ public class EmpresaController {
                 }).toList();
         entidad.setEstablecimientos(establecimiento);
         return entidad;
+    }
+
+    private EstablecimientoDTO convertirAEstablecimientoDTO(Establecimiento e){
+        EstablecimientoDTO dto = new EstablecimientoDTO();
+        dto.setIdEstablecimiento(e.getIdEstablecimiento());
+        dto.setDepartamento(e.getDepartamento());
+        dto.setLocalidad(e.getLocalidad());
+        dto.setDireccion(e.getDireccion());
+        dto.setCuitEmpresa(e.getEmpresa().getCuitEmpresa());
+        return dto;
     }
 
 }
