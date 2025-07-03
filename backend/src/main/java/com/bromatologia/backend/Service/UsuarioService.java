@@ -25,10 +25,20 @@ public class UsuarioService {
         return obtenerUsuarioExistente(id);
     }
 
+
+    public Usuario crearUsuarioAdmin(Usuario usuario){
+        if(usuario == null){
+            throw new UsuarioException("El usuario no puede ser nulo o su rol no es ADMIN");
+        }
+        usuario.setRol(Rol.ADMIN);
+        return usuarioRepository.save(usuario);
+    }
+
     public Usuario crearUsuario(Usuario usuario){
         if(usuario == null){
             throw new UsuarioException("El usuario no puede ser nulo");
         }
+        usuario.setRol(Rol.EMPLEADO);
         return usuarioRepository.save(usuario);
     }
 

@@ -1,8 +1,14 @@
 package com.bromatologia.backend.Controller;
 
+import com.bromatologia.backend.DTO.EmpresaDTO;
+import com.bromatologia.backend.DTO.EstablecimientoDTO;
 import com.bromatologia.backend.DTO.UsuarioDTO;
 import com.bromatologia.backend.DTO.UsuarioUpdateDTO;
+import com.bromatologia.backend.Entity.Empresa;
+import com.bromatologia.backend.Entity.Establecimiento;
+import com.bromatologia.backend.Entity.Titular;
 import com.bromatologia.backend.Entity.Usuario;
+import com.bromatologia.backend.Enums.Rol;
 import com.bromatologia.backend.Service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +45,19 @@ public class UsuarioController {
         return new ResponseEntity<>(new UsuarioDTO(buscado), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/admin")
+    public ResponseEntity<UsuarioDTO> crearUsuarioAdmin( @Valid @RequestBody Usuario usuario) {
+        Usuario admin = usuarioService.crearUsuarioAdmin(usuario);
+        return new ResponseEntity<>(new UsuarioDTO(admin), HttpStatus.OK);
+    }
+
     @PreAuthorize("isAuthenticated()")
-    @PostMapping
-    public ResponseEntity<Usuario> guardarUsuario( @Valid @RequestBody Usuario usuario) {
+    @PostMapping()
+    public ResponseEntity<UsuarioDTO> crearUsuario( @Valid @RequestBody Usuario usuario) {
         Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
-        return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
+        UsuarioDTO dto = new UsuarioDTO(nuevoUsuario);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

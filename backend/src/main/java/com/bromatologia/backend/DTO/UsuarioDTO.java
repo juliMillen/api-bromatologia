@@ -19,4 +19,5 @@ public class UsuarioDTO {
         this.username = usuario.getUsername();
         this.role = usuario.getRol().name();
     }
+
 }
