@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/mantenimiento")
+@RequestMapping("/api/mantenimiento")
 //@CrossOrigin("http://localhost:4200/")
 public class MantenimientoController {
     @Autowired

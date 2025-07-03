@@ -18,16 +18,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/empresa")
+@RequestMapping("/api/empresa")
 //@CrossOrigin("http://localhost:4200/")
 public class EmpresaController {
     @Autowired
     private EmpresaService empresaService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Empresa>> obtenerEmpresas(){
+    public ResponseEntity<List<EmpresaDTO>> obtenerEmpresas(){
         List<Empresa> empresas = empresaService.obtenerEmpresas();
-        return new ResponseEntity<>(empresas, HttpStatus.OK);
+        List<EmpresaDTO> listaDTO = empresas.stream()
+                .map(this::convertirAEmpresaDTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{cuitEmpresa}")

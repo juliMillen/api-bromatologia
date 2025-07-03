@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/producto")
+@RequestMapping("/api/producto")
 //@CrossOrigin("http://localhost:4200/")
 public class ProductoController {
 

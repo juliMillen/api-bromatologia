@@ -33,7 +33,7 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public ResponseEntity<?>login(@RequestBody LoginRequests loginRequests) {
 
 
@@ -53,7 +53,7 @@ public class AuthController {
     }
 
 
-    @PostMapping("/register")
+    @PostMapping("/api/register")
     public ResponseEntity<?>register(@RequestBody RegisterRequest registerRequest) {
         try{
             String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());

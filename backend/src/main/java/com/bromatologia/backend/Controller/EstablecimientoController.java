@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/establecimiento")
+@RequestMapping("/api/establecimiento")
 //@CrossOrigin("http://localhost:4200/")
 public class EstablecimientoController {
 

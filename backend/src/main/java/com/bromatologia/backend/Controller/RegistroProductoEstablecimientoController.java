@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 
 @RestController
-@RequestMapping("/registro-producto-establecimiento")
+@RequestMapping("/api/registro-producto-establecimiento")
 public class RegistroProductoEstablecimientoController {
     @Autowired
     private RegistroProductoEstablecimientoService registroProductoEstablecimientoService;

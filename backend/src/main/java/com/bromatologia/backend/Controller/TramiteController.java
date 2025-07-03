@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/tramite")
+@RequestMapping("/api/tramite")
 //@CrossOrigin("http://localhost:4200/")
 public class TramiteController {
     @Autowired

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/registroEstablecimiento")
+@RequestMapping("/api/registroEstablecimiento")
 //@CrossOrigin("http://localhost:4200/")
 public class RegistroEstablecimientoController {
     @Autowired
@@ -21,7 +21,7 @@ public class RegistroEstablecimientoController {
 
 
     @GetMapping("/")
-    public ResponseEntity<List<RegistroEstablecimientoDTO>> getRegistroEstablecimiento() {
+    public ResponseEntity<List<RegistroEstablecimientoDTO>> obtenerRegistroEstablecimiento() {
         List<RegistroEstablecimiento> listaRegistrosEst = registroEstablecimientoService.obtenerEstablecimientos();
         if(listaRegistrosEst == null || listaRegistrosEst.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -35,7 +35,7 @@ public class RegistroEstablecimientoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RegistroEstablecimientoDTO>getRegistroEstablecimientoById(@PathVariable long id) {
+    public ResponseEntity<RegistroEstablecimientoDTO>obtenerRegistroEstablecimientoById(@PathVariable long id) {
         RegistroEstablecimiento buscado = registroEstablecimientoService.obtenerEstablecimientoById(id);
         if(buscado == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

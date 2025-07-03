@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/registroProducto")
+@RequestMapping("/api/registroProducto")
 //@CrossOrigin("http://localhost:4200/")
 public class RegistroProductoController {
     @Autowired

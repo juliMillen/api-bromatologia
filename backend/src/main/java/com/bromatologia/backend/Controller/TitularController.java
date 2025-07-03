@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/titular")
+@RequestMapping("/api/titular")
 //@CrossOrigin("http://localhost:4200/")
 public class TitularController {
     @Autowired
