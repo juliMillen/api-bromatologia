@@ -1,6 +1,5 @@
 package com.bromatologia.backend.Entity;
 
-import com.bromatologia.backend.Enums.Rol;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -21,8 +20,8 @@ public class Usuario {
     @NotNull(message = "el password no puede ser nulo")
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull(message = "El usuario debe tener un rol asignado")
+    @ManyToOne
+    @JoinColumn(name = "rol_id", nullable = false)
     private Rol rol;
 
     public Usuario(String username, String password, Rol rol){
@@ -30,5 +29,4 @@ public class Usuario {
         this.password = password;
         this.rol = rol;
     }
-
 }

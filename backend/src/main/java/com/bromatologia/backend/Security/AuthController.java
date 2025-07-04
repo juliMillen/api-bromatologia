@@ -1,12 +1,10 @@
 package com.bromatologia.backend.Security;
 
-import com.bromatologia.backend.DTO.UsuarioDTO;
+import com.bromatologia.backend.DTO.*;
+import com.bromatologia.backend.Entity.Rol;
 import com.bromatologia.backend.Entity.Usuario;
-import com.bromatologia.backend.Enums.Rol;
 import com.bromatologia.backend.Repository.IUsuarioRepository;
-import com.bromatologia.backend.DTO.JwtResponse;
-import com.bromatologia.backend.DTO.LoginRequests;
-import com.bromatologia.backend.DTO.RegisterRequest;
+import com.bromatologia.backend.Service.RolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +31,9 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RolService rolService;
+
     @PostMapping("/api/login")
     public ResponseEntity<?>login(@RequestBody LoginRequests loginRequests) {
 
@@ -57,15 +58,31 @@ public class AuthController {
     public ResponseEntity<?>register(@RequestBody RegisterRequest registerRequest) {
         try{
             String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
-            Rol rolEnum = Rol.valueOf(registerRequest.getRole().toUpperCase()); //convierte todo a mayuscula sin importar que se lo pase en minuscula
-            Usuario nuevoUsuario = new Usuario(registerRequest.getUsername(), hashedPassword, rolEnum);
+            Rol rol = rolService.obtenerRolPorTipo(registerRequest.getRol().getTipoRol());
+            Usuario nuevoUsuario = new Usuario(registerRequest.getUsername(), hashedPassword, rol);
             usuarioRepository.save(nuevoUsuario);
-            return ResponseEntity.status(HttpStatus.CREATED).body(new UsuarioDTO(nuevoUsuario));
+            return ResponseEntity.status(HttpStatus.CREATED).body(convertirADTO(nuevoUsuario));
         }catch(IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Rol invalido");
         }
         catch(Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el usuario");
         }
+    }
+
+    //metodo de mapeo DTO <---> entidad
+    private UsuarioDTO convertirADTO(Usuario entidad){
+        UsuarioDTO dto = new UsuarioDTO();
+        dto.setId(entidad.getId());
+        dto.setUsername(entidad.getUsername());
+        dto.setRol(entidad.getRol().getTipoRol());
+
+        /*Rol
+        Rol rol = entidad.getRol();
+        RolDTO rolDTO = new RolDTO();
+        rolDTO.setIdRol(rol.getIdRol());
+        rolDTO.setTipoRol(rol.getTipoRol());
+        dto.setRol(rolDTO);*/
+        return dto;
     }
 }

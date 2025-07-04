@@ -1,14 +1,7 @@
 package com.bromatologia.backend.Controller;
 
-import com.bromatologia.backend.DTO.EmpresaDTO;
-import com.bromatologia.backend.DTO.EstablecimientoDTO;
-import com.bromatologia.backend.DTO.UsuarioDTO;
-import com.bromatologia.backend.DTO.UsuarioUpdateDTO;
-import com.bromatologia.backend.Entity.Empresa;
-import com.bromatologia.backend.Entity.Establecimiento;
-import com.bromatologia.backend.Entity.Titular;
-import com.bromatologia.backend.Entity.Usuario;
-import com.bromatologia.backend.Enums.Rol;
+import com.bromatologia.backend.DTO.*;
+import com.bromatologia.backend.Entity.*;
 import com.bromatologia.backend.Service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,35 +21,38 @@ public class UsuarioController {
 
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> listarUsuarios() {
-        List<UsuarioDTO> listaUsuarios = usuarioService.obtenerUsuarios()
+        List<Usuario> listaUsuarios = usuarioService.obtenerUsuarios();
+        List<UsuarioDTO> listaDTO = listaUsuarios
                 .stream()
-                .map(UsuarioDTO::new)
+                .map(this::convertirADTO)
                 .collect(Collectors.toList());
         if (listaUsuarios.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(listaUsuarios, HttpStatus.OK);
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
 
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> obtenerUsuario(@PathVariable long id) {
         Usuario buscado = usuarioService.obtenerUsuarioPorId(id);
-        return new ResponseEntity<>(new UsuarioDTO(buscado), HttpStatus.OK);
+        UsuarioDTO usuarioDTO = convertirADTO(buscado);
+        return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin")
     public ResponseEntity<UsuarioDTO> crearUsuarioAdmin( @Valid @RequestBody Usuario usuario) {
         Usuario admin = usuarioService.crearUsuarioAdmin(usuario);
-        return new ResponseEntity<>(new UsuarioDTO(admin), HttpStatus.OK);
+        UsuarioDTO usuarioDTO = convertirADTO(admin);
+        return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping()
     public ResponseEntity<UsuarioDTO> crearUsuario( @Valid @RequestBody Usuario usuario) {
         Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
-        UsuarioDTO dto = new UsuarioDTO(nuevoUsuario);
+        UsuarioDTO dto = convertirADTO(nuevoUsuario);
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
@@ -77,4 +73,21 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    //metodo de mapeo DTO <---> entidad
+    private UsuarioDTO convertirADTO(Usuario entidad){
+        UsuarioDTO dto = new UsuarioDTO();
+        dto.setId(entidad.getId());
+        dto.setUsername(entidad.getUsername());
+        dto.setRol(entidad.getRol().getTipoRol());
+
+        /*Rol
+        Rol rol = entidad.getRol();
+        RolDTO rolDTO = new RolDTO();
+        rolDTO.setIdRol(rol.getIdRol());
+        rolDTO.setTipoRol(rol.getTipoRol());
+        dto.setRol(rolDTO);*/
+        return dto;
+    }
+
 }

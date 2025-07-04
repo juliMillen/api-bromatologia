@@ -1,6 +1,6 @@
 package com.bromatologia.backend.DTO;
 
-import com.bromatologia.backend.Enums.Rol;
+import com.bromatologia.backend.Entity.Rol;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,5 +19,5 @@ public class UsuarioUpdateDTO {
     @NotBlank
     private String password;
     @NotNull(message = "El rol no puede ser nulo")
-    private Rol rol;
+    private RolDTO rol;
 }

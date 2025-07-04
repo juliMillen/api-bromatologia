@@ -1,8 +1,8 @@
 package com.bromatologia.backend.Service;
 
 import com.bromatologia.backend.DTO.UsuarioUpdateDTO;
+import com.bromatologia.backend.Entity.Rol;
 import com.bromatologia.backend.Entity.Usuario;
-import com.bromatologia.backend.Enums.Rol;
 import com.bromatologia.backend.Exception.UsuarioException;
 import com.bromatologia.backend.Repository.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,9 @@ public class UsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RolService rolService;
+
     public List<Usuario> obtenerUsuarios(){
         return usuarioRepository.findAll();
     }
@@ -30,7 +33,11 @@ public class UsuarioService {
         if(usuario == null){
             throw new UsuarioException("El usuario no puede ser nulo o su rol no es ADMIN");
         }
-        usuario.setRol(Rol.ADMIN);
+        Rol rolAdmin = rolService.obtenerRolPorTipo("ADMIN");
+        usuario.setRol(rolAdmin);
+
+        //Encriptar contraseña
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepository.save(usuario);
     }
 
@@ -38,7 +45,11 @@ public class UsuarioService {
         if(usuario == null){
             throw new UsuarioException("El usuario no puede ser nulo");
         }
-        usuario.setRol(Rol.EMPLEADO);
+        Rol rolEmpleado = rolService.obtenerRolPorTipo("EMPLEADO");
+        usuario.setRol(rolEmpleado);
+
+        //encriptar contraseña
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepository.save(usuario);
     }
 
@@ -67,9 +78,12 @@ public class UsuarioService {
             aModificar.setPassword(passwordEncoder.encode(nuevoPassword)); //encriptamos la nueva contraseña
         }
 
-        String nuevoRol = dto.getRol().name(); //convertir enum --> string
-        validarRol(nuevoRol); // validar ese string
-        aModificar.setRol(Rol.valueOf(nuevoRol)); // Volver a conver string --> enum
+        if(dto.getRol() != null && !dto.getRol().getTipoRol().trim().isEmpty()){
+            String nuevoRol = dto.getRol().getTipoRol().trim();
+            validarRol(nuevoRol);
+            Rol rol = rolService.obtenerRolPorTipo(nuevoRol);
+            aModificar.setRol(rol);
+        }
         return usuarioRepository.save(aModificar);
     }
 
@@ -102,13 +116,8 @@ public class UsuarioService {
         if(rol == null || rol.trim().isEmpty()){
             throw new UsuarioException("El rol no puede ser nulo");
         }
-
-        try{
-            Rol.valueOf(rol.toUpperCase()); //Aseguro que sea un nombre valido del enum
-        }catch(IllegalArgumentException e){
-            throw new UsuarioException("El rol no es valido");
-        }
     }
+
 
     public Usuario obtenerUsuarioExistente(long id){
         if(id <= 0){
