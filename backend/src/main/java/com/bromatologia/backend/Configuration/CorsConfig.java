@@ -15,8 +15,8 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // a todas las rutas
                 .allowedOrigins("http://localhost:4200") // al front de angular
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders()
+                        .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS")
+                        .allowedHeaders("*")
                         .allowCredentials(true);
             }
         };
