@@ -3,6 +3,7 @@ package com.bromatologia.backend.Controller;
 import com.bromatologia.backend.DTO.EmpresaDTO;
 import com.bromatologia.backend.DTO.EmpresaUpdateDTO;
 import com.bromatologia.backend.DTO.EstablecimientoDTO;
+import com.bromatologia.backend.DTO.TitularDTO;
 import com.bromatologia.backend.Entity.Empresa;
 import com.bromatologia.backend.Entity.Establecimiento;
 import com.bromatologia.backend.Entity.Titular;
@@ -90,6 +91,18 @@ public class EmpresaController {
         dto.setNombreEmpresa(entidad.getNombreEmpresa());
         dto.setEmail(entidad.getEmail());
         dto.setTelefono(entidad.getTelefono());
+
+
+        //Titular
+        Titular titularEntidad = entidad.getTitular();
+        if(titularEntidad != null){
+            TitularDTO titularDTO = new TitularDTO();
+            titularDTO.setCuitTitular(titularEntidad.getCuitTitular());
+            titularDTO.setNombreTitular(titularEntidad.getNombreTitular());
+            titularDTO.setEmail(titularEntidad.getEmail());
+            titularDTO.setTelefono(titularEntidad.getTelefono());
+            dto.setTitular(titularDTO);
+        }
 
         //Establecimiento
         List<EstablecimientoDTO> establecimientosDTO = entidad.getEstablecimientos()
