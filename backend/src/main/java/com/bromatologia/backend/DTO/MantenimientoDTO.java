@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 public class MantenimientoDTO {
 
-    @NotNull(message = "El id no puede ser nulo")
     private long idMantenimiento;
     @NotNull(message = "La fecha no puede ser nulo")
     private LocalDate fechaMantenimiento;

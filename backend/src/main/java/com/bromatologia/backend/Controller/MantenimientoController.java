@@ -1,6 +1,7 @@
 package com.bromatologia.backend.Controller;
 
 import com.bromatologia.backend.DTO.MantenimientoDTO;
+import com.bromatologia.backend.DTO.ReciboDTO;
 import com.bromatologia.backend.DTO.TramiteDTO;
 import com.bromatologia.backend.Entity.*;
 import com.bromatologia.backend.Service.MantenimientoService;
@@ -44,9 +45,22 @@ public class MantenimientoController {
     }
 
     @GetMapping("/{id}/tramites")
-    public ResponseEntity<List<Tramite>> obtenerTramitesPorMantenimiento(@PathVariable long id) {
+    public ResponseEntity<List<TramiteDTO>> obtenerTramitesPorMantenimiento(@PathVariable long id) {
         Mantenimiento buscado = mantenimientoService.obtenerMantenimiento(id);
-        return new ResponseEntity<>(buscado.getTramites(), HttpStatus.OK);
+        List<TramiteDTO> tramites = buscado.getTramites().stream().map(t -> {
+            TramiteDTO tramite = new TramiteDTO();
+            tramite.setIdTramite(t.getIdTramite());
+            tramite.setNombreTramite(t.getNombreTramite());
+
+            if(t.getRecibo() != null){
+                ReciboDTO reciboDTO = new ReciboDTO();
+                reciboDTO.setFechaRecibo(t.getRecibo().getFechaRecibo());
+                reciboDTO.setImporte(t.getRecibo().getImporte());
+            }
+
+            return tramite;
+        }).toList();
+        return new ResponseEntity<>(tramites, HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -85,8 +99,15 @@ public class MantenimientoController {
                     TramiteDTO tramite = new TramiteDTO();
                     tramite.setIdTramite(e.getIdTramite());
                     tramite.setNombreTramite(e.getNombreTramite());
+
+                    ReciboDTO recibo = new ReciboDTO();
+                    recibo.setFechaRecibo(e.getRecibo().getFechaRecibo());
+                    recibo.setImporte(e.getRecibo().getImporte());
+
+                    tramite.setRecibo(recibo);
                     return tramite;
                 }).toList();
+        dto.setTramites(tramites);
         return dto;
     }
 
@@ -104,8 +125,15 @@ public class MantenimientoController {
                     Tramite tramite = new Tramite();
                     tramite.setIdTramite(e.getIdTramite());
                     tramite.setNombreTramite(e.getNombreTramite());
+
+                    Recibo recibo = new Recibo();
+                    recibo.setFechaRecibo(e.getRecibo().getFechaRecibo());
+                    recibo.setImporte(e.getRecibo().getImporte());
+
+                    tramite.setRecibo(recibo);
                     return tramite;
                 }).toList();
+        entidad.setTramites(tramites);
         return entidad;
     }
 }

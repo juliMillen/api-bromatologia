@@ -25,6 +25,7 @@ public class MantenimientoService {
         return mantenimientoRepository.findAll();
     }
 
+    @Transactional
     public Mantenimiento obtenerMantenimiento(long id){
         return obtenerMantenimientoExistente(id);
     }
