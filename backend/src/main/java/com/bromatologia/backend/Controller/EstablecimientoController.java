@@ -89,8 +89,11 @@ public class EstablecimientoController {
         dto.setDepartamento(entidad.getDepartamento());
         dto.setLocalidad(entidad.getLocalidad());
         dto.setDireccion(entidad.getDireccion());
-        dto.setCuitEmpresa(entidad.getEmpresa().getCuitEmpresa());
-
+        if(entidad.getEmpresa() != null){
+            dto.setCuitEmpresa(entidad.getEmpresa().getCuitEmpresa());
+        }else{
+            dto.setCuitEmpresa(0);
+        }
         //Producto
         List<ProductoDTO> productosDTO = entidad.getProductos()
                 .stream()
@@ -116,9 +119,13 @@ public class EstablecimientoController {
 
 
         //Empresa
-        Empresa empresa = new Empresa();
-        empresa.setCuitEmpresa(dto.getCuitEmpresa());
-        entidad.setEmpresa(empresa);
+        if(dto.getCuitEmpresa() != 0){
+            Empresa empresa = new Empresa();
+            empresa.setCuitEmpresa(dto.getCuitEmpresa());
+            entidad.setEmpresa(empresa);
+        }else{
+            entidad.setEmpresa(null);
+        }
 
         //Producto
         List<Producto> productos = dto.getProductos()

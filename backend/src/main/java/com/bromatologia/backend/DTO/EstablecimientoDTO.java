@@ -16,7 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 public class EstablecimientoDTO {
 
-    @NotNull(message = "El id no puede ser nulo")
     private long idEstablecimiento;
     @NotBlank(message = "La localidad es obligatoria")
     private String localidad;
@@ -26,7 +25,6 @@ public class EstablecimientoDTO {
     private String direccion;
 
     //Informacion de la empresa
-    @NotNull(message = "El cuit de la empresa no puede ser nulo")
     private long cuitEmpresa;
 
     //Informacion del o los producto
