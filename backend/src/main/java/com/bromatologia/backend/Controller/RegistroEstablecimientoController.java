@@ -20,7 +20,7 @@ public class RegistroEstablecimientoController {
     private RegistroEstablecimientoService registroEstablecimientoService;
 
 
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<List<RegistroEstablecimientoDTO>> obtenerRegistroEstablecimiento() {
         List<RegistroEstablecimiento> listaRegistrosEst = registroEstablecimientoService.obtenerEstablecimientos();
         if(listaRegistrosEst == null || listaRegistrosEst.isEmpty()) {
