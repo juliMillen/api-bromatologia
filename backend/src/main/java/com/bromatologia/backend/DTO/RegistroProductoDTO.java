@@ -15,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 public class RegistroProductoDTO {
 
-    @NotNull(message = "El id no puede ser nulo")
     private long idRegistroProducto;
     @NotBlank(message = "El tipo es obligatorio")
     private String tipo;

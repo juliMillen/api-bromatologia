@@ -105,6 +105,7 @@ public class RegistroEstablecimientoController {
         //Empresa
         EmpresaDTO empresaDTO = new EmpresaDTO();
         empresaDTO.setCuitEmpresa(entidad.getEmpresa().getCuitEmpresa());
+        dto.setCuitEmpresa(entidad.getEmpresa().getCuitEmpresa());
 
         //titular
         TitularDTO titularDTO = new TitularDTO();
