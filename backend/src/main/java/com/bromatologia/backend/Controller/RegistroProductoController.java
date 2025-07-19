@@ -43,7 +43,7 @@ public class RegistroProductoController {
 
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<RegistroProductoDTO> guardarRegistroProducto(@RequestBody  @Valid RegistroProductoDTO dto) {
         RegistroProducto nuevoRegistroProducto = convertirADominio(dto);
         RegistroProducto guardado = registroProductoService.guardarRegistroProducto(nuevoRegistroProducto);
