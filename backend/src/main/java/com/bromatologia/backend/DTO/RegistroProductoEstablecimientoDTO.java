@@ -17,14 +17,14 @@ public class RegistroProductoEstablecimientoDTO {
 
     @NotNull(message = "El id de registro producto no puede ser nulo")
     private long idRegistroProducto;
-    @NotNull(message = "El id de registro establecimniento no puede ser nulo")
+    @NotNull(message = "El id de registro establecimiento no puede ser nulo")
     private long idRegistroEstablecimiento;
 
     @NotNull(message = "El numero de RNPA es obligatorio")
     @Pattern(regexp = "\\d{1,10}", message = "El numero de RNPA debe contener solo digitos ")
     private String rnpaActual;
-    @NotNull(message = "La fecha de emision es oblgiatoria")
-    private LocalDate fechaDeEmision;
+    @NotNull(message = "La fecha de emision es obligatoria")
+    private LocalDate fechaEmision;
     @NotNull(message = "El numero de RNPA Anterior es obligatorio")
     @Pattern(regexp = "\\d{1,10}", message = "El numero de RNPA debe contener solo digitos ")
     private String rnpaAnterior;

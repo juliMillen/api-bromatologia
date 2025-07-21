@@ -58,7 +58,7 @@ public class AuthController {
     public ResponseEntity<?>register(@RequestBody RegisterRequest registerRequest) {
         try{
             String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
-            Rol rol = rolService.obtenerRolPorTipo(registerRequest.getRol().getTipoRol());
+            Rol rol = rolService.obtenerRolPorTipo("EMPLEADO");
             Usuario nuevoUsuario = new Usuario(registerRequest.getUsername(), hashedPassword, rol);
             usuarioRepository.save(nuevoUsuario);
             return ResponseEntity.status(HttpStatus.CREATED).body(convertirADTO(nuevoUsuario));

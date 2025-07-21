@@ -14,6 +14,5 @@ public class UsuarioDTO {
     private long id;
     @NotBlank(message = "El nombre de usario es obligatorio")
     private String username;
-    @NotBlank(message = "El rol del usuario es obligatorio")
     private String rol;
 }
