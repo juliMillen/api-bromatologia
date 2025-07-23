@@ -20,6 +20,7 @@ public class RegistroProductoEstablecimientoDTO {
     @NotNull(message = "El id de registro establecimiento no puede ser nulo")
     private long idRegistroEstablecimiento;
 
+    private RegistroProductoDTO registroProducto;
     @NotNull(message = "El numero de RNPA es obligatorio")
     @Pattern(regexp = "\\d{1,10}", message = "El numero de RNPA debe contener solo digitos ")
     private String rnpaActual;

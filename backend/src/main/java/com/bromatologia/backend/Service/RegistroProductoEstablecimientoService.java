@@ -36,6 +36,10 @@ public class RegistroProductoEstablecimientoService {
         return registroProductoEstablecimientoRepository.findById(id).orElseThrow(() -> new RegistroProductoEstablecimientoException("El registro del establecimiento no existe"));
     }
 
+    public List<RegistroProductoEstablecimiento> obtenerTodosConProductoYMantenimiento(){
+        return registroProductoEstablecimientoRepository.findAllConProductoYMantenimientos();
+    }
+
     @Transactional
     public RegistroProductoEstablecimiento crearRegistroProductoEstablecimiento(long idRegProducto, long idRegEstablecimiento, RegistroProductoEstablecimiento entidad) {
         if(idRegProducto <= 0 || idRegEstablecimiento <= 0) {

@@ -1,8 +1,12 @@
 package com.bromatologia.backend.Controller;
 
+import com.bromatologia.backend.DTO.MantenimientoDTO;
+import com.bromatologia.backend.DTO.RegistroProductoDTO;
 import com.bromatologia.backend.DTO.RegistroProductoEstablecimientoDTO;
+import com.bromatologia.backend.Entity.RegistroProducto;
 import com.bromatologia.backend.Entity.RegistroProductoEstablecimiento;
 import com.bromatologia.backend.Entity.RegistroProductoEstablecimientoId;
+import com.bromatologia.backend.Exception.RegistroProductoEstablecimientoException;
 import com.bromatologia.backend.Service.RegistroProductoEstablecimientoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +48,20 @@ public class RegistroProductoEstablecimientoController {
 
     }
 
+    @GetMapping("/registroProductoConMantenimientos")
+    public ResponseEntity<List<RegistroProductoEstablecimientoDTO>> obtenerConProductoYMantenimiento(){
+        List<RegistroProductoEstablecimiento> listaRegistrosConMantenimiento = registroProductoEstablecimientoService.obtenerTodosConProductoYMantenimiento();
+        if(listaRegistrosConMantenimiento == null || listaRegistrosConMantenimiento.isEmpty()){
+            throw new RegistroProductoEstablecimientoException("No se han encontrado los registros con mantenimiento");
+        }
+
+        List<RegistroProductoEstablecimientoDTO> listaDTO = listaRegistrosConMantenimiento
+                .stream()
+                .map(this::convertirARegistroDTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
+    }
+
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{idRegProducto}/{idRegEstablecimiento}")
@@ -74,6 +92,34 @@ public class RegistroProductoEstablecimientoController {
         dto.setNroRne(entidad.getNroRne());
         dto.setCertificado(entidad.getCertificado());
         dto.setExpediente(entidad.getExpediente());
+
+
+        //Registro Producto
+
+        RegistroProducto rp = entidad.getRegistroProducto();
+        if(rp != null){
+            RegistroProductoDTO rpDTO = new RegistroProductoDTO();
+            rpDTO.setIdRegistroProducto(rp.getIdRegistroProducto());
+            rpDTO.setTipo(rp.getTipo());
+            rpDTO.setIdProducto(rp.getProducto().getIdProducto());
+
+            //Mantenimientos
+
+            if(rp.getMantenimientos() != null){
+                List<MantenimientoDTO> mantenimientoDTO = rp.getMantenimientos()
+                        .stream()
+                        .map( man -> {
+                            MantenimientoDTO mDTO = new MantenimientoDTO();
+                            mDTO.setIdMantenimiento(man.getIdMantenimiento());
+                            mDTO.setFechaMantenimiento(man.getFechaMantenimiento());
+                            mDTO.setEnlaceRecibido(man.getEnlaceRecibido());
+                            return mDTO;
+                        })
+                        .collect(Collectors.toList());
+                rpDTO.setMantenimientos(mantenimientoDTO);
+            }
+            dto.setRegistroProducto(rpDTO);
+        }
         return dto;
     }
 
