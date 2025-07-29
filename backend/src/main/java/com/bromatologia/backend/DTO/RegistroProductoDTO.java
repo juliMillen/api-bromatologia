@@ -22,5 +22,8 @@ public class RegistroProductoDTO {
     @NotNull(message = "El id no puede ser nulo")
     private long idProducto;
 
+    @NotBlank(message = "El elaborador es obligatorio")
+    private String elaborador;
+
     private List<MantenimientoDTO> mantenimientos = new ArrayList<>();
 }

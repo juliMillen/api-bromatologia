@@ -40,7 +40,7 @@ public class UsuarioController {
         return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/admin")
     public ResponseEntity<UsuarioDTO> crearUsuarioAdmin( @Valid @RequestBody Usuario usuario) {
         Usuario admin = usuarioService.crearUsuarioAdmin(usuario);

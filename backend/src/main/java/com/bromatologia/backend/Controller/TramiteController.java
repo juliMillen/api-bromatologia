@@ -70,6 +70,7 @@ public class TramiteController {
         recibo.setIdRecibo(entidad.getRecibo().getIdRecibo());
         recibo.setFechaRecibo(entidad.getRecibo().getFechaRecibo());
         recibo.setImporte(entidad.getRecibo().getImporte());
+        dto.setRecibo(recibo);
         return dto;
     }
 

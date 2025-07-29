@@ -78,6 +78,8 @@ public class RegistroProductoController {
         RegistroProductoDTO dto = new RegistroProductoDTO();
         dto.setIdRegistroProducto(entidad.getIdRegistroProducto());
         dto.setTipo(entidad.getTipo());
+        dto.setElaborador(entidad.getElaborador());
+
 
         //Producto
         if(entidad.getProducto() != null){
@@ -103,6 +105,7 @@ public class RegistroProductoController {
         RegistroProducto entidad = new RegistroProducto();
         entidad.setIdRegistroProducto(dto.getIdRegistroProducto());
         entidad.setTipo(dto.getTipo());
+        entidad.setElaborador(dto.getElaborador());
 
         //producto
         Producto producto = new Producto();

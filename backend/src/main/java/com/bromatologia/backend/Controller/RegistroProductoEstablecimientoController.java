@@ -102,6 +102,7 @@ public class RegistroProductoEstablecimientoController {
             rpDTO.setIdRegistroProducto(rp.getIdRegistroProducto());
             rpDTO.setTipo(rp.getTipo());
             rpDTO.setIdProducto(rp.getProducto().getIdProducto());
+            rpDTO.setElaborador(rp.getElaborador());
 
             //Mantenimientos
 

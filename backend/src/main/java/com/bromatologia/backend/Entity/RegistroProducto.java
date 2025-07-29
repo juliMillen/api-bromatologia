@@ -21,6 +21,9 @@ public class RegistroProducto {
     @JoinColumn(name = "producto_id", nullable = true)
     private Producto producto;
 
+    @NotBlank(message = "El elaborador no puede estar vacio")
+    private String Elaborador;
+
     @OneToMany(mappedBy = "registroProducto",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Mantenimiento> mantenimientos = new ArrayList<>();
 
