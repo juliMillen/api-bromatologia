@@ -73,9 +73,10 @@ public class MantenimientoController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{idMantenimiento}/tramite/{idTramite}")
-    public ResponseEntity<Tramite> agregarTramite(@PathVariable long idMantenimiento, @PathVariable long idTramite){
+    public ResponseEntity<TramiteDTO> agregarTramite(@PathVariable long idMantenimiento, @PathVariable long idTramite){
         Tramite nuevo = mantenimientoService.agregarTramite(idMantenimiento, idTramite);
-        return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
+        TramiteDTO dto = convertirATramiteDTO(nuevo);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -135,5 +136,22 @@ public class MantenimientoController {
                 }).toList();
         entidad.setTramites(tramites);
         return entidad;
+    }
+
+
+    //tramite
+    //metodos de mapeo DTO <---> entidad
+    private TramiteDTO convertirATramiteDTO(Tramite entidad) {
+        TramiteDTO dto = new TramiteDTO();
+        dto.setIdTramite(entidad.getIdTramite());
+        dto.setNombreTramite(entidad.getNombreTramite());
+
+        //Recibo
+        ReciboDTO recibo = new ReciboDTO();
+        recibo.setIdRecibo(entidad.getRecibo().getIdRecibo());
+        recibo.setFechaRecibo(entidad.getRecibo().getFechaRecibo());
+        recibo.setImporte(entidad.getRecibo().getImporte());
+        dto.setRecibo(recibo);
+        return dto;
     }
 }
