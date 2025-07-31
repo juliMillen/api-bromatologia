@@ -16,23 +16,32 @@ import java.util.List;
 public class RegistroEstablecimientoDTO {
 
     @NotNull(message = "El registro no puede ser nulo")
-    private long idRegistroEstablecimiento;
-    @NotNull(message = "El cuit de la empresa es obligatorio")
-    private long cuitEmpresa;
-    @NotNull(message = "El cuit del titular es obligatorio")
-    private long cuitTitular;
-    @NotNull(message = "El id del establecimiento es obligatorio")
-    private long idEstablecimiento;
+    private long rpe;
+
+    @NotNull(message = "La fecha de emision no puede ser null")
+    private LocalDate fechaEmision;
+
+    @NotNull(message = "La fecha de vencimiento no puede ser null")
+    private LocalDate fechaVencimiento;
+
+    private EmpresaDTO empresa;
+
+    @NotBlank(message = "El departamento del establecimiento es obligatorio")
+    private String departamento;
+
+    @NotBlank(message = "La localidad del establecimiento es obligatoria")
+    private String localidad;
+
+    @NotBlank(message = "La direccion del establecimiento es obligatoria")
+    private String direccion;
+
+    @NotBlank(message = "El numero de expediente es obligatorio")
+    private String expediente;
+
+    @NotBlank(message = "El enlace es obligatorio")
+    private String enlace;
+
+    private List<CategoriaDTO> categorias = new ArrayList<>();
 
     private List<MantenimientoDTO> mantenimientos = new ArrayList<>();
-    @NotBlank(message = "La categoria Anterior es obligatorio")
-    private String categoriaAnt;
-    @NotNull(message = "El arancel no puede ser nulo")
-    private double arancel;
-    @NotNull(message = "La fecha de emision no puede ser nulo")
-    private LocalDate fechaEmision;
-    @NotNull(message = "La fecha de vencimiento no puede ser nulo")
-    private LocalDate fechaVencimiento;
-    @NotBlank(message = "El estado del registro es obligatorio")
-    private String estado;
 }

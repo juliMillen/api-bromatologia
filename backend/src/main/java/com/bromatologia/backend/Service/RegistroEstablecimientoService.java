@@ -15,16 +15,13 @@ public class RegistroEstablecimientoService {
     private IRegistroEstablecimientoRepository registroEstablecimientoRepository;
 
     @Autowired
-    private IEstablecimientoRepository establecimientoRepository;
-
-    @Autowired
     private IEmpresaRepository empresaRepository;
 
     @Autowired
-    private ITitularRepository titularRepository;
+    private IMantenimientoRepository mantenimientoRepository;
 
     @Autowired
-    private IMantenimientoRepository mantenimientoRepository;
+    private ICategoriaRepository categoriaRepository;
 
     public List<RegistroEstablecimiento> obtenerEstablecimientos() {
         return registroEstablecimientoRepository.findAll();
@@ -51,28 +48,13 @@ public class RegistroEstablecimientoService {
     }
 
     @Transactional
-    public Empresa asignarEmpresa(long idRegistroEstablecimiento, long cuitEmpresa){
-        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(idRegistroEstablecimiento);
-        Empresa empresa = empresaRepository.findById(cuitEmpresa).orElseThrow(() -> new EmpresaException("El empresa no existe"));
-        registro.asignarEmpresa(empresa);
-        return empresa;
+    public Categoria asignarCategoria(long idRegistroEstablecimiento, long idCategoria){
+        RegistroEstablecimiento registroEst = obtenerRegistroEstablecimientoExistente(idRegistroEstablecimiento);
+        Categoria categoria = categoriaRepository.findById(idCategoria).orElseThrow( () -> new CategoriaException("La categoria no existe"));
+        registroEst.agregarCategoria(categoria);
+        return categoria;
     }
 
-    @Transactional
-    public Titular asignarTitular(long idRegistroEstablecimiento, long cuitTitular){
-        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(idRegistroEstablecimiento);
-        Titular titular = titularRepository.findById(cuitTitular).orElseThrow(() -> new TitularException("No existe el titular registro"));
-        registro.asignarTitular(titular);
-        return titular;
-    }
-
-    @Transactional
-    public Establecimiento asignarEstablecimiento(long idRegistroEstablecimiento, long idEstablecimiento){
-        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(idRegistroEstablecimiento);
-        Establecimiento establecimiento = establecimientoRepository.findById(idEstablecimiento).orElseThrow(() -> new EstablecimientoException("El establecimiento no se encontro"));
-        registro.asignarEstablecimiento(establecimiento);
-        return establecimiento;
-    }
 
     @Transactional
     public Mantenimiento agregarMantenimiento(long idRegistroEstablecimiento,long idMantenimiento){

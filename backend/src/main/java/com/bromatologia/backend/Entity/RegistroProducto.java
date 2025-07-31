@@ -4,6 +4,8 @@ import com.bromatologia.backend.Exception.RegistroProductoException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +16,27 @@ import java.util.List;
 public class RegistroProducto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idRegistroProducto;
+    private String rppa;
+
+    private LocalDate fechaEmision;
+
+    private LocalDate fechaVencimiento;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "producto_id", nullable = true)
-    private Producto producto;
+    private RegistroEstablecimiento registroEstablecimiento;
+
+    private String denominacion;
+
+    private String marca;
+
+    private String nombreFantasia;
+
+    private String categoriaProducto;
+
+    private long expediente;
+
+    private String enlace;
+
 
     @NotBlank(message = "El elaborador no puede estar vacio")
     private String Elaborador;
@@ -28,20 +45,26 @@ public class RegistroProducto {
     private List<Mantenimiento> mantenimientos = new ArrayList<>();
 
 
-    @NotBlank(message = "El tipo no puede estar vacio")
-    private String tipo;
 
-
-    public RegistroProducto(String tipo) {
-        this.tipo = tipo;
+    public RegistroProducto(String rppa, LocalDate fechaEmision, LocalDate fechaVencimiento, String denominacion, String marca, String nombreFantasia, String categoriaProducto, long expediente, String enlace) {
+        this.rppa = rppa;
+        this.fechaEmision = fechaEmision;
+        this.fechaVencimiento = fechaVencimiento;
+        this.denominacion = denominacion;
+        this.marca = marca;
+        this.nombreFantasia = nombreFantasia;
+        this.categoriaProducto = categoriaProducto;
+        this.expediente = expediente;
+        this.enlace = enlace;
     }
 
-    public void asignarProducto(Producto producto) {
-        if (producto == null) {
-            throw new RegistroProductoException("El producto no puede ser nulo");
+    public void agregarRegistroEstablecimiento(RegistroEstablecimiento registroEstablecimiento){
+        if(registroEstablecimiento == null){
+            throw new RegistroProductoException("No hay un registro establecimiento");
         }
-        this.producto = producto;
+        this.registroEstablecimiento = registroEstablecimiento;
     }
+
 
 
     public void agregarMantenimiento(Mantenimiento mantenimiento){

@@ -54,25 +54,12 @@ public class RegistroEstablecimientoController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{idRegistroEstablecimiento}/empresa/{cuitEmpresa}")
-    public ResponseEntity<Empresa> asignarEmpresa(@PathVariable long idRegistroEstablecimiento, @PathVariable long cuitEmpresa) {
-        Empresa nueva = registroEstablecimientoService.asignarEmpresa(idRegistroEstablecimiento,cuitEmpresa);
+    @PostMapping("/{idRegistroEstablecimiento}/categoria/{idCategoria}")
+    public ResponseEntity<Categoria> asignarCategoria(@PathVariable long idRegistroEstablecimiento, @PathVariable long idCategoria) {
+        Categoria nueva = registroEstablecimientoService.asignarCategoria(idRegistroEstablecimiento,idCategoria);
         return new ResponseEntity<>(nueva, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{idRegistroEstablecimiento}/titular/{idTitular}")
-    public ResponseEntity<Titular> asignarTitular(@PathVariable long idRegistroEstablecimiento, @PathVariable long idTitular) {
-        Titular nuevo = registroEstablecimientoService.asignarTitular(idRegistroEstablecimiento,idTitular);
-        return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{idRegistroEstablecimiento}/establecimiento/{idEstablecimiento}")
-    public ResponseEntity<Establecimiento> asignarEstablecimiento(@PathVariable long idRegistroEstablecimiento, @PathVariable long idEstablecimiento) {
-        Establecimiento nuevo = registroEstablecimientoService.asignarEstablecimiento(idRegistroEstablecimiento,idEstablecimiento);
-        return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
-    }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("{idRegistroEstablecimiento}/mantenimiento/{idMantenimiento}")
@@ -92,28 +79,18 @@ public class RegistroEstablecimientoController {
     //metodos de mapeo DTO <---> entidad
     private RegistroEstablecimientoDTO convertirADTO(RegistroEstablecimiento entidad){
         RegistroEstablecimientoDTO dto = new RegistroEstablecimientoDTO();
-        dto.setIdRegistroEstablecimiento(entidad.getIdRegistroEstablecimiento());
-        dto.setIdEstablecimiento(entidad.getEstablecimiento().getIdEstablecimiento());
-        dto.setCuitTitular(entidad.getTitular().getCuitTitular());
-        dto.setArancel(entidad.getArancel());
-        dto.setCategoriaAnt(entidad.getCategoriaAnt());
+        dto.setRpe(entidad.getRpe());
         dto.setFechaEmision(entidad.getFechaEmision());
         dto.setFechaVencimiento(entidad.getFechaVencimiento());
-        dto.setEstado(entidad.getEstado());
+        dto.setDepartamento(entidad.getDepartamentoEst());
+        dto.setLocalidad(entidad.getLocalidadEst());
+        dto.setDireccion(entidad.getDireccionEst());
+        dto.setExpediente(entidad.getExpediente());
+        dto.setEnlace(entidad.getEnlace());
 
-
-        //Empresa
         EmpresaDTO empresaDTO = new EmpresaDTO();
-        empresaDTO.setCuitEmpresa(entidad.getEmpresa().getCuitEmpresa());
-        dto.setCuitEmpresa(entidad.getEmpresa().getCuitEmpresa());
-
-        //titular
-        TitularDTO titularDTO = new TitularDTO();
-        titularDTO.setCuitTitular(entidad.getTitular().getCuitTitular());
-
-        //Establecimiento
-        EstablecimientoDTO establecimientoDTO = new EstablecimientoDTO();
-        establecimientoDTO.setIdEstablecimiento(entidad.getEstablecimiento().getIdEstablecimiento());
+        empresaDTO.setRazonSocial(entidad.getEmpresa().getRazonSocial());
+        dto.setEmpresa(empresaDTO);
 
         //Mantenimiento
         List<MantenimientoDTO> mantenimientosDTO = entidad.getMantenimientos()
@@ -132,29 +109,21 @@ public class RegistroEstablecimientoController {
 
     private RegistroEstablecimiento convertirADominio(RegistroEstablecimientoDTO dto) {
         RegistroEstablecimiento entidad = new RegistroEstablecimiento();
-        entidad.setIdRegistroEstablecimiento(dto.getIdRegistroEstablecimiento());
-        entidad.setCategoriaAnt(dto.getCategoriaAnt());
-        entidad.setArancel(dto.getArancel());
+        entidad.setRpe(dto.getRpe());
         entidad.setFechaEmision(dto.getFechaEmision());
         entidad.setFechaVencimiento(dto.getFechaVencimiento());
-        entidad.setEstado(dto.getEstado());
+        entidad.setDepartamentoEst(dto.getDepartamento());
+        entidad.setLocalidadEst(dto.getLocalidad());
+        entidad.setDireccionEst(dto.getDireccion());
+        entidad.setExpediente(dto.getExpediente());
+        entidad.setEnlace(dto.getEnlace());
 
 
         //Empresa
         Empresa empresa = new Empresa();
-        empresa.setCuitEmpresa(dto.getCuitEmpresa());
+        empresa.setRazonSocial(dto.getEmpresa().getRazonSocial());
         entidad.setEmpresa(empresa);
 
-        //Titular
-        Titular titular = new Titular();
-        titular.setCuitTitular(dto.getCuitTitular());
-        entidad.setTitular(titular);
-
-
-        //Establecimiento
-        Establecimiento establecimiento = new Establecimiento();
-        establecimiento.setIdEstablecimiento(dto.getIdEstablecimiento());
-        entidad.setEstablecimiento(establecimiento);
 
         //mantenimiento
         List<Mantenimiento> mantenimientos = dto.getMantenimientos()

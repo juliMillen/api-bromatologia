@@ -23,16 +23,26 @@ public class EmpresaDTO {
     @NotBlank(message = "El nombre es obligatorio")
     private String nombreEmpresa;
 
-    //datos del titular}
-    @NotNull(message = "El titular no puede ser nulo")
-    private TitularDTO titular;
+    @NotBlank(message = "La razon social es obligatoria")
+    private String razonSocial;
+
     @NotBlank(message = "El email es obligatorio")
     private String email;
+
     @NotBlank(message = "El telefono es obligatorio")
     @Pattern(regexp = "^\\+?\\d{7,15}$", message = "Formato de teléfono inválido")
     private String telefono;
 
-    //establecimiento
+    @NotBlank(message = "El departamento de la empresa es obligatorio")
+    private String departamento;
 
-    private List<EstablecimientoDTO> establecimientos = new ArrayList<>();
+    @NotBlank(message = "La localidad de la empresa es obligatoria")
+    private String localidad;
+
+    @NotBlank(message = "La direccion es obligatoria")
+    private String direccion;
+
+    @NotBlank(message = "La contraseña es obligatoria")
+    private String password;
+
 }

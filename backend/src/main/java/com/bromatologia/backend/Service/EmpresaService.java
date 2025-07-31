@@ -2,12 +2,8 @@ package com.bromatologia.backend.Service;
 
 import com.bromatologia.backend.DTO.EmpresaUpdateDTO;
 import com.bromatologia.backend.Entity.Empresa;
-import com.bromatologia.backend.Entity.Establecimiento;
 import com.bromatologia.backend.Exception.EmpresaException;
-import com.bromatologia.backend.Exception.EstablecimientoException;
 import com.bromatologia.backend.Repository.IEmpresaRepository;
-import com.bromatologia.backend.Repository.IEstablecimientoRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +14,6 @@ public class EmpresaService {
     @Autowired
     private IEmpresaRepository empresaRepository;
 
-    @Autowired
-    private IEstablecimientoRepository establecimientoRepository;
 
     public List<Empresa> obtenerEmpresas() {
         return empresaRepository.findAll();
@@ -57,13 +51,6 @@ public class EmpresaService {
         return empresaRepository.save(aActualizar);
     }
 
-    @Transactional
-    public Establecimiento agregarEstablecimiento(long cuitEmpresa,long idEstablecimiento){
-        Empresa empresa = obtenerEmpresaExistente(cuitEmpresa);
-        Establecimiento nuevo = establecimientoRepository.findById(idEstablecimiento).orElseThrow(() -> new EstablecimientoException("El establecimiento no existe"));
-        empresa.agregarEstablecimiento(nuevo);
-        return nuevo;
-    }
 
     public Empresa obtenerEmpresaExistente(long cuitEmpresa){
         if(cuitEmpresa <= 0){

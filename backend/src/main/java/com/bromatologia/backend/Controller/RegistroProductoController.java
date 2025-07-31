@@ -70,9 +70,20 @@ public class RegistroProductoController {
     //metodos de mapeo DTO <---> entidad
     private RegistroProductoDTO convertirADTO(RegistroProducto entidad) {
         RegistroProductoDTO dto = new RegistroProductoDTO();
-        dto.setIdRegistroProducto(entidad.getIdRegistroProducto());
-        dto.setTipo(entidad.getTipo());
-        dto.setElaborador(entidad.getElaborador());
+        dto.setRppa(entidad.getRppa());
+        dto.setFechaEmision(entidad.getFechaEmision());
+        dto.setFechaVencimiento(entidad.getFechaVencimiento());
+        dto.setDenominacion(entidad.getDenominacion());
+        dto.setMarca(entidad.getMarca());
+        dto.setNombreFantasia(entidad.getNombreFantasia());
+        dto.setCategoriaProducto(entidad.getCategoriaProducto());
+        dto.setExpediente(entidad.getExpediente());
+        dto.setEnlace(entidad.getEnlace());
+
+       RegistroEstablecimientoDTO regDto = new RegistroEstablecimientoDTO();
+       regDto.setRpe(entidad.getRegistroEstablecimiento().getRpe());
+       dto.setRegistroEstablecimiento(regDto);
+
 
 
         //Mantenimiento
@@ -91,11 +102,19 @@ public class RegistroProductoController {
 
     private RegistroProducto convertirADominio(RegistroProductoDTO dto) {
         RegistroProducto entidad = new RegistroProducto();
-        entidad.setIdRegistroProducto(dto.getIdRegistroProducto());
-        entidad.setTipo(dto.getTipo());
-        entidad.setElaborador(dto.getElaborador());
+        entidad.setRppa(dto.getRppa());
+        entidad.setFechaEmision(dto.getFechaEmision());
+        entidad.setFechaVencimiento(dto.getFechaVencimiento());
+        entidad.setDenominacion(dto.getDenominacion());
+        entidad.setMarca(dto.getMarca());
+        entidad.setNombreFantasia(dto.getNombreFantasia());
+        entidad.setCategoriaProducto(dto.getCategoriaProducto());
+        entidad.setExpediente(dto.getExpediente());
+        entidad.setEnlace(dto.getEnlace());
 
-
+        RegistroEstablecimiento registroEstablecimiento = new RegistroEstablecimiento();
+        registroEstablecimiento.setRpe(dto.getRegistroEstablecimiento().getRpe());
+        entidad.setRegistroEstablecimiento(registroEstablecimiento);
 
         //mantenimiento
         List<Mantenimiento> mantenimientos = dto.getMantenimientos()
