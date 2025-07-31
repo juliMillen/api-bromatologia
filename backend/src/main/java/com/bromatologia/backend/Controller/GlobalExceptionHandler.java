@@ -31,11 +31,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ProductoException.class)
-    public ResponseEntity<String> handlerProductoException(ProductoException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(ReciboException.class)
     public ResponseEntity<String> handlerReciboException(ReciboException exception){
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);

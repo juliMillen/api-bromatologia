@@ -51,12 +51,6 @@ public class RegistroProductoController {
         return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{idRegistroProducto}/producto/{idProducto}")
-    public ResponseEntity<Producto> asignarProducto(@PathVariable long idRegistroProducto, @PathVariable long idProducto) {
-        Producto nuevo = registroProductoService.asignarProducto(idRegistroProducto, idProducto);
-        return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
-    }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{idRegistroProducto}/mantenimiento/{idMantenimiento}")
@@ -81,12 +75,6 @@ public class RegistroProductoController {
         dto.setElaborador(entidad.getElaborador());
 
 
-        //Producto
-        if(entidad.getProducto() != null){
-            dto.setIdProducto(entidad.getProducto().getIdProducto());
-        }
-
-
         //Mantenimiento
         List<MantenimientoDTO> mantenimientosDTO = entidad.getMantenimientos()
                 .stream()
@@ -107,10 +95,6 @@ public class RegistroProductoController {
         entidad.setTipo(dto.getTipo());
         entidad.setElaborador(dto.getElaborador());
 
-        //producto
-        Producto producto = new Producto();
-        producto.setIdProducto(dto.getIdProducto());
-        entidad.setProducto(producto);
 
 
         //mantenimiento

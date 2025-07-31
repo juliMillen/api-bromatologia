@@ -1,14 +1,12 @@
 package com.bromatologia.backend.DTO;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Getter
 @Setter
@@ -27,6 +25,5 @@ public class EstablecimientoDTO {
     //Informacion de la empresa
     private long cuitEmpresa;
 
-    //Informacion del o los producto
-    private List<ProductoDTO> productos = new ArrayList<>();
+
 }

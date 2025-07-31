@@ -1,12 +1,10 @@
 package com.bromatologia.backend.Service;
 
 import com.bromatologia.backend.Entity.Establecimiento;
-import com.bromatologia.backend.Entity.Producto;
 import com.bromatologia.backend.Exception.EstablecimientoException;
-import com.bromatologia.backend.Exception.ProductoException;
+
 import com.bromatologia.backend.Repository.IEstablecimientoRepository;
-import com.bromatologia.backend.Repository.IProductoRepository;
-import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +15,6 @@ public class EstablecimientoService {
 
     @Autowired
     private IEstablecimientoRepository establecimientoRepository;
-
-    @Autowired
-    private IProductoRepository productoRepository;
 
 
     public List<Establecimiento> obtenerEstablecimientos(){
@@ -45,13 +40,6 @@ public class EstablecimientoService {
         establecimientoRepository.delete(aEliminar);
     }
 
-    @Transactional
-    public Producto agregarProducto(long idEstablecimiento,long idProducto){
-        Establecimiento establecimiento = obtenerEstablecimientoExistente(idEstablecimiento);
-        Producto producto = productoRepository.findById(idProducto).orElseThrow(() -> new ProductoException("Producto invalido"));
-        establecimiento.agregarProductos(producto);
-        return producto;
-    }
 
     public Establecimiento obtenerEstablecimientoExistente(long idEstablecimiento){
         if(idEstablecimiento <= 0){

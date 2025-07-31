@@ -1,10 +1,10 @@
 package com.bromatologia.backend.Controller;
 
 import com.bromatologia.backend.DTO.EstablecimientoDTO;
-import com.bromatologia.backend.DTO.ProductoDTO;
+
 import com.bromatologia.backend.Entity.Empresa;
 import com.bromatologia.backend.Entity.Establecimiento;
-import com.bromatologia.backend.Entity.Producto;
+
 import com.bromatologia.backend.Service.EstablecimientoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,16 +47,6 @@ public class EstablecimientoController {
         return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/productos")
-    public ResponseEntity<List<ProductoDTO>> obtenerProductosDeEstablecimientos(@PathVariable long id) {
-        Establecimiento buscado = establecimientoService.obtenerEstablecimientoPorId(id);
-
-        List<ProductoDTO>listaDTO = buscado.getProductos()
-                .stream()
-                .map(this::convertirAProductoDTO)
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
-    }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/")
@@ -68,12 +58,6 @@ public class EstablecimientoController {
     return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{idEstablecimiento}/productos/{idProducto}")
-    public ResponseEntity<Producto> agregarProducto(@PathVariable long idEstablecimiento, @PathVariable long idProducto){
-        Producto nuevo = establecimientoService.agregarProducto(idEstablecimiento, idProducto);
-        return ResponseEntity.ok(nuevo);
-    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
@@ -94,18 +78,6 @@ public class EstablecimientoController {
         }else{
             dto.setCuitEmpresa(0);
         }
-        //Producto
-        List<ProductoDTO> productosDTO = entidad.getProductos()
-                .stream()
-                .map(e->{
-                    ProductoDTO productoDTO = new ProductoDTO();
-                    productoDTO.setIdProducto(e.getIdProducto());
-                    productoDTO.setDenominacion(e.getDenominacion());
-                    productoDTO.setMarca(e.getMarca());
-                    productoDTO.setNombreFantasia(e.getNombreFantasia());
-                    return productoDTO;
-                }).toList();
-        dto.setProductos(productosDTO);
         return dto;
     }
 
@@ -126,29 +98,8 @@ public class EstablecimientoController {
         }else{
             entidad.setEmpresa(null);
         }
-
-        //Producto
-        List<Producto> productos = dto.getProductos()
-                .stream()
-                .map(e->{
-                    Producto prod = new Producto();
-                    prod.setIdProducto(e.getIdProducto());
-                    prod.setDenominacion(e.getDenominacion());
-                    prod.setMarca(e.getMarca());
-                    prod.setNombreFantasia(e.getNombreFantasia());
-                    return prod;
-                }).toList();
-        entidad.setProductos(productos);
         return entidad;
     }
 
-    private ProductoDTO convertirAProductoDTO(Producto e){
-        ProductoDTO dto = new ProductoDTO();
-        dto.setIdProducto(e.getIdProducto());
-        dto.setDenominacion(e.getDenominacion());
-        dto.setMarca(e.getMarca());
-        dto.setNombreFantasia(e.getNombreFantasia());
-        return dto;
-    }
 
 }
