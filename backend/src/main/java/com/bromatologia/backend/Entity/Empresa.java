@@ -16,14 +16,12 @@ public class Empresa {
     @NotNull
     @Min(value = 20000000000L, message = "El CUIT debe tener al menos 11 dígitos")
     private long cuitEmpresa;
-    @NotBlank
-    private String nombreEmpresa;
-
-    @NotNull
-    private LocalDate fechaAlta;
 
     @NotBlank
     private String razonSocial;
+
+    @NotNull
+    private LocalDate fechaAlta;
 
     @NotBlank
     private String email;
@@ -43,10 +41,10 @@ public class Empresa {
     @NotBlank
     private String password;
 
-    public Empresa(long cuitEmpresa, String nombreEmpresa,String razonSocial, String email, String telefono, String departamento, String localidad, String direccion, String password) {
+    public Empresa(long cuitEmpresa,String razonSocial,LocalDate fechaAlta, String email, String telefono, String departamento, String localidad, String direccion, String password) {
         this.cuitEmpresa = cuitEmpresa;
-        this.nombreEmpresa = nombreEmpresa;
         this.razonSocial = razonSocial;
+        this.fechaAlta = fechaAlta;
         this.email = email;
         this.telefono = telefono;
         this.departamento = departamento;

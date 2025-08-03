@@ -48,6 +48,13 @@ public class ActividadController {
         return new ResponseEntity<>(actividadDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{idActividad}/categoria/{idCategoria}")
+    public ResponseEntity<Categoria> asignarCategoria(@PathVariable long idActividad, @PathVariable long idCategoria) {
+        Categoria nueva = actividadService.asignarCategoria(idActividad,idCategoria);
+        return new ResponseEntity<>(nueva, HttpStatus.CREATED);
+    }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")

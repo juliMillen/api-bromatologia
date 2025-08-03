@@ -48,5 +48,8 @@ public class RegistroProductoDTO {
     @NotBlank(message = "El enlace es obligatorio")
     private String enlace;
 
+    @NotBlank(message = "El elaborador es obligatorio")
+    private String elaborador;
+
     private List<MantenimientoDTO> mantenimientos = new ArrayList<>();
 }

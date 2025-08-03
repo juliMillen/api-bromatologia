@@ -16,7 +16,7 @@ import java.util.List;
 public class RegistroEstablecimientoDTO {
 
     @NotNull(message = "El registro no puede ser nulo")
-    private long rpe;
+    private String rpe;
 
     @NotNull(message = "La fecha de emision no puede ser null")
     private LocalDate fechaEmision;
@@ -35,8 +35,8 @@ public class RegistroEstablecimientoDTO {
     @NotBlank(message = "La direccion del establecimiento es obligatoria")
     private String direccion;
 
-    @NotBlank(message = "El numero de expediente es obligatorio")
-    private String expediente;
+    @NotNull(message = "El numero de expediente es obligatorio")
+    private long expediente;
 
     @NotBlank(message = "El enlace es obligatorio")
     private String enlace;

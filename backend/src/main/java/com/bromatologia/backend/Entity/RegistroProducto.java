@@ -37,7 +37,6 @@ public class RegistroProducto {
 
     private String enlace;
 
-
     @NotBlank(message = "El elaborador no puede estar vacio")
     private String Elaborador;
 

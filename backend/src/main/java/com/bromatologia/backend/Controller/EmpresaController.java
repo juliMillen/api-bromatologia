@@ -69,8 +69,8 @@ public class EmpresaController {
     private EmpresaDTO convertirAEmpresaDTO(Empresa entidad){
         EmpresaDTO dto = new EmpresaDTO();
         dto.setCuitEmpresa(entidad.getCuitEmpresa());
-        dto.setNombreEmpresa(entidad.getNombreEmpresa());
         dto.setRazonSocial(entidad.getRazonSocial());
+        dto.setFechaAlta(entidad.getFechaAlta());
         dto.setEmail(entidad.getEmail());
         dto.setTelefono(entidad.getTelefono());
         dto.setDepartamento(entidad.getDepartamento());
@@ -84,8 +84,8 @@ public class EmpresaController {
 
         Empresa entidad = new Empresa();
         entidad.setCuitEmpresa(dto.getCuitEmpresa());
-        entidad.setNombreEmpresa(dto.getNombreEmpresa());
         entidad.setRazonSocial(dto.getRazonSocial());
+        entidad.setFechaAlta(dto.getFechaAlta());
         entidad.setEmail(dto.getEmail());
         entidad.setTelefono(dto.getTelefono());
         entidad.setDepartamento(dto.getDepartamento());

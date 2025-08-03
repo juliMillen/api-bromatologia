@@ -1,5 +1,6 @@
 package com.bromatologia.backend.Service;
 
+import com.bromatologia.backend.DTO.CategoriaDTO;
 import com.bromatologia.backend.Entity.*;
 import com.bromatologia.backend.Exception.*;
 import com.bromatologia.backend.Repository.*;
@@ -27,7 +28,7 @@ public class RegistroEstablecimientoService {
         return registroEstablecimientoRepository.findAll();
     }
 
-    public RegistroEstablecimiento obtenerEstablecimientoById(long id) {
+    public RegistroEstablecimiento obtenerEstablecimientoById(String id) {
        return obtenerRegistroEstablecimientoExistente(id);
     }
 
@@ -39,8 +40,8 @@ public class RegistroEstablecimientoService {
         return registroEstablecimientoRepository.save(registro);
     }
 
-    public void eliminarRegistro(long id) {
-        if(id <= 0){
+    public void eliminarRegistro(String id) {
+        if(id.isEmpty()){
             throw new RegistroEstablecimientoException("El id es invalido");
         }
         RegistroEstablecimiento aEliminar = obtenerRegistroEstablecimientoExistente(id);
@@ -48,7 +49,7 @@ public class RegistroEstablecimientoService {
     }
 
     @Transactional
-    public Categoria asignarCategoria(long idRegistroEstablecimiento, long idCategoria){
+    public Categoria asignarCategoria(String idRegistroEstablecimiento, long idCategoria){
         RegistroEstablecimiento registroEst = obtenerRegistroEstablecimientoExistente(idRegistroEstablecimiento);
         Categoria categoria = categoriaRepository.findById(idCategoria).orElseThrow( () -> new CategoriaException("La categoria no existe"));
         registroEst.agregarCategoria(categoria);
@@ -57,7 +58,7 @@ public class RegistroEstablecimientoService {
 
 
     @Transactional
-    public Mantenimiento agregarMantenimiento(long idRegistroEstablecimiento,long idMantenimiento){
+    public Mantenimiento agregarMantenimiento(String idRegistroEstablecimiento,long idMantenimiento){
         RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(idRegistroEstablecimiento);
         Mantenimiento mantenimiento = mantenimientoRepository.findById(idMantenimiento).orElseThrow(() -> new MantenimientoException("no se ha encontrado el mantenimiento"));
         registro.agregarMantenimiento(mantenimiento);
@@ -65,10 +66,12 @@ public class RegistroEstablecimientoService {
     }
 
 
-    public RegistroEstablecimiento obtenerRegistroEstablecimientoExistente(long id){
-        if(id <= 0){
+    public RegistroEstablecimiento obtenerRegistroEstablecimientoExistente(String id){
+        if(id.isEmpty()){
             throw new RegistroEstablecimientoException("El id del registro es invalido");
         }
         return registroEstablecimientoRepository.findById(id).orElseThrow(() -> new RegistroEstablecimientoException("El id no se ha encontrado"));
     }
+
+
 }

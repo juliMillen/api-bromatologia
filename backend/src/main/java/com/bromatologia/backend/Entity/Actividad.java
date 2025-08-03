@@ -28,4 +28,9 @@ public class Actividad {
     public Actividad(String nombreActividad) {
         this.nombreActividad = nombreActividad;
     }
+
+    public void agregarCategoria(Categoria categoria) {
+        listaCategorias.add(categoria);
+        categoria.setActividad(this);
+    }
 }

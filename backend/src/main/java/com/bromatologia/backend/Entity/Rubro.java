@@ -28,4 +28,9 @@ public class Rubro {
     public Rubro(String nombreRubro) {
         this.nombreRubro = nombreRubro;
     }
+
+    public void agregarCategoria(Categoria categoria){
+        listaCategorias.add(categoria);
+        categoria.setRubro(this);
+    }
 }

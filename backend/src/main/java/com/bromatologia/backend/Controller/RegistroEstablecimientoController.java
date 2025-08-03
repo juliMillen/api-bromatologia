@@ -35,13 +35,23 @@ public class RegistroEstablecimientoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RegistroEstablecimientoDTO>obtenerRegistroEstablecimientoById(@PathVariable long id) {
+    public ResponseEntity<RegistroEstablecimientoDTO>obtenerRegistroEstablecimientoById(@PathVariable String id) {
         RegistroEstablecimiento buscado = registroEstablecimientoService.obtenerEstablecimientoById(id);
         if(buscado == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         RegistroEstablecimientoDTO dto = convertirADTO(buscado);
         return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<CategoriaDTO>> categoriaDeRegistro(@PathVariable String idRegistro){
+        RegistroEstablecimiento registro = registroEstablecimientoService.obtenerEstablecimientoById(idRegistro);
+
+        List<CategoriaDTO> listaDTO = registro.getListaCategorias()
+                .stream()
+                .map(this::convertirACategoriaDTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -54,23 +64,25 @@ public class RegistroEstablecimientoController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{idRegistroEstablecimiento}/categoria/{idCategoria}")
-    public ResponseEntity<Categoria> asignarCategoria(@PathVariable long idRegistroEstablecimiento, @PathVariable long idCategoria) {
+    @PostMapping("{idRegistroEstablecimiento}/categoria/{idCategoria}")
+    public ResponseEntity<CategoriaDTO> asignarCategoria(@PathVariable String idRegistroEstablecimiento, @PathVariable long idCategoria) {
         Categoria nueva = registroEstablecimientoService.asignarCategoria(idRegistroEstablecimiento,idCategoria);
-        return new ResponseEntity<>(nueva, HttpStatus.CREATED);
+        CategoriaDTO dto = convertirACategoriaDTO(nueva);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("{idRegistroEstablecimiento}/mantenimiento/{idMantenimiento}")
-    public ResponseEntity<Mantenimiento> agregarMantenimiento(@PathVariable long idRegistroEstablecimiento, @PathVariable long idMantenimiento) {
+    public ResponseEntity<MantenimientoDTO> agregarMantenimiento(@PathVariable String idRegistroEstablecimiento, @PathVariable long idMantenimiento) {
         Mantenimiento nuevo = registroEstablecimientoService.agregarMantenimiento(idRegistroEstablecimiento, idMantenimiento);
-        return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
+        MantenimientoDTO dto = convertirAMantenimientoDTO(nuevo);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<RegistroEstablecimiento> eliminarRegistro(@PathVariable long id) {
+    public ResponseEntity<RegistroEstablecimiento> eliminarRegistro(@PathVariable String id) {
         registroEstablecimientoService.eliminarRegistro(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -89,8 +101,21 @@ public class RegistroEstablecimientoController {
         dto.setEnlace(entidad.getEnlace());
 
         EmpresaDTO empresaDTO = new EmpresaDTO();
+        empresaDTO.setCuitEmpresa(entidad.getEmpresa().getCuitEmpresa());
         empresaDTO.setRazonSocial(entidad.getEmpresa().getRazonSocial());
         dto.setEmpresa(empresaDTO);
+
+        //Categorias
+        List<CategoriaDTO> categoriaDTO = entidad.getListaCategorias()
+                .stream()
+                .map(e ->{
+                    CategoriaDTO cat = new CategoriaDTO();
+                    cat.setIdCategoria(e.getIdCategoria());
+                    cat.setNombre(e.getNombreCategoria());
+                    return cat;
+                }).toList();
+        dto.setCategorias(categoriaDTO);
+
 
         //Mantenimiento
         List<MantenimientoDTO> mantenimientosDTO = entidad.getMantenimientos()
@@ -121,8 +146,20 @@ public class RegistroEstablecimientoController {
 
         //Empresa
         Empresa empresa = new Empresa();
+        empresa.setCuitEmpresa(dto.getEmpresa().getCuitEmpresa());
         empresa.setRazonSocial(dto.getEmpresa().getRazonSocial());
         entidad.setEmpresa(empresa);
+
+        //Categoria
+        List<Categoria> categorias = dto.getCategorias()
+                .stream()
+                .map(e->{
+                    Categoria cat = new Categoria();
+                    cat.setIdCategoria(e.getIdCategoria());
+                    cat.setNombreCategoria(e.getNombre());
+                    return cat;
+                }).toList();
+        entidad.setListaCategorias(categorias);
 
 
         //mantenimiento
@@ -137,5 +174,40 @@ public class RegistroEstablecimientoController {
                 }).toList();
         entidad.setMantenimientos(mantenimientos);
         return entidad;
+    }
+
+    //categoria a dto
+    private CategoriaDTO convertirACategoriaDTO(Categoria entidad){
+        CategoriaDTO dto = new CategoriaDTO();
+        dto.setIdCategoria(entidad.getIdCategoria());
+        dto.setNombre(entidad.getNombreCategoria());
+        return dto;
+    }
+
+    //mantenimiento a dto
+    //metodos de mapeo DTO <---> entidad
+    private MantenimientoDTO convertirAMantenimientoDTO(Mantenimiento entidad) {
+        MantenimientoDTO dto = new MantenimientoDTO();
+        dto.setIdMantenimiento(entidad.getIdMantenimiento());
+        dto.setFechaMantenimiento(entidad.getFechaMantenimiento());
+        dto.setEnlaceRecibido(entidad.getEnlaceRecibido());
+
+        //Tramites
+        List<TramiteDTO> tramites = entidad.getTramites()
+                .stream()
+                .map(e->{
+                    TramiteDTO tramite = new TramiteDTO();
+                    tramite.setIdTramite(e.getIdTramite());
+                    tramite.setNombreTramite(e.getNombreTramite());
+
+                    ReciboDTO recibo = new ReciboDTO();
+                    recibo.setFechaRecibo(e.getRecibo().getFechaRecibo());
+                    recibo.setImporte(e.getRecibo().getImporte());
+
+                    tramite.setRecibo(recibo);
+                    return tramite;
+                }).toList();
+        dto.setTramites(tramites);
+        return dto;
     }
 }

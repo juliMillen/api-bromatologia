@@ -19,7 +19,7 @@ import java.util.List;
 public class RegistroEstablecimiento {
 
     @Id
-    private long rpe;
+    private String rpe;
 
     private LocalDate fechaEmision;
 
@@ -35,11 +35,11 @@ public class RegistroEstablecimiento {
 
     private String direccionEst;
 
-    private String expediente;
+    private long expediente;
 
     private String enlace;
 
-    @OneToMany(mappedBy = "establecimiento", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "registroEstablecimiento", cascade = CascadeType.ALL)
     private List<Categoria> listaCategorias = new ArrayList<>();
 
 
@@ -47,7 +47,7 @@ public class RegistroEstablecimiento {
     private List<Mantenimiento> mantenimientos = new ArrayList<>();
 
 
-    public RegistroEstablecimiento(long rpe, LocalDate fechaEmision, LocalDate fechaVencimiento, String departamentoEst, String localidadEst, String direccionEst, String expediente, String enlace) {
+    public RegistroEstablecimiento(String rpe, LocalDate fechaEmision, LocalDate fechaVencimiento, String departamentoEst, String localidadEst, String direccionEst, long expediente, String enlace) {
         this.rpe = rpe;
         this.fechaEmision = fechaEmision;
         this.fechaVencimiento = fechaVencimiento;

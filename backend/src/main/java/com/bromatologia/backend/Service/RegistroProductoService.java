@@ -25,7 +25,7 @@ public class RegistroProductoService {
         return registroProductoRepository.findAll();
     }
 
-    public RegistroProducto obtenerRegistroProducto(long id) {
+    public RegistroProducto obtenerRegistroProducto(String id) {
         return obtenerRegistroProductoExistente(id);
     }
 
@@ -36,8 +36,8 @@ public class RegistroProductoService {
         return registroProductoRepository.save(registroProducto);
     }
 
-    public void eliminarRegistroProducto(long id) {
-        if(id <= 0){
+    public void eliminarRegistroProducto(String id) {
+        if(id.isEmpty()){
             throw new RegistroProductoException("El id del registro no es valido");
         }
         RegistroProducto aEliminar = obtenerRegistroProductoExistente(id);
@@ -46,15 +46,15 @@ public class RegistroProductoService {
 
 
     @Transactional
-    public Mantenimiento agregarMantenimiento(long idRegistroProducto, long idMantenimiento){
+    public Mantenimiento agregarMantenimiento(String idRegistroProducto, long idMantenimiento){
         RegistroProducto registroProd = obtenerRegistroProductoExistente(idRegistroProducto);
         Mantenimiento nuevo = mantenimientoRepository.findById(idMantenimiento).orElseThrow(() -> new RegistroProductoException("El mantenimiento no se ha encontrado"));
         registroProd.agregarMantenimiento(nuevo);
         return nuevo;
     }
 
-    public RegistroProducto obtenerRegistroProductoExistente(long id){
-        if(id <= 0){
+    public RegistroProducto obtenerRegistroProductoExistente(String id){
+        if(id.isEmpty()){
             throw new RegistroProductoException("El id del registro no puede ser negativo");
         }
         return registroProductoRepository.findById(id).orElseThrow(() -> new RegistroProductoException("El id del registro no existe"));

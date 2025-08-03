@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +21,12 @@ public class EmpresaDTO {
     @NotNull(message = "El cuit no puede ser nulo")
     @Min(value = 20000000000L, message = "El CUIT debe tener al menos 11 dígitos")
     private long cuitEmpresa;
-    @NotBlank(message = "El nombre es obligatorio")
-    private String nombreEmpresa;
 
     @NotBlank(message = "La razon social es obligatoria")
     private String razonSocial;
+
+    @NotNull(message = "La fecha de alta es obligatoria")
+    private LocalDate fechaAlta;
 
     @NotBlank(message = "El email es obligatorio")
     private String email;

@@ -11,20 +11,12 @@ public class GlobalExceptionHandler {
 
     //clase para tomar las excepciones desde el lado del frontend
 
-    @ExceptionHandler(TitularException.class)
-    public ResponseEntity<String> handlerTitularException(TitularException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-    }
 
     @ExceptionHandler(EmpresaException.class)
     public ResponseEntity<String> handlerEmpresaException(EmpresaException exception){
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(EstablecimientoException.class)
-    public ResponseEntity<String> handlerEstablecimientoException(EstablecimientoException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-    }
 
     @ExceptionHandler(MantenimientoException.class)
     public ResponseEntity<String> handlerMantenimientoException(MantenimientoException exception){
@@ -46,10 +38,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(RegistroProductoEstablecimientoException.class)
-    public ResponseEntity<String> handlerRegistroProductoEstablecimientoException(RegistroProductoEstablecimientoException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-    }
 
     @ExceptionHandler(TramiteException.class)
     public ResponseEntity<String> handlerTramiteException(TramiteException exception){

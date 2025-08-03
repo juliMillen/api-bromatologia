@@ -50,6 +50,13 @@ public class RubroController {
         return new ResponseEntity<>(rubroDTO, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{idRubro}/categoria/{idCategoria}")
+    public ResponseEntity<Categoria> asignarCategoria(@PathVariable long idRubro,@PathVariable long idCategoria){
+        Categoria nueva = rubroService.asignarCategoria(idRubro,idCategoria);
+        return new ResponseEntity<>(nueva, HttpStatus.CREATED);
+    }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")

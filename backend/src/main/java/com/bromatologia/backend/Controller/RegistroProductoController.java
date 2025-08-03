@@ -35,7 +35,7 @@ public class RegistroProductoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RegistroProductoDTO> obtenerRegistroProductoById(@PathVariable long id) {
+    public ResponseEntity<RegistroProductoDTO> obtenerRegistroProductoById(@PathVariable String id) {
         RegistroProducto buscado = registroProductoService.obtenerRegistroProducto(id);
         RegistroProductoDTO respuesta = convertirADTO(buscado);
         return new ResponseEntity<>(respuesta, HttpStatus.OK);
@@ -54,14 +54,15 @@ public class RegistroProductoController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{idRegistroProducto}/mantenimiento/{idMantenimiento}")
-    public ResponseEntity<Mantenimiento> agregarMantenimiento(@PathVariable long idRegistroProducto, @PathVariable long idMantenimiento) {
+    public ResponseEntity<MantenimientoDTO> agregarMantenimiento(@PathVariable String idRegistroProducto, @PathVariable long idMantenimiento) {
         Mantenimiento nuevo = registroProductoService.agregarMantenimiento(idRegistroProducto, idMantenimiento);
-        return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
+        MantenimientoDTO dto = convertirAMantenimientoDTO(nuevo);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<RegistroProducto> eliminarRegistroProducto(@PathVariable long id) {
+    public ResponseEntity<RegistroProducto> eliminarRegistroProducto(@PathVariable String id) {
         registroProductoService.eliminarRegistroProducto(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -79,6 +80,7 @@ public class RegistroProductoController {
         dto.setCategoriaProducto(entidad.getCategoriaProducto());
         dto.setExpediente(entidad.getExpediente());
         dto.setEnlace(entidad.getEnlace());
+        dto.setElaborador(entidad.getElaborador());
 
        RegistroEstablecimientoDTO regDto = new RegistroEstablecimientoDTO();
        regDto.setRpe(entidad.getRegistroEstablecimiento().getRpe());
@@ -111,6 +113,7 @@ public class RegistroProductoController {
         entidad.setCategoriaProducto(dto.getCategoriaProducto());
         entidad.setExpediente(dto.getExpediente());
         entidad.setEnlace(dto.getEnlace());
+        entidad.setElaborador(dto.getElaborador());
 
         RegistroEstablecimiento registroEstablecimiento = new RegistroEstablecimiento();
         registroEstablecimiento.setRpe(dto.getRegistroEstablecimiento().getRpe());
@@ -128,5 +131,32 @@ public class RegistroProductoController {
                 }).toList();
         entidad.setMantenimientos(mantenimientos);
         return entidad;
+    }
+
+    //mantenimiento a dto
+    //metodos de mapeo DTO <---> entidad
+    private MantenimientoDTO convertirAMantenimientoDTO(Mantenimiento entidad) {
+        MantenimientoDTO dto = new MantenimientoDTO();
+        dto.setIdMantenimiento(entidad.getIdMantenimiento());
+        dto.setFechaMantenimiento(entidad.getFechaMantenimiento());
+        dto.setEnlaceRecibido(entidad.getEnlaceRecibido());
+
+        //Tramites
+        List<TramiteDTO> tramites = entidad.getTramites()
+                .stream()
+                .map(e->{
+                    TramiteDTO tramite = new TramiteDTO();
+                    tramite.setIdTramite(e.getIdTramite());
+                    tramite.setNombreTramite(e.getNombreTramite());
+
+                    ReciboDTO recibo = new ReciboDTO();
+                    recibo.setFechaRecibo(e.getRecibo().getFechaRecibo());
+                    recibo.setImporte(e.getRecibo().getImporte());
+
+                    tramite.setRecibo(recibo);
+                    return tramite;
+                }).toList();
+        dto.setTramites(tramites);
+        return dto;
     }
 }
