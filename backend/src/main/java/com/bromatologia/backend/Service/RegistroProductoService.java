@@ -44,6 +44,10 @@ public class RegistroProductoService {
         registroProductoRepository.delete(aEliminar);
     }
 
+    public List<RegistroProducto> obtenerTodosConProductoYMantenimiento(){
+        return registroProductoRepository.findAllConProductoYMantenimientos();
+    }
+
 
     @Transactional
     public Mantenimiento agregarMantenimiento(String idRegistroProducto, long idMantenimiento){

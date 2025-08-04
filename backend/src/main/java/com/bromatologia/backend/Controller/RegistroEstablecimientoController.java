@@ -2,6 +2,7 @@ package com.bromatologia.backend.Controller;
 
 import com.bromatologia.backend.DTO.*;
 import com.bromatologia.backend.Entity.*;
+import com.bromatologia.backend.Exception.RegistroProductoException;
 import com.bromatologia.backend.Service.RegistroEstablecimientoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,20 @@ public class RegistroEstablecimientoController {
         RegistroEstablecimiento guardado = registroEstablecimientoService.guardarRegistro(nuevoRegistro);
         RegistroEstablecimientoDTO respuesta = convertirADTO(guardado);
         return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/registroEstablecimientoConMantenimientos")
+    public ResponseEntity<List<RegistroEstablecimientoDTO>> obtenerConEstablecimientoYMantenimiento(){
+        List<RegistroEstablecimiento> listaRegistrosConMantenimiento = registroEstablecimientoService.obtenerTodosConProductoYMantenimiento();
+        if(listaRegistrosConMantenimiento == null || listaRegistrosConMantenimiento.isEmpty()){
+            throw new RegistroProductoException("No se han encontrado los registros con mantenimiento");
+        }
+
+        List<RegistroEstablecimientoDTO> listaDTO = listaRegistrosConMantenimiento
+                .stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")

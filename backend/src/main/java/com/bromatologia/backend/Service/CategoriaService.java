@@ -25,6 +25,11 @@ public class CategoriaService {
         return obtenerCategoriaExistente(idCategoria);
     }
 
+
+    public Categoria obtenerCategoriaPorNombre(String nombreCategoria){
+        return categoriaRepository.findByNombreCategoria(nombreCategoria);
+    }
+
     public Categoria registrarCategoria(Categoria categoria){
         if(categoria == null){
             throw new CategoriaException("La categoria es null");

@@ -37,6 +37,13 @@ public class CategoriaController {
         return new ResponseEntity<>(categoriaDTO,HttpStatus.OK);
     }
 
+    @GetMapping("/nombre/{nombreCategoria}")
+    public ResponseEntity<CategoriaDTO> obtenerCategoriaPorNombre(@PathVariable String nombreCategoria){
+        Categoria buscada = categoriaService.obtenerCategoriaPorNombre(nombreCategoria);
+        CategoriaDTO categoriaDTO = convertirACategoriaDTO(buscada);
+        return new ResponseEntity<>(categoriaDTO,HttpStatus.OK);
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<CategoriaDTO> registrarCategoria(@RequestBody CategoriaDTO categoriaDTO){

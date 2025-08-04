@@ -40,6 +40,10 @@ public class RegistroEstablecimientoService {
         return registroEstablecimientoRepository.save(registro);
     }
 
+    public List<RegistroEstablecimiento> obtenerTodosConProductoYMantenimiento(){
+        return registroEstablecimientoRepository.findAllConEstablecimientoYMantenimientos();
+    }
+
     public void eliminarRegistro(String id) {
         if(id.isEmpty()){
             throw new RegistroEstablecimientoException("El id es invalido");
