@@ -47,6 +47,10 @@ public class EmpresaService {
         Empresa aActualizar = obtenerEmpresaExistente(cuit);
         aActualizar.setEmail(dto.getEmail());
         aActualizar.setTelefono(dto.getTelefono());
+        aActualizar.setDepartamento(dto.getDepartamento());
+        aActualizar.setLocalidad(dto.getLocalidad());
+        aActualizar.setDireccion(dto.getDireccion());
+        aActualizar.setPassword(dto.getPassword());
 
         return empresaRepository.save(aActualizar);
     }

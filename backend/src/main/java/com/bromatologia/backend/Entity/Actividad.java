@@ -20,8 +20,10 @@ public class Actividad {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idActividad;
 
-    @OneToMany(mappedBy = "actividad")
-    private List<Categoria> listaCategorias = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
 
     private String nombreActividad;
 
@@ -29,8 +31,5 @@ public class Actividad {
         this.nombreActividad = nombreActividad;
     }
 
-    public void agregarCategoria(Categoria categoria) {
-        listaCategorias.add(categoria);
-        categoria.setActividad(this);
-    }
+
 }

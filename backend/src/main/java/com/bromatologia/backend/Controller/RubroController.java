@@ -1,10 +1,9 @@
 package com.bromatologia.backend.Controller;
 
-import com.bromatologia.backend.DTO.ActividadDTO;
-import com.bromatologia.backend.DTO.CategoriaDTO;
-import com.bromatologia.backend.DTO.RubroDTO;
+import com.bromatologia.backend.DTO.*;
 import com.bromatologia.backend.Entity.Actividad;
 import com.bromatologia.backend.Entity.Categoria;
+import com.bromatologia.backend.Entity.Mantenimiento;
 import com.bromatologia.backend.Entity.Rubro;
 import com.bromatologia.backend.Service.RubroService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +51,10 @@ public class RubroController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{idRubro}/categoria/{idCategoria}")
-    public ResponseEntity<Categoria> asignarCategoria(@PathVariable long idRubro,@PathVariable long idCategoria){
+    public ResponseEntity<CategoriaDTO> asignarCategoria(@PathVariable long idRubro,@PathVariable long idCategoria){
         Categoria nueva = rubroService.asignarCategoria(idRubro,idCategoria);
-        return new ResponseEntity<>(nueva, HttpStatus.CREATED);
+        CategoriaDTO dto = convertirACategoriaDTO(nueva);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
 
@@ -80,7 +80,7 @@ public class RubroController {
                 .map(e ->{
                     CategoriaDTO cat = new CategoriaDTO();
                     cat.setIdCategoria(e.getIdCategoria());
-                    cat.setNombre(e.getNombreCategoria());
+                    cat.setNombreCategoria(e.getNombreCategoria());
                     return cat;
                 }).toList();
         dto.setListaDTO(listaDTO);
@@ -101,10 +101,18 @@ public class RubroController {
                 .map(e->{
                     Categoria cat = new Categoria();
                     cat.setIdCategoria(e.getIdCategoria());
-                    cat.setNombreCategoria(e.getNombre());
+                    cat.setNombreCategoria(e.getNombreCategoria());
                     return cat;
                 }).toList();
         entidad.setListaCategorias(listaCat);
         return entidad;
+    }
+
+
+    private CategoriaDTO convertirACategoriaDTO(Categoria entidad) {
+        CategoriaDTO dto = new CategoriaDTO();
+        dto.setIdCategoria(entidad.getIdCategoria());
+        dto.setNombreCategoria(entidad.getNombreCategoria());
+        return dto;
     }
 }

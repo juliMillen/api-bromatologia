@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -26,9 +29,9 @@ public class Categoria {
     @JoinColumn(name = "rubro_id")
     private Rubro rubro;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "actividad_id")
-    private Actividad actividad;
+
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+    private List<Actividad> listaActividades = new ArrayList<>();
 
     @NotBlank
     private String nombreCategoria;
@@ -36,5 +39,10 @@ public class Categoria {
 
     public Categoria(String nombreCategoria) {
         this.nombreCategoria = nombreCategoria;
+    }
+
+    public void agregarActividad(Actividad actividad) {
+        listaActividades.add(actividad);
+        actividad.setCategoria(this);
     }
 }

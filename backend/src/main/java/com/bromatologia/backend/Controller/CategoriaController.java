@@ -1,7 +1,9 @@
 package com.bromatologia.backend.Controller;
 
+import com.bromatologia.backend.DTO.ActividadDTO;
 import com.bromatologia.backend.DTO.CategoriaDTO;
 import com.bromatologia.backend.DTO.EmpresaDTO;
+import com.bromatologia.backend.Entity.Actividad;
 import com.bromatologia.backend.Entity.Categoria;
 import com.bromatologia.backend.Entity.Empresa;
 import com.bromatologia.backend.Service.CategoriaService;
@@ -54,6 +56,14 @@ public class CategoriaController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{idCategoria}/actividad/{idActividad}")
+    public ResponseEntity<ActividadDTO> asignarActividad(@PathVariable long idCategoria,@PathVariable long idActividad){
+        Actividad nueva = categoriaService.asignarActividad(idCategoria,idActividad);
+        ActividadDTO dto = convertirAActividadDTO(nueva);
+        return new ResponseEntity<>(dto,HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Categoria> eliminarCategoria(@PathVariable Long id){
         categoriaService.eliminarCategoria(id);
@@ -65,7 +75,7 @@ public class CategoriaController {
     private CategoriaDTO convertirACategoriaDTO(Categoria entidad){
         CategoriaDTO dto = new CategoriaDTO();
         dto.setIdCategoria(entidad.getIdCategoria());
-        dto.setNombre(entidad.getNombreCategoria());
+        dto.setNombreCategoria(entidad.getNombreCategoria());
         return dto;
     }
 
@@ -73,7 +83,14 @@ public class CategoriaController {
 
         Categoria entidad = new Categoria();
         entidad.setIdCategoria(dto.getIdCategoria());
-        entidad.setNombreCategoria(dto.getNombre());
+        entidad.setNombreCategoria(dto.getNombreCategoria());
         return entidad;
+    }
+
+    private ActividadDTO convertirAActividadDTO(Actividad entidad) {
+        ActividadDTO dto = new ActividadDTO();
+        dto.setIdActividad(entidad.getIdActividad());
+        dto.setNombreActividad(entidad.getNombreActividad());
+        return dto;
     }
 }

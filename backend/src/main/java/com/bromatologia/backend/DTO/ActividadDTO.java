@@ -20,7 +20,7 @@ public class ActividadDTO {
     @NotBlank(message = "El nombre de la actividad es obligatorio")
     private String nombreActividad;
 
-    private List<CategoriaDTO> listaDTO = new ArrayList<>();
+    private long idCategoria;
 
     public ActividadDTO(String nombreActividad) {
         this.nombreActividad = nombreActividad;

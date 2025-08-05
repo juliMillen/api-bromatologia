@@ -1,8 +1,12 @@
 package com.bromatologia.backend.Service;
 
+import com.bromatologia.backend.DTO.RegistroEstUpdateDTO;
+import com.bromatologia.backend.DTO.RegistroProdUpdateDTO;
 import com.bromatologia.backend.Entity.Mantenimiento;
+import com.bromatologia.backend.Entity.RegistroEstablecimiento;
 import com.bromatologia.backend.Entity.RegistroProducto;
 
+import com.bromatologia.backend.Exception.EmpresaException;
 import com.bromatologia.backend.Exception.RegistroProductoException;
 import com.bromatologia.backend.Repository.IMantenimientoRepository;
 import com.bromatologia.backend.Repository.IRegistroProductoRepository;
@@ -34,6 +38,22 @@ public class RegistroProductoService {
             throw new RegistroProductoException("El registro no puede ser nulo");
         }
         return registroProductoRepository.save(registroProducto);
+    }
+
+    public RegistroProducto actualizarRegistroProducto(String rppa, RegistroProdUpdateDTO dto) {
+        if (dto == null || rppa.isEmpty()) {
+            throw new EmpresaException("Registro no encontrado o rppa invalido");
+        }
+        RegistroProducto aActualizar = obtenerRegistroProducto(rppa);
+        aActualizar.setFechaEmision(dto.getFechaEmision());
+        aActualizar.setFechaVencimiento(dto.getFechaVencimiento());
+        aActualizar.setDenominacion(dto.getDenominacion());
+        aActualizar.setMarca(dto.getMarca());
+        aActualizar.setNombreFantasia(dto.getNombreFantasia());
+        aActualizar.setCategoriaProducto(dto.getCategoriaProducto());
+        aActualizar.setEnlace(dto.getEnlace());
+        aActualizar.setElaborador(dto.getElaborador());
+        return registroProductoRepository.save(aActualizar);
     }
 
     public void eliminarRegistroProducto(String id) {

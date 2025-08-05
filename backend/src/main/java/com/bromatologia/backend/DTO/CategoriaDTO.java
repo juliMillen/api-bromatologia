@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,13 +17,14 @@ public class CategoriaDTO {
 
     private long idCategoria;
     @NotBlank(message = "El nombre de la categoria es obligatorio")
-    private String nombre;
+    private String nombreCategoria;
 
     private long idRubro;
-    private long idActividad;
 
-    public CategoriaDTO(String nombre) {
-        this.nombre = nombre;
+    private List<ActividadDTO> listaActividades = new ArrayList<>();
+
+    public CategoriaDTO(String nombreCategoria) {
+        this.nombreCategoria = nombreCategoria;
     }
 
 }

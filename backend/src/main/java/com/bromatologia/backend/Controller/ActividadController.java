@@ -48,12 +48,6 @@ public class ActividadController {
         return new ResponseEntity<>(actividadDTO, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/{idActividad}/categoria/{idCategoria}")
-    public ResponseEntity<Categoria> asignarCategoria(@PathVariable long idActividad, @PathVariable long idCategoria) {
-        Categoria nueva = actividadService.asignarCategoria(idActividad,idCategoria);
-        return new ResponseEntity<>(nueva, HttpStatus.CREATED);
-    }
 
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -71,19 +65,6 @@ public class ActividadController {
         ActividadDTO dto = new ActividadDTO();
         dto.setIdActividad(entidad.getIdActividad());
         dto.setNombreActividad(entidad.getNombreActividad());
-
-
-        //Categoria
-
-        List<CategoriaDTO> listaDTO = entidad.getListaCategorias()
-                .stream()
-                .map(e->{
-                    CategoriaDTO cat = new CategoriaDTO();
-                    cat.setIdCategoria(e.getIdCategoria());
-                    cat.setNombre(e.getNombreCategoria());
-                    return cat;
-                }).toList();
-        dto.setListaDTO(listaDTO);
         return dto;
     }
 
@@ -92,18 +73,6 @@ public class ActividadController {
         Actividad entidad = new Actividad();
         entidad.setIdActividad(dto.getIdActividad());
         entidad.setNombreActividad(dto.getNombreActividad());
-
-        //Categoria
-
-        List<Categoria> listaCategoria = dto.getListaDTO()
-                .stream()
-                .map(e->{
-                    Categoria cat = new Categoria();
-                    cat.setIdCategoria(e.getIdCategoria());
-                    cat.setNombreCategoria(e.getNombre());
-                    return cat;
-                }).toList();
-        entidad.setListaCategorias(listaCategoria);
         return entidad;
     }
 }

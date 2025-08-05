@@ -20,4 +20,12 @@ public class EmpresaUpdateDTO {
     @NotNull
     @Pattern(regexp = "^\\+?\\d{7,15}$", message = "Formato de teléfono inválido")
     private String telefono;
+
+    private String departamento;
+
+    private String localidad;
+
+    private String direccion;
+
+    private String password;
 }

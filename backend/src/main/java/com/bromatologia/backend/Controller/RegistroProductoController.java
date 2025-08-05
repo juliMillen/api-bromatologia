@@ -76,6 +76,14 @@ public class RegistroProductoController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{rppa}")
+    public ResponseEntity<RegistroProductoDTO> actualizarRegistro(@PathVariable String rppa, @RequestBody @Valid RegistroProdUpdateDTO dto) {
+        RegistroProducto actualizado = registroProductoService.actualizarRegistroProducto(rppa, dto);
+        RegistroProductoDTO dtoActualizado = convertirADTO(actualizado);
+        return new ResponseEntity<>(dtoActualizado, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<RegistroProducto> eliminarRegistroProducto(@PathVariable String id) {
         registroProductoService.eliminarRegistroProducto(id);

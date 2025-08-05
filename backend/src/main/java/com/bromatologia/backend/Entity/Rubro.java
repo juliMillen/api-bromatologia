@@ -19,7 +19,7 @@ public class Rubro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idRubro;
 
-    @OneToMany(mappedBy = "rubro")
+    @OneToMany(mappedBy = "rubro", cascade = CascadeType.ALL)
     private List<Categoria> listaCategorias = new ArrayList<>();
 
     private String nombreRubro;

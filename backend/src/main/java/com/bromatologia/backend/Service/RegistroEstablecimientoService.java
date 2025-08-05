@@ -1,6 +1,8 @@
 package com.bromatologia.backend.Service;
 
 import com.bromatologia.backend.DTO.CategoriaDTO;
+import com.bromatologia.backend.DTO.EmpresaUpdateDTO;
+import com.bromatologia.backend.DTO.RegistroEstUpdateDTO;
 import com.bromatologia.backend.Entity.*;
 import com.bromatologia.backend.Exception.*;
 import com.bromatologia.backend.Repository.*;
@@ -42,6 +44,20 @@ public class RegistroEstablecimientoService {
 
     public List<RegistroEstablecimiento> obtenerTodosConProductoYMantenimiento(){
         return registroEstablecimientoRepository.findAllConEstablecimientoYMantenimientos();
+    }
+
+    public RegistroEstablecimiento actualizarRegistroEstablecimiento(String rpe, RegistroEstUpdateDTO dto) {
+        if (dto == null || rpe.isEmpty()) {
+            throw new EmpresaException("Empresa no encontrada o cuit invalido");
+        }
+        RegistroEstablecimiento aActualizar = obtenerRegistroEstablecimientoExistente(rpe);
+        aActualizar.setFechaEmision(dto.getFechaEmision());
+        aActualizar.setFechaVencimiento(dto.getFechaVencimiento());
+        aActualizar.setDepartamentoEst(dto.getDepartamento());
+        aActualizar.setLocalidadEst(dto.getLocalidad());
+        aActualizar.setDireccionEst(dto.getDireccion());
+        aActualizar.setEnlace(dto.getEnlace());
+        return registroEstablecimientoRepository.save(aActualizar);
     }
 
     public void eliminarRegistro(String id) {

@@ -96,6 +96,14 @@ public class RegistroEstablecimientoController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{rpe}")
+    public ResponseEntity<RegistroEstablecimientoDTO> actualizarRegistro(@PathVariable String rpe, @RequestBody @Valid RegistroEstUpdateDTO dto) {
+        RegistroEstablecimiento actualizado = registroEstablecimientoService.actualizarRegistroEstablecimiento(rpe, dto);
+        RegistroEstablecimientoDTO dtoActualizado = convertirADTO(actualizado);
+        return new ResponseEntity<>(dtoActualizado, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<RegistroEstablecimiento> eliminarRegistro(@PathVariable String id) {
         registroEstablecimientoService.eliminarRegistro(id);
@@ -126,7 +134,7 @@ public class RegistroEstablecimientoController {
                 .map(e ->{
                     CategoriaDTO cat = new CategoriaDTO();
                     cat.setIdCategoria(e.getIdCategoria());
-                    cat.setNombre(e.getNombreCategoria());
+                    cat.setNombreCategoria(e.getNombreCategoria());
                     return cat;
                 }).toList();
         dto.setCategorias(categoriaDTO);
@@ -171,7 +179,7 @@ public class RegistroEstablecimientoController {
                 .map(e->{
                     Categoria cat = new Categoria();
                     cat.setIdCategoria(e.getIdCategoria());
-                    cat.setNombreCategoria(e.getNombre());
+                    cat.setNombreCategoria(e.getNombreCategoria());
                     return cat;
                 }).toList();
         entidad.setListaCategorias(categorias);
@@ -195,7 +203,7 @@ public class RegistroEstablecimientoController {
     private CategoriaDTO convertirACategoriaDTO(Categoria entidad){
         CategoriaDTO dto = new CategoriaDTO();
         dto.setIdCategoria(entidad.getIdCategoria());
-        dto.setNombre(entidad.getNombreCategoria());
+        dto.setNombreCategoria(entidad.getNombreCategoria());
         return dto;
     }
 

@@ -47,16 +47,6 @@ public class ActividadService {
         actividadRepository.delete(aEliminar);
     }
 
-
-    @Transactional
-    public Categoria asignarCategoria(long idActividad, long idCategoria){
-        Actividad actividad = obtenerActividadExistente(idActividad);
-        Categoria categoria = categoriaRepository.findById(idCategoria).orElseThrow( () -> new CategoriaException("La categoria no existe"));
-        actividad.agregarCategoria(categoria);
-        return categoria;
-    }
-
-
     public Actividad obtenerActividadExistente(long id){
         if(id <= 0){
             throw new IllegalArgumentException("El id del actividad no puede ser negativo");

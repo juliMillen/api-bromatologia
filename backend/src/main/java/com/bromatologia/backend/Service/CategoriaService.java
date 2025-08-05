@@ -1,8 +1,11 @@
 package com.bromatologia.backend.Service;
 
+import com.bromatologia.backend.Entity.Actividad;
 import com.bromatologia.backend.Entity.Categoria;
 import com.bromatologia.backend.Exception.CategoriaException;
+import com.bromatologia.backend.Repository.IActividadRepository;
 import com.bromatologia.backend.Repository.ICategoriaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,9 @@ public class CategoriaService {
 
     @Autowired
     private ICategoriaRepository categoriaRepository;
+
+    @Autowired
+    private IActividadRepository actividadRepository;
 
     public List<Categoria> obtenerCategorias(){
         return categoriaRepository.findAll();
@@ -35,6 +41,14 @@ public class CategoriaService {
             throw new CategoriaException("La categoria es null");
         }
         return categoriaRepository.save(categoria);
+    }
+
+    @Transactional
+    public Actividad asignarActividad(long idCategoria, long idActividad){
+        Categoria categoria = obtenerCategoriaExistente(idCategoria);
+        Actividad actividad= actividadRepository.findById(idActividad).orElseThrow(() -> new CategoriaException("El id de la actividad no existe"));
+        categoria.agregarActividad(actividad);
+        return actividad;
     }
 
     public void eliminarCategoria(long idCategoria){
