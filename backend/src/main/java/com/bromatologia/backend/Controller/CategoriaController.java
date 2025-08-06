@@ -3,9 +3,11 @@ package com.bromatologia.backend.Controller;
 import com.bromatologia.backend.DTO.ActividadDTO;
 import com.bromatologia.backend.DTO.CategoriaDTO;
 import com.bromatologia.backend.DTO.EmpresaDTO;
+import com.bromatologia.backend.DTO.RubroDTO;
 import com.bromatologia.backend.Entity.Actividad;
 import com.bromatologia.backend.Entity.Categoria;
 import com.bromatologia.backend.Entity.Empresa;
+import com.bromatologia.backend.Entity.Rubro;
 import com.bromatologia.backend.Service.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -76,6 +78,18 @@ public class CategoriaController {
         CategoriaDTO dto = new CategoriaDTO();
         dto.setIdCategoria(entidad.getIdCategoria());
         dto.setNombreCategoria(entidad.getNombreCategoria());
+
+        if(entidad.getRubro() != null){
+            dto.setRubro(convertirARubroDTO(entidad.getRubro()));
+        }
+
+        if(entidad.getListaActividades() != null){
+            List<ActividadDTO> listaDTO = entidad.getListaActividades()
+                    .stream()
+                    .map(this::convertirAActividadDTO)
+                    .collect(Collectors.toList());
+            dto.setListaActividades(listaDTO);
+        }
         return dto;
     }
 
@@ -93,4 +107,12 @@ public class CategoriaController {
         dto.setNombreActividad(entidad.getNombreActividad());
         return dto;
     }
+
+    private RubroDTO convertirARubroDTO(Rubro rubro) {
+        RubroDTO dto = new RubroDTO();
+        dto.setIdRubro(rubro.getIdRubro());
+        dto.setNombreRubro(rubro.getNombreRubro());
+        return dto;
+    }
+
 }

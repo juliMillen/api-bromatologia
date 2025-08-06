@@ -12,4 +12,7 @@ public interface IRegistroEstablecimientoRepository extends JpaRepository<Regist
 
     @Query("SELECT re from RegistroEstablecimiento re LEFT JOIN FETCH re.mantenimientos")
     List<RegistroEstablecimiento> findAllConEstablecimientoYMantenimientos();
+
+    @Query("SELECT re from RegistroEstablecimiento re LEFT JOIN FETCH re.listaCategorias")
+    List<RegistroEstablecimiento> findAllConEstablecimientoYCategorias();
 }

@@ -42,8 +42,12 @@ public class RegistroEstablecimientoService {
         return registroEstablecimientoRepository.save(registro);
     }
 
-    public List<RegistroEstablecimiento> obtenerTodosConProductoYMantenimiento(){
+    public List<RegistroEstablecimiento> obtenerTodosConEstablecimientoYMantenimiento(){
         return registroEstablecimientoRepository.findAllConEstablecimientoYMantenimientos();
+    }
+
+    public List<RegistroEstablecimiento> obtenerEstablecimientosYCategorias(){
+        return registroEstablecimientoRepository.findAllConEstablecimientoYCategorias();
     }
 
     public RegistroEstablecimiento actualizarRegistroEstablecimiento(String rpe, RegistroEstUpdateDTO dto) {

@@ -19,7 +19,8 @@ public class CategoriaDTO {
     @NotBlank(message = "El nombre de la categoria es obligatorio")
     private String nombreCategoria;
 
-    private long idRubro;
+
+    private RubroDTO rubro;
 
     private List<ActividadDTO> listaActividades = new ArrayList<>();
 

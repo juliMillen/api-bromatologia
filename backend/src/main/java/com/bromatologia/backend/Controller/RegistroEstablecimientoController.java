@@ -5,6 +5,7 @@ import com.bromatologia.backend.Entity.*;
 import com.bromatologia.backend.Exception.RegistroProductoException;
 import com.bromatologia.backend.Service.RegistroEstablecimientoService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,12 +67,26 @@ public class RegistroEstablecimientoController {
 
     @GetMapping("/registroEstablecimientoConMantenimientos")
     public ResponseEntity<List<RegistroEstablecimientoDTO>> obtenerConEstablecimientoYMantenimiento(){
-        List<RegistroEstablecimiento> listaRegistrosConMantenimiento = registroEstablecimientoService.obtenerTodosConProductoYMantenimiento();
+        List<RegistroEstablecimiento> listaRegistrosConMantenimiento = registroEstablecimientoService.obtenerTodosConEstablecimientoYMantenimiento();
         if(listaRegistrosConMantenimiento == null || listaRegistrosConMantenimiento.isEmpty()){
             throw new RegistroProductoException("No se han encontrado los registros con mantenimiento");
         }
 
         List<RegistroEstablecimientoDTO> listaDTO = listaRegistrosConMantenimiento
+                .stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(listaDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/registroEstablecimientoConCategorias")
+    public ResponseEntity<List<RegistroEstablecimientoDTO>> obtenerConEstablecimientoYCategoria(){
+        List<RegistroEstablecimiento> listaRegistrosConCategorias = registroEstablecimientoService.obtenerEstablecimientosYCategorias();
+        if(listaRegistrosConCategorias == null || listaRegistrosConCategorias.isEmpty()){
+            throw new RegistroProductoException("No hay categorias asociadas");
+        }
+
+        List<RegistroEstablecimientoDTO> listaDTO = listaRegistrosConCategorias
                 .stream()
                 .map(this::convertirADTO)
                 .collect(Collectors.toList());
