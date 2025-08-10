@@ -32,9 +32,23 @@ public class EmpresaController {
         return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/{cuitEmpresa}")
+    @GetMapping("/cuit/{cuitEmpresa}")
     public ResponseEntity<EmpresaDTO> obtenerEmpresaPorId(@PathVariable Long cuitEmpresa) {
         Empresa empresa = empresaService.obtenerEmpresaPorId(cuitEmpresa);
+        EmpresaDTO empresaDTO = convertirAEmpresaDTO(empresa);
+        return new ResponseEntity<>(empresaDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/razonSocial/{razonSocial}")
+    public ResponseEntity<EmpresaDTO> obtenerEmpresaPorRazonSocial(@PathVariable String razonSocial) {
+        Empresa empresa = empresaService.obtenerEmpresaPorRazonSocial(razonSocial);
+        EmpresaDTO empresaDTO = convertirAEmpresaDTO(empresa);
+        return new ResponseEntity<>(empresaDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/propiedades/{cuit}/{razonSocial}/{departamento}")
+    public ResponseEntity<EmpresaDTO> obtenerEmpresaPorPropiedades(@PathVariable long cuit, @PathVariable String razonSocial, @PathVariable String departamento) {
+        Empresa empresa = empresaService.obtenerEmpresaPorPropiedades(cuit,razonSocial,departamento);
         EmpresaDTO empresaDTO = convertirAEmpresaDTO(empresa);
         return new ResponseEntity<>(empresaDTO, HttpStatus.OK);
     }

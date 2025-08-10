@@ -24,6 +24,28 @@ public class EmpresaService {
         return obtenerEmpresaExistente(id);
     }
 
+    public Empresa obtenerEmpresaPorRazonSocial(String razonSocial){
+        if(razonSocial == null || razonSocial.isEmpty()){
+            throw new EmpresaException("La razon social no existe o los campos estan vacios");
+        }
+        return empresaRepository.findEmpresaByRazonSocial(razonSocial);
+    }
+
+
+    public Empresa obtenerEmpresaPorDepartamento(String departamento){
+        if(departamento == null || departamento.isEmpty()){
+            throw new EmpresaException("El departamento no existe o los campos estan vacios");
+        }
+        return empresaRepository.findEmpresaByDepartamento(departamento);
+    }
+
+    public Empresa obtenerEmpresaPorPropiedades(long cuit, String razonSocial, String departamento){
+        if(cuit <=0 || razonSocial == null || razonSocial.isEmpty() || departamento == null || departamento.isEmpty()){
+            throw new EmpresaException("Los campos no puede estar vacios vacios, ni ser nulos");
+        }
+        return empresaRepository.findByCuitEmpresaAndRazonSocialAndDepartamento(cuit, razonSocial, departamento);
+    }
+
 
     public Empresa crearEmpresa(Empresa empresa){
         if(empresa == null){
