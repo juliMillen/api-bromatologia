@@ -3,6 +3,7 @@ package com.bromatologia.backend.Entity;
 import com.bromatologia.backend.Exception.RegistroProductoException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.List;
 public class RegistroProducto {
 
     @Id
+    @Pattern(regexp = "08[-/]\\d{6}", message = "El RPPA debe tener el formato 08-000000 o 08/000000")
     private String rppa;
 
     private LocalDate fechaEmision;

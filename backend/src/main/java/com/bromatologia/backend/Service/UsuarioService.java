@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -26,6 +27,13 @@ public class UsuarioService {
 
     public Usuario obtenerUsuarioPorId(long id){
         return obtenerUsuarioExistente(id);
+    }
+
+    public Optional<Usuario> obtenerUsuarioPorUsername(String username){
+        if(username.isEmpty()){
+            throw new UsuarioException("Usuario no encontrado");
+        }
+        return usuarioRepository.findByUsername(username);
     }
 
 
@@ -100,7 +108,6 @@ public class UsuarioService {
         if( username == null ||username.trim().isEmpty()){
             throw new UsuarioException("El nombre de usuario no puede ser nulo");
         }
-
         if(usuarioRepository.findByUsername(username).isPresent()){
             throw new UsuarioException("El nombre de usuario ya existe");
         }

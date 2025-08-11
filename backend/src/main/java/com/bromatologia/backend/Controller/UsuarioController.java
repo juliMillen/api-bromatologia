@@ -2,6 +2,7 @@ package com.bromatologia.backend.Controller;
 
 import com.bromatologia.backend.DTO.*;
 import com.bromatologia.backend.Entity.*;
+import com.bromatologia.backend.Exception.UsuarioException;
 import com.bromatologia.backend.Service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,6 +39,13 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> obtenerUsuario(@PathVariable long id) {
         Usuario buscado = usuarioService.obtenerUsuarioPorId(id);
         UsuarioDTO usuarioDTO = convertirADTO(buscado);
+        return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/buscar/{username}")
+    public ResponseEntity<UsuarioDTO> obtenerUsuarioPorUsername(@PathVariable String username) {
+        Optional<Usuario> buscado = usuarioService.obtenerUsuarioPorUsername(username);
+        UsuarioDTO usuarioDTO = convertirADTO(buscado.orElseThrow( () -> new UsuarioException("Usuario no encontrado")) );
         return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
     }
 
