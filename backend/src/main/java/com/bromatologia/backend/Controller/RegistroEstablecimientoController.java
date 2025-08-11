@@ -57,7 +57,7 @@ public class RegistroEstablecimientoController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<RegistroEstablecimientoDTO> guardarRegistro(@RequestBody @Valid RegistroEstablecimientoDTO dto) {
         RegistroEstablecimiento nuevoRegistro = convertirADominio(dto);
         RegistroEstablecimiento guardado = registroEstablecimientoService.guardarRegistro(nuevoRegistro);

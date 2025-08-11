@@ -52,6 +52,7 @@ public class RegistroProductoService {
         aActualizar.setNombreFantasia(dto.getNombreFantasia());
         aActualizar.setCategoriaProducto(dto.getCategoriaProducto());
         aActualizar.setEnlace(dto.getEnlace());
+        aActualizar.setExpediente(dto.getExpediente());
         aActualizar.setElaborador(dto.getElaborador());
         return registroProductoRepository.save(aActualizar);
     }

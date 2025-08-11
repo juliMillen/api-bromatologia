@@ -22,6 +22,7 @@ public class RegistroProdUpdateDTO {
     private String nombreFantasia;
     private String categoriaProducto;
     private String enlace;
+    private long expediente;
     private String elaborador;
     private List<CategoriaDTO> listaCategoria = new ArrayList<>();
 }

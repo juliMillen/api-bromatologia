@@ -29,5 +29,7 @@ public class RegistroEstUpdateDTO {
 
     private String enlace;
 
+    private long expediente;
+
     private List<CategoriaDTO> listaCategoria = new ArrayList<>();
 }

@@ -52,7 +52,7 @@ public class RegistroEstablecimientoService {
 
     public RegistroEstablecimiento actualizarRegistroEstablecimiento(String rpe, RegistroEstUpdateDTO dto) {
         if (dto == null || rpe.isEmpty()) {
-            throw new EmpresaException("Empresa no encontrada o cuit invalido");
+            throw new RegistroEstablecimientoException("El registro no puede ser nulo");
         }
         RegistroEstablecimiento aActualizar = obtenerRegistroEstablecimientoExistente(rpe);
         aActualizar.setFechaEmision(dto.getFechaEmision());
@@ -60,6 +60,7 @@ public class RegistroEstablecimientoService {
         aActualizar.setDepartamentoEst(dto.getDepartamento());
         aActualizar.setLocalidadEst(dto.getLocalidad());
         aActualizar.setDireccionEst(dto.getDireccion());
+        aActualizar.setExpediente(dto.getExpediente());
         aActualizar.setEnlace(dto.getEnlace());
         return registroEstablecimientoRepository.save(aActualizar);
     }
