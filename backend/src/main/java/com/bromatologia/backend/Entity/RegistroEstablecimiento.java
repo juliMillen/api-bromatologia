@@ -11,7 +11,9 @@ import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -41,8 +43,9 @@ public class RegistroEstablecimiento {
 
     private String enlace;
 
-    @OneToMany(mappedBy = "registroEstablecimiento", cascade = CascadeType.ALL)
-    private List<Categoria> listaCategorias = new ArrayList<>();
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable( name= "registro_establecimiento_categoria", joinColumns = @JoinColumn(name = "rpe"), inverseJoinColumns = @JoinColumn(name = "id_categoria"))
+    private Set<Categoria> listaCategorias = new HashSet<>();
 
 
     @OneToMany(mappedBy = "registroEstablecimiento", cascade = CascadeType.ALL)
@@ -73,7 +76,7 @@ public class RegistroEstablecimiento {
     public void agregarCategoria(Categoria categoria) {
         if (categoria != null) {
             listaCategorias.add(categoria);
-            categoria.setRegistroEstablecimiento(this);
+            categoria.getRegistroEstablecimientos().add(this); //mantenemos sincronia
         }else{
             throw new RegistroEstablecimientoException("La categoria es null");
         }

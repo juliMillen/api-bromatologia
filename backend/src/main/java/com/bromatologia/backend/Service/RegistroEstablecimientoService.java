@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class RegistroEstablecimientoService {
@@ -65,20 +66,38 @@ public class RegistroEstablecimientoService {
         return registroEstablecimientoRepository.save(aActualizar);
     }
 
+    @Transactional
     public void eliminarRegistro(String id) {
         if(id.isEmpty()){
             throw new RegistroEstablecimientoException("El id es invalido");
         }
         RegistroEstablecimiento aEliminar = obtenerRegistroEstablecimientoExistente(id);
+        aEliminar.getListaCategorias().clear();
         registroEstablecimientoRepository.delete(aEliminar);
     }
 
-    @Transactional
+    /*@Transactional
     public Categoria asignarCategoria(String idRegistroEstablecimiento, long idCategoria){
         RegistroEstablecimiento registroEst = obtenerRegistroEstablecimientoExistente(idRegistroEstablecimiento);
         Categoria categoria = categoriaRepository.findById(idCategoria).orElseThrow( () -> new CategoriaException("La categoria no existe"));
         registroEst.agregarCategoria(categoria);
         return categoria;
+    }*/
+
+    @Transactional
+    public Set<Categoria> asignarCategorias(String idRegistroEstablecimiento, List<Long> idCategorias){
+        RegistroEstablecimiento registro = obtenerRegistroEstablecimientoExistente(idRegistroEstablecimiento);
+        List<Categoria> categorias = categoriaRepository.findAllById(idCategorias);
+
+        if(categorias.size() != idCategorias.size()){
+            throw new CategoriaException("Una o mas categorias cargadas no existen");
+        }
+        categorias.forEach(registro::agregarCategoria);
+        registro.getListaCategorias().clear();
+        registro.getListaCategorias().addAll(categorias);
+        //Persistimos los cambios
+        registroEstablecimientoRepository.save(registro);
+        return registro.getListaCategorias();
     }
 
 

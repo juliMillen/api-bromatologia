@@ -21,9 +21,8 @@ public class Categoria {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idCategoria;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "registro_establecimiento", nullable = true)
-    private RegistroEstablecimiento registroEstablecimiento;
+    @ManyToMany(mappedBy = "listaCategorias")
+    private List<RegistroEstablecimiento> registroEstablecimientos = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rubro_id")

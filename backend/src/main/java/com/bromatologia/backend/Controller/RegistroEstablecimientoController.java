@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -93,12 +94,22 @@ public class RegistroEstablecimientoController {
         return new ResponseEntity<>(listaDTO, HttpStatus.OK);
     }
 
-    @PreAuthorize("isAuthenticated()")
+    /*@PreAuthorize("isAuthenticated()")
     @PostMapping("{idRegistroEstablecimiento}/categoria/{idCategoria}")
     public ResponseEntity<CategoriaDTO> asignarCategoria(@PathVariable String idRegistroEstablecimiento, @PathVariable long idCategoria) {
         Categoria nueva = registroEstablecimientoService.asignarCategoria(idRegistroEstablecimiento,idCategoria);
         CategoriaDTO dto = convertirACategoriaDTO(nueva);
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
+    }*/
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("{idRegistroEstablecimiento}/categorias/{idCategorias}")
+    public ResponseEntity<Set<CategoriaDTO>> asignarCategorias(@PathVariable String idRegistroEstablecimiento, @PathVariable List<Long> idCategorias){
+        Set<Categoria> nuevas = registroEstablecimientoService.asignarCategorias(idRegistroEstablecimiento,idCategorias);
+        Set<CategoriaDTO> dtos = nuevas.stream()
+                .map(this::convertirACategoriaDTO)
+                .collect(Collectors.toSet());
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
 
@@ -189,14 +200,14 @@ public class RegistroEstablecimientoController {
         entidad.setEmpresa(empresa);
 
         //Categoria
-        List<Categoria> categorias = dto.getCategorias()
+        Set<Categoria> categorias = dto.getCategorias()
                 .stream()
                 .map(e->{
                     Categoria cat = new Categoria();
                     cat.setIdCategoria(e.getIdCategoria());
                     cat.setNombreCategoria(e.getNombreCategoria());
                     return cat;
-                }).toList();
+                }).collect(Collectors.toSet());
         entidad.setListaCategorias(categorias);
 
 
