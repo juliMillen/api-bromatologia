@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // a todas las rutas
-                .allowedOrigins("http://localhost:4200") // al front de angular
+                .allowedOrigins("https://api-bromatologia.onrender.com") // direccion al path de render
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE","OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
