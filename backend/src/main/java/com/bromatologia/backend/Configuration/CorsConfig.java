@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // a todas las rutas
-                .allowedOrigins("https://api-bromatologia.onrender.com") // direccion al path de render
+                .allowedOrigins("https://bromatologia.netlify.app") // path netlify
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE","OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
